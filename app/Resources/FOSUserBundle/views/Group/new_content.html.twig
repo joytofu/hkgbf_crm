@@ -1,0 +1,7 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+<form class="form-signin" action="{{ path('fos_user_group_new') }}" {{ form_enctype(form) }} method="POST" class="fos_user_group_new">
+    {{ form_widget(form) }}
+    <button class="btn btn-lg btn-primary btn-block" type="submit" id="_submit" name="_submit" >Create</button>
+</form>

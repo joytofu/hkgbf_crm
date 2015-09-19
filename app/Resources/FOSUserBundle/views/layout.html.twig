@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        {% block global_css %}
+            <link type="text/css" rel="stylesheet" href="{{ asset('css/signin.css') }}" />
+            <link type="text/css" rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+            <link type="text/css" rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}" />
+        {% endblock %}
+
+        {% block private_css %}
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/cover.css') }}" />
+        {% endblock %}
+    </head>
+    <body>
+
+
+        {% if app.request.hasPreviousSession %}
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    <div class="flash-{{ type }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+
+            {% block fos_user_content %}
+            {% endblock fos_user_content %}
+
+        {% block auth_top %}
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                <a href="{{ path('fos_user_security_logout') }}">
+                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                </a>
+            {% else %}
+                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+            {% endif %}
+        {% endblock %}
+
+    {% block js %}
+    {% endblock %}
+
+    </body>
+</html>

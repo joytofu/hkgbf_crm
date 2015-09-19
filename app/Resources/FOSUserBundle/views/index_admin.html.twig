@@ -1,0 +1,198 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('css/notice.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jVectorMap/jquery-jvectormap-2.0.4.css') }}" media="screen">
+{% endblock %}
+
+{% block page_header %}首页{% endblock %}
+{% block content %}
+    <div class="row">
+        {#通知公告块#}
+        <div class="col-md-9">
+            <div class="box box-solid">
+                {#<div class="box-header with-border">
+                    <h3 class="box-title">Carousel</h3>
+                </div>#}<!-- /.box-header -->
+                <div class="box-body">
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="3" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="4" class=""></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <div class="notice_title"><h2>{% if notice_active is not null %}{{ notice_active.title|raw }}{% endif %}</h2></div>
+                                <div class="notice_content">{% if notice_active is not null %}{{ notice_active.content|raw }}{% endif %}</div>
+                                <img src="{{ asset('img/notice/1.png') }}">
+                            </div>
+                            {% set i=2 %}
+                            {% for data in notice %}
+                            <div class="item">
+                                <div class="notice_title"><h2>{{ data.title|raw }}</h2></div>
+                                <div class="notice_content">{{ data.content|raw }}</div>
+                                <img src="/img/notice/{{ i }}.png">
+                            </div>
+                             {% set i=i+1 %}
+                            {% endfor %}
+                        </div>
+                        <a class="left carousel-control" style="width:10%" href="#carousel-example-generic" data-slide="prev">
+                            <span class="fa fa-angle-left"></span>
+                        </a>
+                        <a class="right carousel-control"  style="width:10%" href="#carousel-example-generic" data-slide="next">
+                            <span class="fa fa-angle-right"></span>
+                        </a>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div>
+
+        {#当前客户总数块#}
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>{{ clients_num }}</h3>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <p><b>当前用户总数</b></p>
+                 {% else %}
+                     <p><b>当前客户总数</b></p>
+                  {% endif %}
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-stalker"></i>
+            </div>
+            <a href="{{ path('clientslist') }}" class="small-box-footer">
+                查看详情 <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+        {#新注册用户块#}
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>{{ unverified_num }}</h3>
+
+                <p><b>新注册用户</b></p>
+
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ path('unverifiedclientslist') }}" class="small-box-footer">
+                查看详情 <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+    {#甜甜圈统计图块#}
+     <div class="col-md-6">
+         <div class="box box-danger">
+             <div class="box-header with-border">
+                 <h3 class="box-title">会员分类统计</h3>
+                 <div class="box-tools pull-right">
+                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                 </div>
+             </div>
+             <div class="box-body">
+                 <div class="row">
+                     <div class="col-md-8">
+                         <div class="chart-responsive">
+                             <canvas id="pieChart" height="250"></canvas>
+                         </div>
+                     </div>
+                     <div class="col-md-4">
+                         <ul class="chart-legend clearfix" style="font-size: 16px">
+                             <li><i class="fa fa-circle-o text-aqua"></i> 普通会员</li>
+                             <li><i class="fa fa-circle-o text-yellow"></i> 金卡会员</li>
+                             <li><i class="fa fa-circle-o text-red"></i> 钻石会员</li>
+                         </ul>
+                     </div>
+                 </div>
+             </div><!-- /.box-body -->
+         </div>
+     </div>
+
+     {#客户分布地图#}
+     <div class="col-md-6">
+         <div class="box box-success">
+             <div class="box-header with-border">
+                 <h3 class="box-title">客户分布图</h3>
+                 <div class="box-tools pull-right">
+                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                     <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                 </div>
+             </div>
+             <div class="box-body no-padding">
+                 <div class="row">
+                     <div class="col-md-12">
+                         <div class="pad">
+                             <div id="china" style="height: 500px;width:100%">
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+    </div>
+{% endblock %}
+
+{% block private_js %}
+    <script src="{{ asset('js/chart/Chart.min.js') }}"></script>
+    <script src="{{ asset('js/chart/pieChart.js') }}"></script>
+    <script>chartSetUp({{ normal_clients_num }},{{ golden_clients_num }},{{ diamond_clients_num }})</script>
+    <script src="{{ asset('js/jVectorMap/jquery-jvectormap-2.0.4.min.js') }}"></script>
+    <script src="{{ asset('js/jVectorMap/jquery-jvectormap-cn-official.js') }}"></script>
+    <script type="text/javascript">
+                $(function () {
+                       $('#china').vectorMap({
+                           map: 'cn_mill',
+                           backgroundColor: "#EEE",
+                           markersSelectable:true,
+                           normalizeFunction: 'polynomial',
+                           hoverOpacity: 0.7,
+                           hoverColor: false,
+                           regionStyle: {
+                               initial: {
+                                   fill: '#D24545',
+                                   "fill-opacity": 1,
+                                   stroke: 'none',
+                                   "stroke-width": 0,
+                                   "stroke-opacity": 1
+                               },
+                               hover: {
+                                   "fill-opacity": 0.7,
+                                   cursor: 'pointer'
+                               },
+
+                           },
+
+                           markers: [
+                               {% for normal_client in normal_clients %}
+                               {latLng: [{{ normal_client.longitude }},{{ normal_client.latitude }}],
+                                   name: "{{ normal_client.username }},{{ normal_client.city }}{{ normal_client.district }}{{ normal_client.town }}",
+                                   style:{fill:'#3A5FCD'}},
+                               {% endfor %}
+
+                               {% for golden_client in golden_clients %}
+                               {latLng: [{{ golden_client.longitude }},{{ golden_client.latitude }}],
+                                   name: "{{ golden_client.username }},{{ golden_client.city }}{{ golden_client.district }}{{ golden_client.town }}",
+                                   style:{fill:'#EEEE00'}},
+                               {% endfor %}
+
+                               {% for diamond_client in diamond_clients %}
+                               {latLng: [{{ diamond_client.longitude }},{{ diamond_client.latitude }}],
+                                   name: "{{ diamond_client.username }},{{ diamond_client.city }}{{ diamond_client.district }}{{ diamond_client.town }}",
+                                   style:{fill:'#8B0A50'}},
+                               {% endfor %}
+
+                                   ]
+                        });
+                });
+            </script>
+
+{% endblock %}

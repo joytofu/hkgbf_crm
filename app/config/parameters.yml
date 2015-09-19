@@ -1,0 +1,12 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: hkgbf_crm
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: smtp.163.com
+    mailer_user: hkgbfmail@163.com
+    mailer_password: oqyljewrdqmlmiia
+    secret: dffee3a02b3dff8efa7b4203cc9a0ac9c3a54b4b

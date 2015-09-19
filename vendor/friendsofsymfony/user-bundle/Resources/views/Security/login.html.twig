@@ -1,0 +1,48 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block private_css %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/cover.css') }}" />
+{% endblock %}
+
+{% block fos_user_content %}
+{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+
+<div class="site-wrapper">
+
+<div style="margin-top:40px">
+    {% block auth_top %}
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+        <a href="{{ path('fos_user_security_logout') }}">
+            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+        </a>
+    {% else %}
+        <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+    {% endif %}
+    {% endblock %}
+
+<form class="form-signin" action="{{ path("fos_user_security_check") }}" method="post">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+    <label for="username" class="sr-only">{{ 'security.login.username'|trans }}</label>
+    <input class="form-control" type="text" id="username" placeholder="username" name="_username"  required="required" />
+
+    <label for="password" class="sr-only">{{ 'security.login.password'|trans }}</label>
+    <input class="form-control" type="password" id="password" placeholder="password" name="_password" required="required" />
+
+    <label for="remember_me">
+    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+    {{ 'security.login.remember_me'|trans }}
+    </label>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit" id="_submit" name="_submit" >Sign in</button>
+</form>
+
+
+</div>
+</div>
+{% endblock fos_user_content %}

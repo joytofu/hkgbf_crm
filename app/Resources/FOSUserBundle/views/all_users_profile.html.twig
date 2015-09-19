@@ -1,0 +1,96 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block fos_user_content %}
+
+
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active" role="presentation">
+            <a href="#role_regular" role="tab" data-toggle="tab" aria-controls="role_regular" aria-expanded="true">普通会员</a>
+        </li>
+        <li role="presentation">
+            <a href="#role_golden" role="tab" data-toggle="tab" aria-controls="role_golden" aria-expanded="false">金卡会员</a>
+        </li>
+        <li role="presentation">
+            <a href="#role_diamond" role="tab" data-toggle="tab" aria-controls="role_diamond" aria-expanded="false">钻石会员</a>
+        </li>
+        <li role="presentation">
+            <a href="#role_agent" role="tab" data-toggle="tab" aria-controls="role_agent" aria-expanded="false">渠道代理</a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade active in" id="role_regular" aria-labelledby="role_regular-tab">
+            <ul class="none_list_style">
+                {% for content in regular %}
+                    <li>{{ content }}:
+                      <div class="btn-group">
+                        <button type="button" class="dropdown-toggle btn btn-info" data-toggle="dropdown">
+                        设置会员级别<b class="caret"></b>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_GOLDEN'}) }}">设为金卡会员</a></li>
+                            <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_DIAMOND'}) }}">设为钻石会员</a></li>
+                        </ul>
+                      </div>
+                      <a href="{{ path('editUser',{'id':content.id}) }}" target="_blank"><button class="btn btn-primary">修改用户信息</button></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="role_golden" aria-labelledby="role_golden-tab">
+            <ul class="none_list_style">
+                {% for content in golden %}
+                    <li>{{ content }}:
+                        <div class="btn-group">
+                            <button type="button" class="dropdown-toggle btn btn-info" data-toggle="dropdown">
+                                设置会员级别<b class="caret"></b>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为普通会员</a></li>
+                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_DIAMOND'}) }}">设为钻石会员</a></li>
+                            </ul>
+                        </div>
+                        <a href="{{ path('editUser',{'id':content.id}) }}" target="_blank"><button class="btn btn-primary">修改用户信息</button></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="role_diamond" aria-labelledby="role_diamond-tab">
+            <ul class="none_list_style">
+                {% for content in diamond %}
+                    <li>{{ content }}:
+                        <div class="btn-group">
+                            <button type="button" class="dropdown-toggle btn btn-info" data-toggle="dropdown">
+                                设置会员级别<b class="caret"></b>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为普通会员</a></li>
+                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_GOLDEN'}) }}">设为金卡会员</a></li>
+                            </ul>
+                        </div>
+                        <a href="{{ path('editUser',{'id':content.id}) }}" target="_blank"><button class="btn btn-primary">修改用户信息</button></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="role_agent" aria-labelledby="role_agent-tab">
+            <ul class="none_list_style">
+                {% for content in agent %}
+                    <li>{{ content }}:
+
+                        <a href="{{ path('editUser',{'id':content.id}) }}" target="_blank"><button class="btn btn-primary">修改用户信息</button></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+</div>
+{% endblock fos_user_content %}
+
+{% block js %}
+    <script src="{{ asset('js/jquery-1.11.3.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+{% endblock %}

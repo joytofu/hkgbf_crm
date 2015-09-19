@@ -1,0 +1,185 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}{{ username }}购买产品详情{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Custom Tabs -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">股票</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">保险</a></li>
+                    <li><a href="#tab_3" data-toggle="tab">环球基金</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            产品资料上传 <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li role="presentation">
+                                {{ form_start(upload_form,{'attr':{'style':'margin-left:10px'}}) }}
+                                {{ form_widget(upload_form.productFile) }}
+                                <button type="submit">提交</button>
+                                {{ form_end(upload_form) }}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            添加产品信息 <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li role="presentation"><a href="{{ path('addstocks',{'id':user_id}) }}" role="menuitem" tabindex="-1">添加股票信息</a></li>
+                            <li role="presentation"><a href="{{ path('addinsurance',{'id':user_id}) }}" role="menuitem" tabindex="-1">添加保险信息</a></li>
+                            <li role="presentation"><a href="#" role="menuitem" tabindex="-1">添加基金信息</a></li>
+                        </ul>
+                    </li>
+                    <li class="pull-right"><a href="{{ path('clientslist') }}" class="text-muted"><i class="fa fa-arrow-left">返回客户列表</i></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                        <div class="box-body">
+                            <table id="products_list1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>持仓股票代码</th>
+                                    <th>持仓股票名称</th>
+                                    <th>购买日期</th>
+                                    <th>持仓手数</th>
+                                    <th>购买价格(元/股)</th>
+                                    <th>当前价格(元/股)</th>
+                                    <th>浮动盈亏(元)</th>
+                                    <th>当前状态</th>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <th>修改</th>
+                                    {% endif %}
+
+                                </tr>
+                                </thead>
+                                {% for data in stock_data %}
+                                <tr>
+                                    <td>{{ data.stockId }}</td>
+                                    <td>{{ data.stockName }}</td>
+                                    <td>{{ data.buyDate|date('Y-m-d') }}</td>
+                                    <td>{{ data.position }}</td>
+                                    <td>{{ data.buyingPrice }}</td>
+                                    <td>{{ data.currentPrice }}</td>
+                                    <td>{{ data.calculateProfitAndLoss() }}</td>
+                                    <td><span class="label label-success">买入</span></td>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <td>
+                                        <a href="{{ path('editstock',{'id':data.getId()}) }}"><button class="btn btn-facebook">编辑</button></a>
+                                        <a href="javascript:void(0)" onclick="deletestock({{ data.getId() }})"><button class="btn btn-adn">删除</button></a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                                <thead><tr><th>合计盈亏:{{ sum }}元</th></tr></thead>
+
+                            </table>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                    <div class="tab-pane" id="tab_2">
+                        <div class="box-body">
+                            <table id="products_list2" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>保险名称</th>
+                                    <th>保险类型</th>
+                                    <th>购买日期</th>
+                                    <th>投保人</th>
+                                    <th>被保人</th>
+                                    <th>保费(元)</th>
+                                    <th>保额(元)</th>
+                                    <th>投保年龄</th>
+                                    <th>投保年限</th>
+                                    <th>出生日期</th>
+                                    <th>性别</th>
+                                    <th>是否吸烟</th>
+                                    <th>下次续费日期</th>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <th>修改</th>
+                                    {% endif %}
+
+                                </tr>
+                                </thead>
+                                {% for data in insurance_data %}
+                                    <tr>
+                                        <td>{{ data.insuranceName }}</td>
+                                        <td>{{ data.type }}</td>
+                                        <td>{{ data.buyDate|date('Y-m-d') }}</td>
+                                        <td>{{ data.PolicyHolder }}</td>
+                                        <td>{{ data.Recognizee }}</td>
+                                        <td>{{ data.insurancePremium }}</td>
+                                        <td>{{ data.sumInsured }}</td>
+                                        <td>{{ data.AgeAtIssue }}</td>
+                                        <td>{{ data.Years }}</td>
+                                        <td>{{ data.BornDate|date('Y-m-d') }}</td>
+                                        <td>{{ data.gender }}</td>
+                                        <td>{% if data.isSmoking==0 %}否{% else %}是{% endif %}</td>
+                                        <td>{{ data.NextPayDate|date('Y-m-d') }}</td>
+
+                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                            <td>
+                                                <a href="{{ path('editinsurance',{'id':data.getId()}) }}"><button class="btn btn-facebook">编辑</button></a>
+                                                <a href="javascript:void(0)" onclick="deleteinsurance({{ data.getId() }})"><button class="btn btn-adn">删除</button></a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+                        </div>
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_3">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                        It has survived not only five centuries, but also the leap into electronic typesetting,
+                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+                        like Aldus PageMaker including versions of Lorem Ipsum.
+                    </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#products_list1").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+            $('#products_list3').DataTable();
+        });
+    </script>
+    <script>
+        function deletestock(id){
+            if(confirm('你确定删除该股票信息吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_stock_2/"+id;
+            }
+        }
+
+        function deleteinsurance(id){
+            if(confirm('你确定删除该保险信息吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_insurance_2/"+id;
+            }
+        }
+
+    </script>
+{% endblock %}

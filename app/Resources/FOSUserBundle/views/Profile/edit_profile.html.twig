@@ -1,0 +1,45 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block hidden_username %}{{ username }}{% endblock %}
+
+{% block content %}
+
+    <div class="box box-primary" style="width: 50%;margin-left: 23%">
+    <div class="box-header with-border">
+        <h3 class="box-title">个人信息</h3>
+    </div>
+    {{ form_start(form,{'attr':{'role':'form'}}) }}
+    <div class="box-body">
+        <div class="form-group">
+            {{ form_widget(form.imageFile) }}
+
+        </div>
+    <div class="form-group">
+        {{ form_row(form.username) }}
+    </div>
+        <div class="form-group">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.cellphone) }}
+        </div>
+        <div class="form-group">
+        {{ form_row(form.email) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.company) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.address) }}
+        </div>
+
+
+    </div>
+    <div class="box-footer">
+    <button class="btn btn-primary" type="submit" id="_submit" name="_submit" >保存修改</button>
+    </div>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock content %}
+{% block page_header %}用户信息{% endblock %}
+

@@ -1,0 +1,216 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}用户分组{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-7" style="margin-left: 20%">
+            <!-- Custom Tabs -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">普通会员</a></li>
+                    <li><a href="#tab_2" data-toggle="tab" style="color:#f39c12">金卡会员</a></li>
+                    <li><a href="#tab_3" data-toggle="tab" style="color:#c7254e">钻石会员</a></li>
+                    <li><a href="#tab_4" data-toggle="tab" style="color:darkblue">渠道代理</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                        <div class="box-body">
+                            <table id="products_list1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>用户名</th>
+                                    <th>姓名</th>
+                                    <th>所属代理</th>
+                                    <th>修改会员级别</th>
+                                    <th>修改会员信息</th>
+                                </tr>
+                                </thead>
+                                {% for content in regular %}
+                                    <tr>
+                                        <td>{{ content }}</td>
+                                        <td>{{ content.name }}</td>
+                                        <td>
+                                            {% if content.invitation=='24bb2a5a71' %}agent001
+                                            {% elseif content.invitation=='ea9834405a' %}agent002
+                                            {% elseif content.invitation=='c355eca4e1' %}agent003
+                                            {% else %}无{% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                            <button type="button" class="dropdown-toggle btn btn-vk" data-toggle="dropdown">
+                                                设置会员级别<b class="caret"></b>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_GOLDEN'}) }}">设为金卡会员</a></li>
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_DIAMOND'}) }}">设为钻石会员</a></li>
+                                            </ul>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('edituserprofile',{'id':content.id}) }}"><button class="btn btn-primary">修改用户信息</button></a>
+                                            <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                    <div class="tab-pane" id="tab_2">
+                        <div class="box-body">
+                            <table id="products_list2" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>用户名</th>
+                                    <th>姓名</th>
+                                    <th>所属代理</th>
+                                    <th>修改会员级别</th>
+                                    <th>修改会员信息</th>
+                                </tr>
+                                </thead>
+                                {% for content in golden %}
+                                    <tr>
+                                        <td>{{ content }}</td>
+                                        <td>{{ content.name }}</td>
+                                        <td>
+                                            {% if content.invitation=='24bb2a5a71' %}agent001
+                                            {% elseif content.invitation=='ea9834405a' %}agent002
+                                            {% elseif content.invitation=='c355eca4e1' %}agent003
+                                            {% else %}无{% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="dropdown-toggle btn btn-vk" data-toggle="dropdown">
+                                                    设置会员级别<b class="caret"></b>
+                                                </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为普通会员</a></li>
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_DIAMOND'}) }}">设为钻石会员</a></li>
+                                            </ul>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('edituserprofile',{'id':content.id}) }}"><button class="btn btn-primary">修改用户信息</button></a>
+                                            <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_3">
+                        <div class="box-body">
+                            <table id="products_list3" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>用户名</th>
+                                    <th>姓名</th>
+                                    <th>所属代理</th>
+                                    <th>修改会员级别</th>
+                                    <th>修改会员信息</th>
+                                </tr>
+                                </thead>
+                                {% for content in diamond %}
+                                    <tr>
+                                        <td>{{ content }}</td>
+                                        <td>{{ content.name }}</td>
+                                        <td>
+                                            {% if content.invitation=='24bb2a5a71' %}agent001
+                                            {% elseif content.invitation=='ea9834405a' %}agent002
+                                            {% elseif content.invitation=='c355eca4e1' %}agent003
+                                            {% else %}无{% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                            <button type="button" class="dropdown-toggle btn btn-vk" data-toggle="dropdown">
+                                                设置会员级别<b class="caret"></b>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为普通会员</a></li>
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_GOLDEN'}) }}">设为金卡会员</a></li>
+                                            </ul>
+                                                </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('edituserprofile',{'id':content.id}) }}"><button class="btn btn-primary">修改用户信息</button></a>
+                                            <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_4">
+                        <div class="box-body">
+                            <table id="products_list4" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>用户名</th>
+                                    <th>姓名</th>
+                                    <th>修改会员信息</th>
+                                </tr>
+                                </thead>
+                                {% for content in agent %}
+                                    <tr>
+                                        <td>{{ content }}</td>
+                                        <td>{{ content.name }}</td>
+                                        <td>
+                                            <a href="{{ path('edituserprofile',{'id':content.id}) }}"><button class="btn btn-primary">修改代理信息</button></a>
+                                            <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#products_list1").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+            $('#products_list3').DataTable();
+            $('#products_list4').DataTable();
+        });
+    </script>
+    <script>
+        function deletestock(id){
+            if(confirm('你确定删除该股票信息吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_stock_2/"+id;
+            }
+        }
+
+        function deleteinsurance(id){
+            if(confirm('你确定删除该保险信息吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_insurance_2/"+id;
+            }
+        }
+
+        function deleteuser(id){
+            if(confirm('你确定删除该用户吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_user/"+id;
+            }
+        }
+
+    </script>
+{% endblock %}

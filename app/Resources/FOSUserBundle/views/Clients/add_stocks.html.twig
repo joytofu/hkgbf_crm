@@ -1,0 +1,43 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}添加股票信息{% endblock %}
+{% block content %}
+
+{{ form_start(form) }}
+    {{ form_row(form.stock_id) }}
+    {{ form_row(form.stock_name) }}
+    {{ form_row(form.buy_date) }}
+    {{ form_row(form.position) }}
+    {{ form_row(form.buying_price) }}
+    {{ form_row(form.current_price) }}
+    <button type="submit">提交</button>
+{{ form_end(form) }}
+
+{% endblock %}
+
+
+
+
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#products_list1").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+{% endblock %}

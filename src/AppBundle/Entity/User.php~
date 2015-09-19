@@ -1,0 +1,96 @@
+<?php
+namespace AppBundle\Entity;
+
+use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping\ManyToOne;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="fos_user")
+ */
+class User extends BaseUser
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Invitation")
+     * @ORM\JoinColumn(referencedColumnName="code")
+     */
+    protected $invitation;
+
+
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Group",inversedBy="id")
+     */
+    protected $group_id = 1;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group", inversedBy="users")
+     * @ORM\JoinTable(name="fos_user_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $roles;
+
+    public function __construct()
+    {
+        parent::__construct();
+        // your own logic
+    }
+
+    public function setInvitation(Invitation $invitation)
+    {
+        $this->invitation = $invitation;
+    }
+
+    public function getInvitation()
+    {
+        return $this->invitation;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set group_id
+     *
+     * @param integer $groupId
+     * @return User
+     */
+    public function setGroupId($groupId)
+    {
+        $this->group_id = $groupId;
+
+        return $this;
+    }
+
+    /**
+     * Get group_id
+     *
+     * @return integer 
+     */
+    public function getGroupId()
+    {
+        return $this->group_id;
+    }
+
+
+}

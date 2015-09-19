@@ -1,0 +1,101 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+    <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block hidden_username %}{{ username }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">客户个人信息</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>手机号码</th>
+                    <th>电子邮件</th>
+                    <th>公司名称</th>
+                    <th>联系地址</th>
+                    <th>会员级别</th>
+                    <th>会员状态</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for value in data %}
+                <tr>
+                    <td><a href="{{ path('productdetail',{'id':value.id}) }}" target="_blank">{{ value.username }}</a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('edituserprofile',{'id':value.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
+                    <td>{{ value.name }}</td>
+                    <td>{{ value.cellphone }}</td>
+                    <td>{{ value.email }}</td>
+                    <td>{{ value.company }}</td>
+                    <td>{{ value.province }}{{ value.city }}{{ value.district }}{% if value.address_detail is defined %}{{ value.address_detail }}{% endif %}</td>
+                    <td>
+                        {% if value.groupid==1 %}普通会员
+                        {% elseif value.groupid==2 %}<b style="color:#f39c12">金卡会员</b>
+                            {% elseif value.groupid==3 %}<b style="color:#c7254e">钻石会员</b>
+                        {% elseif value.groupid==4 %}<b style="color:darkblue">渠道代理</b>{% endif %}
+                    </td>
+                    <td>
+                        {% if value.enabled==1 %}
+                        <span class="label label-success">已审核</span>
+                        {% else %}
+                        <button id="{{ value.id }}" value="{{ value.id }}" class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
+                            <script>
+                                $(document).ready(function(){
+                                    $("#{{ value.id }}").click(function(){
+                                        $.ajax({
+                                            type:"POST",
+                                            url:"/admin/setenabled/"+$("#{{ value.id }}").val(),
+                                            success:function(data){
+                                                var $verified = "<span class='label label-success'>已审核</span>";
+                                                    $("#{{ value.id }}").replaceWith($verified);
+
+                                             }
+                                        });
+                                    });
+                                });
+                            </script>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div><!-- /.box-body -->
+    </div>
+    </div>
+    </div>
+{% endblock %}
+{% block page_header %}{% if is_granted('ROLE_SUPER_ADMIN') %}所有用户{% else %}我的客户{% endif %}{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <!--SlimScroll-->
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <!--FastClick-->
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#example1").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+
+{% endblock %}
