@@ -5,6 +5,7 @@ parameters:
     database_name: hkgbf_crm
     database_user: root
     database_password: null
+    database_path: '%kernel.root_dir%/data/hkgbf-crm.sqlite'
     mailer_transport: smtp
     mailer_host: smtp.163.com
     mailer_user: hkgbfmail@163.com
