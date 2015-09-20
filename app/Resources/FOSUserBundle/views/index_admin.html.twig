@@ -33,7 +33,7 @@
                             <div class="item">
                                 <div class="notice_title"><h2>{{ data.title|raw }}</h2></div>
                                 <div class="notice_content">{{ data.content|raw }}</div>
-                                <img src="/img/notice/{{ i }}.png">
+                                <img src="{{ app.request.baseurl }}/img/notice/{{ i }}.png">
                             </div>
                              {% set i=i+1 %}
                             {% endfor %}

@@ -1,5 +1,0 @@
-_assetic:
-    resource: .
-    type: assetic
-_app:
-    resource: 'F:\wamp\www\hkgbf_crm\app/config/routing_dev.yml'

@@ -52,7 +52,7 @@
                                     $("#{{ value.id }}").click(function(){
                                         $.ajax({
                                             type:"POST",
-                                            url:"/admin/setenabled/"+$("#{{ value.id }}").val(),
+                                            url:"{{ app.request.baseurl }}/admin/setenabled/"+$("#{{ value.id }}").val(),
                                             success:function(data){
                                                 var $verified = "<span class='label label-success'>已审核</span>";
                                                     $("#{{ value.id }}").replaceWith($verified);
