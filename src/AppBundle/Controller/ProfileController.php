@@ -103,15 +103,24 @@ class ProfileController extends BaseProfileController
         $form = $this->createForm(new EditProfileType(),$user);
         $em = $this->getDoctrine()->getManager();
 
+        $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
+        $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
+        $address = $this->getCurrentAddress($user,$direct_cities);
+
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+
+            //将地址写入数组
+            $this->setAddress($em,$direct_cities,$user,$hkmt);
             $em->flush();
-            echo "<script>alert('修改成功')</script>";
+            $editprofile_url = $this->generateUrl('editprofile');
+            return new Response("<script>alert('修改成功');window.location.href='$editprofile_url';</script>");
         }
 
         return $this->render('FOSUserBundle:Profile:edit_profile.html.twig',array(
             'user'=>$user,
             'form'=>$form->createView(),
+            'address'=>$address,
             'username'=>$username));
     }
 
@@ -127,6 +136,80 @@ class ProfileController extends BaseProfileController
         $username = $user->getUsername();
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
         $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
+        $address = $this->getCurrentAddress($user,$direct_cities);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted()&&$form->isValid()){
+
+
+            //将地址写入数组
+            $this->setAddress($em,$direct_cities,$user,$hkmt);
+
+            $em->flush();
+            $group_url = $this->generateUrl('group');
+            return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
+        }
+
+        return $this->render('FOSUserBundle:Profile:edit_user_profile.html.twig',array(
+            'username'=>$username,
+            'address'=>$address,
+            'form'=>$form->createView(),
+            'id'=>$id));
+
+    }
+
+    protected function setAddress($em,$direct_cities,User $user,$hkmt){
+        //将地址写入数组
+        if($_POST['area']&&$_POST['area'][0]!=-1) {
+            $areaData = $em->getRepository('AppBundle:Area');
+            $add = array(); //储存省市区地址名称
+            foreach ($_POST['area'] as $value) {
+                $add[] = $areaData->find($value)->getName();
+            }
+            $add[] = $_POST['address_detail'];
+
+            //再将地址写入省市区镇，作经纬度之用
+            if (in_array($add[0], $direct_cities)) {   //4个直辖市、2个特别行政区和台湾
+                $user->setProvince($add[0]);
+                $user->setCity($add[0]);
+                if(!in_array($add[0],$hkmt)) {
+                    $user->setDistrict($add[1]);
+                    $user->setTown($add[2]);
+                }else{
+                    $user->setDistrict($add[2]);
+                }
+                $user->setAddressDetail($add[3]);
+                $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
+                    'province' => $user->getProvince(),
+                    'district' => $user->getDistrict()));
+                $this->setLatLng($latlng_data, $user);
+            } else {  //非直辖市
+                $user->setProvince($add[0]);
+                $user->setCity($add[1]);
+                if ($add[1] != "中山市") {  //非中山市
+                    $user->setDistrict($add[2]);
+                    $user->setTown($add[3]);
+                    if(!empty($add[4])) {
+                        $user->setAddressDetail($add[4]);
+                    }
+                    $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
+                        'province' => $user->getProvince(),
+                        'city' => $user->getCity(),
+                        'district' => $user->getDistrict()));
+                } else {  //是中山市
+                    $user->setTown($add[2]);
+                    $user->setAddressDetail($add[3]);
+                    $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
+                        'province' => $user->getProvince(),
+                        'city' => $user->getCity(),
+                        'district' => $user->getDistrict()));
+                }
+                $this->setLatLng($latlng_data, $user);
+            }
+        }
+    }
+
+    protected function getCurrentAddress(User $user,$direct_cities){
         $address = array();
         if($user->getProvince()&&!in_array($user->getProvince(),$direct_cities)){
             $address[] = $user->getProvince();
@@ -144,72 +227,7 @@ class ProfileController extends BaseProfileController
         }else{
             $address = null;
         }
-
-
-        $form->handleRequest($request);
-        if($form->isSubmitted()&&$form->isValid()){
-
-
-            //将地址写入数组
-            if($_POST['area']&&$_POST['area'][0]!=-1) {
-                $areaData = $em->getRepository('AppBundle:Area');
-                $add = array(); //储存省市区地址名称
-                foreach ($_POST['area'] as $value) {
-                    $add[] = $areaData->find($value)->getName();
-                }
-                $add[] = $_POST['address_detail'];
-
-                //再将地址写入省市区镇，作经纬度之用
-                if (in_array($add[0], $direct_cities)) {   //4个直辖市、2个特别行政区和台湾
-                    $user->setProvince($add[0]);
-                    $user->setCity($add[0]);
-                    if(!in_array($add[0],$hkmt)) {
-                        $user->setDistrict($add[1]);
-                        $user->setTown($add[2]);
-                    }else{
-                        $user->setDistrict($add[2]);
-                    }
-                    $user->setAddressDetail($add[3]);
-                    $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
-                        'province' => $user->getProvince(),
-                        'district' => $user->getDistrict()));
-                    $this->setLatLng($latlng_data, $user);
-                } else {  //非直辖市
-                    $user->setProvince($add[0]);
-                    $user->setCity($add[1]);
-                    if ($add[1] != "中山市") {  //非中山市
-                        $user->setDistrict($add[2]);
-                        $user->setTown($add[3]);
-                        if(!empty($add[4])) {
-                            $user->setAddressDetail($add[4]);
-                        }
-                        $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
-                            'province' => $user->getProvince(),
-                            'city' => $user->getCity(),
-                            'district' => $user->getDistrict()));
-                    } else {  //是中山市
-                        $user->setTown($add[2]);
-                        $user->setAddressDetail($add[3]);
-                        $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
-                            'province' => $user->getProvince(),
-                            'city' => $user->getCity(),
-                            'district' => $user->getDistrict()));
-                    }
-                    $this->setLatLng($latlng_data, $user);
-                }
-            }
-
-            $em->flush();
-            $group_url = $this->generateUrl('group');
-            return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
-        }
-
-        return $this->render('FOSUserBundle:Profile:edit_user_profile.html.twig',array(
-            'username'=>$username,
-            'address'=>$address,
-            'form'=>$form->createView(),
-            'id'=>$id));
-
+        return $address;
     }
 
     protected function setLatLng($latlng_data,$user){

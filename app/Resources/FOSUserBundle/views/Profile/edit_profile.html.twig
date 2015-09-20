@@ -29,8 +29,13 @@
             {{ form_row(form.company) }}
         </div>
         <div class="form-group">
-            {{ form_row(form.address) }}
+            <label class="control-label" for="editProfile_address">原地址</label>
+            <input type="text" class="form-control" value="{{ address }}" readonly>
         </div>
+        <div class="form-group" id="area">
+            <label class="control-label" for="editProfile_address">新地址</label>
+        </div>
+
 
 
     </div>
@@ -42,4 +47,53 @@
 
 {% endblock content %}
 {% block page_header %}用户信息{% endblock %}
+
+{% block private_js %}
+    <script type="text/javascript" src="{{ asset('js/area_picker/area.js') }}"></script>
+    <script>
+        $(function(){
+            add_select(0);
+
+            $('body').on('change', '#area select', function() {
+                var $me = $(this);
+                var $next = $me.next();
+
+                /**
+                 * 如果下一级已经是当前所选地区的子地区，则不进行处理
+                 */
+                if ($me.val() == $next.data('pid')) {
+                    return;
+
+                }
+                $me.nextAll().remove();
+                add_select($me.val());
+                var $textarea = "<textarea style='width: 100%' class='form-group has-feedback' name='address_detail' id='address_detail' rows='3' placeholder='请输入具体地址'></textarea>";
+                $('#area').append($textarea);
+            });
+
+            function add_select(pid) {
+                var area_names = area['name'+pid];
+                if (!area_names) {
+                    return false;
+                }
+                var area_codes = area['code'+pid];
+                var $select = $('<select>');
+                $select.attr('name', 'area[]');
+                $select.attr('class','form-control');
+                $select.data('pid', pid);
+                if (area_codes[0] != -1) {
+                    area_names.unshift("请选择地区");
+                    area_codes.unshift(-1);
+                }
+                for (var idx in area_codes) {
+                    var $option = $('<option>');
+                    $option.attr('value', area_codes[idx]);
+                    $option.text(area_names[idx]);
+                    $select.append($option);
+                }
+                $('#area').append($select);
+            };
+        });
+    </script>
+{% endblock %}
 
