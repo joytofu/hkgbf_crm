@@ -35,6 +35,7 @@ framework:
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"
+    cache:            false
     strict_variables: "%kernel.debug%"
     form_theme:
          - 'bootstrap_3_layout.html.twig'
@@ -57,7 +58,7 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
+        driver:   "%database_driver%"
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
@@ -70,6 +71,7 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #     path:     "%database_path%"
+
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
