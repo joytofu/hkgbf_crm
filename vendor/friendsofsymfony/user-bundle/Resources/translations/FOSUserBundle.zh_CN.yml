@@ -85,6 +85,7 @@ layout:
 # Form field labels
 form:
     group_name: 小组名称：
+    name: 姓名
     username: 用户名：
     email: 电子邮箱：
     current_password: 当前密码：
@@ -94,3 +95,7 @@ form:
     new_password_confirmation: 确认新密码：
     invitation: 邀请码:
     address: 地址:
+    roles: 角色权限:
+    cellphone: 手机号码:
+    company: 单位名称:
+    imageFile: 头像

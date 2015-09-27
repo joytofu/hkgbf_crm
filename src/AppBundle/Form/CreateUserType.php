@@ -13,12 +13,12 @@ class CreateUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username',null,array('label'=>'用户名'))
-            ->add('password',null,array('label'=>'密码'))
-            ->add('name',null,array('label'=>'姓名'))
-            ->add('email',null,array('label'=>'电子邮箱'))
-            ->add('cellphone',null,array('label'=>'手机号码'))
-            ->add('imageFile','vich_image',array('label'=>'头像'));
+            ->add('username',null,array('label'=>'form.username', 'translation_domain' => 'FOSUserBundle'))
+            ->add('password','password',array('label'=>'form.password', 'translation_domain' => 'FOSUserBundle'))
+            ->add('name',null,array('label'=>'form.name', 'translation_domain' => 'FOSUserBundle'))
+            ->add('email',null,array('label'=>'form.email', 'translation_domain' => 'FOSUserBundle'))
+            ->add('cellphone',null,array('label'=>'form.cellphone', 'translation_domain' => 'FOSUserBundle'))
+            ->add('imageFile','vich_image',array('label'=>'form.imageFile', 'required'=>false,'translation_domain' => 'FOSUserBundle'));
     }
 
     public function configureOptions(OptionsResolver $resolver)

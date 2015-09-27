@@ -19,6 +19,9 @@
                     <th>姓名</th>
                     <th>手机号码</th>
                     <th>会员状态</th>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <th>会员权限</th>
+                    {% endif %}
                     <th>已购买产品</th>
 
                 </tr>
@@ -52,6 +55,18 @@
                             </script>
                         {% endif %}
                     </td>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <td>
+                            {% if user.roles[0]=='ROLE_REGULAR' %}普通会员
+                            {% elseif user.roles[0]=='ROLE_GOLDEN' %}金卡会员
+                            {% elseif user.roles[0]=='ROLE_DIAMOND' %}钻石会员
+                            {% elseif user.roles[0]=='ROLE_AGENT' %}代理
+                            {% elseif user.roles[0]=='ROLE_AGENT_ADMIN' %}代理管理
+                            {% elseif user.roles[0]=='ROLE_ADMIN' %}普通管理员
+                            {% endif %}
+
+                        </td>
+                    {% endif %}
                     <td>
                         <input style="margin-left: 3%" type="checkbox" {% if user.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
                         <input style="margin-left: 3%" type="checkbox" {% if user.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
@@ -61,6 +76,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <a href="{{ path('create_user') }}"><button class="btn-microsoft">创建用户</button></a>
         </div><!-- /.box-body -->
     </div>
     </div>

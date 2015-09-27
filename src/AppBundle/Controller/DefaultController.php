@@ -255,15 +255,37 @@ class DefaultController extends Controller
     /**
      * @Route("/createuser", name="create_user")
      */
-    public function creatUser(){
+    public function creatUser(Request $request){
         $user = new User();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new CreateUserType(),$user);
+        $form->handleRequest($request);
 
-        if($form->isSubmitted()&&$form->isValid()){
+        if($form->isSubmitted()){
+            switch($_POST['roles']){
+                case 'ROLE_REGULAR':
+                    $user->setGroupId(1);
+                    break;
+                case 'ROLE_GOLDEN':
+                    $user->setGroupId(2);
+                    break;
+                case 'ROLE_DIAMOND':
+                    $user->setGroupId(3);
+                    break;
+                case 'ROLE_AGENT':
+                    $user->setGroupId(4);
+                    break;
+                case 'ROLE_AGENT_ADMIN':
+                    $user->setGroupId(5);
+                    break;
+                case 'ROLE_ADMIN':
+                    $user->setGroupId(6);
+                    break;
+            }
+            $user->setRoles(array($_POST['roles']));
             $em->persist($user);
             $em->flush();
-            return new Response("<script>alert('创建用户成功')</script>");
+            return new Response("<script>alert('创建用户成功');window.location.href='/admin/clientslist';</script>");
         }
 
         return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView()));

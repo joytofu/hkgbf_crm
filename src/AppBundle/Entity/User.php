@@ -64,7 +64,7 @@ class User extends BaseUser
      * @ORM\Column(type="integer",nullable=true)
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Group",inversedBy="id")
      */
-    protected $group_id = 1;
+    protected $group_id;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group", inversedBy="users")
@@ -126,37 +126,37 @@ class User extends BaseUser
     protected $insurance;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $province;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $city;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $district;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $town;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $address_detail;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",nullable=true)
      */
     protected $latitude;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",nullable=true)
      */
     protected $longitude;
 
