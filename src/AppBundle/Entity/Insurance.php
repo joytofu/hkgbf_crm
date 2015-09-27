@@ -30,6 +30,11 @@ class Insurance {
     /**
      * @ORM\Column(type="string")
      */
+    protected $insurance_number;
+
+    /**
+     * @ORM\Column(type="string")
+     */
     protected $type;
 
     /**
@@ -61,17 +66,11 @@ class Insurance {
      */
     protected $recognizee;
 
-    /**
-     * 投保年龄
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThanOrEqual("18")
-     */
-    protected $age_at_issue;
 
     /**
-     * 投保年限
+     * 已经缴费年期
      * @ORM\Column(type="integer")
-     * @Assert\GreaterThanOrEqual("10")
+     * @Assert\GreaterThanOrEqual("0")
      */
     protected $years;
 
@@ -80,21 +79,16 @@ class Insurance {
      */
     protected $born_date;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\Choice(choices={"男","女"})
-     */
-    protected $gender;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $is_smoking;
 
     /**
      * @ORM\Column(type="date")
      */
     protected $next_pay_date;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $verified = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="stocks")
@@ -118,6 +112,14 @@ class Insurance {
 
     public function setInsuranceName($insurance_name){
         $this->insurance_name = $insurance_name;
+    }
+
+    public function getInsuranceNumber(){
+        return $this->insurance_number;
+    }
+
+    public function setInsuranceNumber($insurance_number){
+        $this->insurance_number = $insurance_number;
     }
 
     public function getType(){
@@ -169,13 +171,7 @@ class Insurance {
         $this->recognizee = $recognizee;
     }
 
-    public function getAgeAtIssue(){
-        return $this->age_at_issue;
-    }
 
-    public function setAgeAtIssue($age_at_issue){
-        $this->age_at_issue = $age_at_issue;
-    }
 
     public function getYears(){
         return $this->years;
@@ -194,25 +190,6 @@ class Insurance {
         return $this;
     }
 
-    public function getGender(){
-        return $this->gender;
-    }
-
-    public function setGender($gender){
-        $this->gender = $gender;
-    }
-
-    public function IsSmoking(){
-        if($this->is_smoking==true){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public function setIsSmoking($is_smoking = false){
-        $this->is_smoking = $is_smoking;
-    }
 
     public function getNextPayDate(){
         return $this->next_pay_date;
@@ -229,6 +206,15 @@ class Insurance {
 
     public function setUser(User $user = null){
         $this->user = $user;
+    }
+
+    public function getVerified(){
+        return $this->verified;
+    }
+
+    public function setVerified($boolean){
+        $this->verified = (boolean) $boolean;
+        return $this;
     }
 
     public function __toString(){

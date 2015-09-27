@@ -24,7 +24,10 @@ class EditProfileType extends AbstractType
             ->add('cellphone','text',array('label'=>'手机号码'))
             ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
             ->add('company',null,array('label'=>'公司名称','translation_domain' => 'FOSUserBundle'))
-            ->add('imageFile','vich_image',array('label'=>'头像','allow_delete'=>'false','required'=>false));
+            ->add('imageFile','vich_image',array('label'=>'头像','allow_delete'=>'false','required'=>false))
+            ->add('if_stock_purchased','checkbox',array('required'=>false))
+            ->add('if_insurance_purchased','checkbox',array('required'=>false))
+            ->add('if_fund_purchased','checkbox',array('required'=>false));
     }
 
     public function configureOptions(OptionsResolver $resolver)

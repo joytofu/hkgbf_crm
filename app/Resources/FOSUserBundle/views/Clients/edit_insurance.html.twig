@@ -15,18 +15,17 @@
             <form role="form" method="post" action="{{ path('editinsurance',{'id':id}) }}">
                 <div class="box-body">
                     <div class="form-group">{{ form_row(form.insurance_name) }}</div>
+                    <div class="form-group">{{ form_row(form.insurance_number) }}</div>
                     <div class="form-group">{{ form_row(form.type) }}</div>
                     <div class="form-group">{{ form_row(form.insurance_premium) }}</div>
                     <div class="form-group">{{ form_row(form.sum_insured) }}</div>
                     <div class="form-group">{{ form_row(form.policy_holder) }}</div>
                     <div class="form-group">{{ form_row(form.recognizee) }}</div>
-                    <div class="form-group">{{ form_row(form.age_at_issue) }}</div>
-                    <div class="form-group">{{ form_row(form.years) }}</div>
                     <div class="form-group">{{ form_row(form.born_date) }}</div>
-                    <div class="form-group" style="width:13%">{{ form_row(form.gender) }}</div>
-                    <div class="form-group" style="width:13%">{{ form_row(form.is_smoking) }}</div>
                     <div class="form-group">{{ form_row(form.buy_date) }}</div>
+                    <div class="form-group">{{ form_row(form.years) }}</div>
                     <div class="form-group">{{ form_row(form.next_pay_date) }}</div>
+                    <div class="form-group">{{ form_row(form.verified) }}</div>
                 </div>
                 <div class="box-footer">
                     <button class="btn btn-primary" style="padding-top: 3px;font-size:14px" type="submit">提交</button>

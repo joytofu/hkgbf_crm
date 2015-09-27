@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Notice;
 use AppBundle\Entity\User;
+use AppBundle\Form\CreateUserType;
 use AppBundle\Form\DataTransformer\NoticeType;
 use AppBundle\Form\ModifyRoleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -155,15 +156,16 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         if($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $data = $em->getRepository('AppBundle:User')->findAll();
+            $users = $em->getRepository('AppBundle:User')->findAll();
         }else{
             $invitation = $user->getInvite();
-            $data = $em->getRepository('AppBundle:User')->findBy(array('invitation' => $invitation));
+            $users = $em->getRepository('AppBundle:User')->findBy(array('invitation' => $invitation));
         }
 
 
+
         return $this->render('FOSUserBundle:Clients:clientsList.html.twig',array(
-           'data'=>$data));
+           'users'=>$users));
     }
 
 
@@ -248,6 +250,23 @@ class DefaultController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('noticelist');
+    }
+
+    /**
+     * @Route("/createuser", name="create_user")
+     */
+    public function creatUser(){
+        $user = new User();
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new CreateUserType(),$user);
+
+        if($form->isSubmitted()&&$form->isValid()){
+            $em->persist($user);
+            $em->flush();
+            return new Response("<script>alert('创建用户成功')</script>");
+        }
+
+        return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView()));
     }
 
 

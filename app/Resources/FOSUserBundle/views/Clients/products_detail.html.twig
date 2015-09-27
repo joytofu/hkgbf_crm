@@ -9,7 +9,8 @@
             <!-- Custom Tabs -->
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab_1" data-toggle="tab">股票</a></li>
+                    <li class="active"><a href="#tab_0" data-toggle="tab">客户详细信息</a></li>
+                    <li><a href="#tab_1" data-toggle="tab">股票</a></li>
                     <li><a href="#tab_2" data-toggle="tab">保险</a></li>
                     <li><a href="#tab_3" data-toggle="tab">环球基金</a></li>
                     <li class="dropdown">
@@ -38,7 +39,32 @@
                     <li class="pull-right"><a href="{{ path('clientslist') }}" class="text-muted"><i class="fa fa-arrow-left">返回客户列表</i></a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab_1">
+                    <div class="tab-pane active" id="tab_0">
+                        <div class="box-body">
+                            <table id="user_data" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>电子邮箱</th>
+                                    <th>单位全称</th>
+                                    <th>单位地址</th>
+                                    <th>会员级别</th>
+                                </tr>
+                                </thead>
+                                <tr>
+                                    <td>{{ user_data.email }}</td>
+                                    <td>{{ user_data.company }}</td>
+                                    <td>{{ user_data.province }}{{ user_data.city }}{{ user_data.district }}{% if user_data.address_detail is defined %}{{ user_data.address_detail }}{% endif %}</td>
+                                    <td>{% if user_data.groupid==1 %}普通会员
+                                        {% elseif user_data.groupid==2 %}<b style="color:#f39c12">金卡会员</b>
+                                        {% elseif user_data.groupid==3 %}<b style="color:#c7254e">钻石会员</b>
+                                        {% elseif user_data.groupid==4 %}<b style="color:darkblue">渠道代理</b>{% endif %}
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab_1">
                         <div class="box-body">
                             <table id="products_list1" class="table table-bordered table-striped">
                                 <thead>
@@ -86,18 +112,17 @@
                                 <thead>
                                 <tr>
                                     <th>保险名称</th>
+                                    <th>保单编号</th>
                                     <th>保险类型</th>
                                     <th>购买日期</th>
                                     <th>投保人</th>
                                     <th>被保人</th>
                                     <th>保费(元)</th>
                                     <th>保额(元)</th>
-                                    <th>投保年龄</th>
-                                    <th>投保年限</th>
                                     <th>出生日期</th>
-                                    <th>性别</th>
-                                    <th>是否吸烟</th>
+                                    <th>已缴费年期</th>
                                     <th>下次续费日期</th>
+                                    <th>状态</th>
                                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                                         <th>修改</th>
                                     {% endif %}
@@ -107,18 +132,20 @@
                                 {% for data in insurance_data %}
                                     <tr>
                                         <td>{{ data.insuranceName }}</td>
+                                        <td>{{ data.insuranceNumber }}</td>
                                         <td>{{ data.type }}</td>
                                         <td>{{ data.buyDate|date('Y-m-d') }}</td>
                                         <td>{{ data.PolicyHolder }}</td>
                                         <td>{{ data.Recognizee }}</td>
                                         <td>{{ data.insurancePremium }}</td>
                                         <td>{{ data.sumInsured }}</td>
-                                        <td>{{ data.AgeAtIssue }}</td>
-                                        <td>{{ data.Years }}</td>
                                         <td>{{ data.BornDate|date('Y-m-d') }}</td>
-                                        <td>{{ data.gender }}</td>
-                                        <td>{% if data.isSmoking==0 %}否{% else %}是{% endif %}</td>
+                                        <td>{{ data.Years }}</td>
                                         <td>{{ data.NextPayDate|date('Y-m-d') }}</td>
+                                        <td>
+                                            {% if data.Verified==true %}<span class="label label-success">已审核</span>
+                                            {% else %}<span class="label label-warning">审核中</span>{% endif %}
+                                        </td>
 
                                         {% if is_granted('ROLE_SUPER_ADMIN') %}
                                             <td>

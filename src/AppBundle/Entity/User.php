@@ -160,6 +160,21 @@ class User extends BaseUser
      */
     protected $longitude;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $if_stock_purchased;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $if_insurance_purchased;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $if_fund_purchased;
+
 
     public function __construct()
     {
@@ -396,6 +411,35 @@ class User extends BaseUser
     public function setLongitude($longitude){
         $this->longitude = $longitude;
     }
+
+    public function getIfStockPurchased(){
+        return $this->if_stock_purchased;
+    }
+
+    public function setIfStockPurchased($boolean){
+        $this->if_stock_purchased = (boolean) $boolean;
+        return $this;
+    }
+
+    public function getIfInsurancePurchased(){
+        return $this->if_insurance_purchased;
+    }
+
+    public function setIfInsurancePurchased($boolean){
+        $this->if_insurance_purchased = (boolean) $boolean;
+        return $this;
+    }
+
+    public function getIfFundPurchased(){
+        return $this->if_fund_purchased;
+    }
+
+    public function setIfFundPurchased($boolean){
+        $this->if_fund_purchased = (boolean) $boolean;
+        return $this;
+    }
+
+
 
     /*public function __toString(){
         return (string) $this->getStocks();

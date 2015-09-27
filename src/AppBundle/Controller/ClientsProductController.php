@@ -40,6 +40,9 @@ class ClientsProductController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        //get private data of user
+        $user_data = $em->getRepository('AppBundle:User')->find($id);
+
         //get stock data of user
         $stock_data = $em->getRepository('AppBundle:Stock')->findBy(array('user'=>$id));
         $sum = 0;
@@ -58,6 +61,7 @@ class ClientsProductController extends Controller
 
 
         return $this->render('FOSUserBundle:Clients:products_detail.html.twig',array(
+            'user_data'=>$user_data,
             'stock_data'=>$stock_data,
             'insurance_data'=>$insurance_stock,
             'username'=>$username,
@@ -320,7 +324,7 @@ class ClientsProductController extends Controller
 
         if($form->isSubmitted()&&$form->isValid()){
             $em->flush();
-            return new Response("<script>alert('修改成功!')</script>");
+            return new Response("<script>alert('修改成功!');window.location.href='/admin/clientslist';</script>");
         }
 
         return $this->render('@FOSUser/Clients/edit_insurance.html.twig',array(

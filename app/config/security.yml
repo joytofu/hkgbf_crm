@@ -7,9 +7,9 @@ security:
 
     role_hierarchy:
             ROLE_REGULAR:     ROLE_USER
-            ROLE_ADMIN:       ROLE_USER
             ROLE_AGENT:       ROLE_AGENT
-            ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH,ROLE_AGENT]
+            ROLE_AGENT_ADMIN: ROLE_AGENT
+            ROLE_SUPER_ADMIN: [ROLE_ALLOWED_TO_SWITCH,ROLE_AGENT]
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
