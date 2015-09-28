@@ -231,12 +231,15 @@
                 <li class="header">HEADER</li>
                 <!-- Optionally, you can add icons to the links -->
                 <li {% if app.request.requestUri=="/admin/" %}class="active"{% endif %}><a href="{{ path('index') }}"><i class="fa fa-home"></i> <span>首页</span></a></li>
-                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li {% if app.request.requestUri=="/admin/clientslist" %}class="active"{% endif %}><a href="{{ path('clientslist') }}"><i class="fa fa-user"></i> <span>所有用户</span></a></li>
                 {% else %}
                     <li {% if app.request.requestUri=="/admin/clientslist" %}class="active"{% endif %}><a href="{{ path('clientslist') }}"><i class="fa fa-users"></i> <span>我的客户</span></a></li>
                 {% endif %}
-                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                {% if is_granted('ROLE_AGENT_ADMIN') %}
+                    <li {% if app.request.requestUri=="/admin/clientsofagents" %}class="active"{% endif %}><a href="{{ path('clientsofagents') }}"><i class="fa fa-user"></i> <span>下属代理及其客户</span></a></li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
                 <li {% if app.request.requestUri=="/admin/modifyrole" %}class="active"{% endif %}><a href="{{ path('group') }}"><i class="fa fa-users"></i> <span>用户分组</span></a></li>
                 <li {% if app.request.requestUri=="admin/noticelist" %}class="active"{% endif %}><a href="{{ path('noticelist') }}"><i class="fa fa-file"></i> <span>通知公告</span></a></li>
                 {% endif %}

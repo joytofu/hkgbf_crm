@@ -51,7 +51,7 @@ class ProfileController extends BaseProfileController
     /**
      * @Route("/edit/{id}",name="editUser")
      * @Method({"GET","POST"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editUser(User $user, Request $request)
     {
@@ -152,6 +152,7 @@ class ProfileController extends BaseProfileController
 
         return $this->render('FOSUserBundle:Profile:edit_user_profile.html.twig',array(
             'username'=>$username,
+            'user'=>$user,
             'address'=>$address,
             'form'=>$form->createView(),
             'id'=>$id));

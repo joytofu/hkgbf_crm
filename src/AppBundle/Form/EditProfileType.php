@@ -27,7 +27,8 @@ class EditProfileType extends AbstractType
             ->add('imageFile','vich_image',array('label'=>'头像','allow_delete'=>'false','required'=>false))
             ->add('if_stock_purchased','checkbox',array('required'=>false))
             ->add('if_insurance_purchased','checkbox',array('required'=>false))
-            ->add('if_fund_purchased','checkbox',array('required'=>false));
+            ->add('if_fund_purchased','checkbox',array('required'=>false))
+            ->add('pid','choice',array('label'=>'form.pid','translation_domain' => 'FOSUserBundle','choices'=>array('59'=>'agent_admin_001','60'=>'agent_admin_002')));
     }
 
     public function configureOptions(OptionsResolver $resolver)

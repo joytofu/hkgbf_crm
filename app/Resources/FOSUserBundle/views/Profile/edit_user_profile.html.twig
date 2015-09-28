@@ -38,12 +38,18 @@
         <div class="form-group" id="area">
             <label class="control-label" for="editProfile_address">新地址</label>
         </div>
+        {% if user.roles[0]=='ROLE_REGULAR' or user.roles[0]=='ROLE_GOLDEN' or user.roles[0]=='ROLE_DIAMOND' %}
         <div class="form-group">
             <input type="checkbox" id="editProfile_if_stock_purchased" name="editProfile[if_stock_purchased]" value="1">已买股票
             <input style="margin-left: 3%" type="checkbox" id="editProfile_if_insurance_purchased" name="editProfile[if_insurance_purchased]" value="1">已买保险
             <input style="margin-left: 3%" type="checkbox" id="editProfile_if_fund_purchased" name="editProfile[if_fund_purchased]" value="1">已买基金
-
         </div>
+        {% endif %}
+        {% if user.roles[0]=='ROLE_AGENT' %}
+        <div class="form-group">
+            {{ form_row(form.pid) }}
+        </div>
+        {% endif %}
 
     </div>
     <div class="box-footer">

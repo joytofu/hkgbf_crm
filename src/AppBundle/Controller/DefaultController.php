@@ -188,6 +188,26 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/clientsofagents", name="clientsofagents")
+     */
+    public function clientsOfAgents(){
+        $user = $this->getUser();
+        $pid = $user->getId();
+        $agents = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array('pid'=>$pid));
+        $invitations = array();
+        foreach($agents as $agent){
+            $invitations[] = $agent->getInvite();
+        }
+        $users_of_all_agents = array();
+        foreach($invitations as $invitation){
+            $users_of_all_agents[] = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array('invitation'=>$invitation));
+        }
+
+        return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'users_of_all_agents'=>$users_of_all_agents));
+
+    }
+
+    /**
      * @Route("/createnotice", name="createnotice")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      */

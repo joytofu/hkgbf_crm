@@ -67,11 +67,15 @@
 
                         </td>
                     {% endif %}
+                    {% if user.roles[0]=='ROLE_AGENT' or user.roles[0]=='ROLE_AGENT_ADMIN' %}
+                    <td></td>
+                    {% else %}
                     <td>
                         <input style="margin-left: 3%" type="checkbox" {% if user.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
                         <input style="margin-left: 3%" type="checkbox" {% if user.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
                         <input style="margin-left: 3%" type="checkbox" {% if user.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
                 </tbody>
