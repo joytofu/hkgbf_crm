@@ -20,6 +20,14 @@ class EditProfileType extends AbstractType
     {
         $builder
             ->add('username', null, array('label' => '用户名', 'translation_domain' => 'FOSUserBundle'))
+            ->add('plainPassword', 'repeated', array(
+                'type' => 'password',
+                'required'=>false,
+                'options' => array('translation_domain' => 'FOSUserBundle'),
+                'first_options' => array('label' => 'form.password'),
+                'second_options' => array('label' => 'form.password_confirmation'),
+                'invalid_message' => 'fos_user.password.mismatch',
+            ))
             ->add('name',null,array('label'=>'姓名','translation_domain' => 'FOSUserBundle'))
             ->add('cellphone','text',array('label'=>'手机号码'))
             ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))

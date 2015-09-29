@@ -37,6 +37,7 @@ class ClientsProductController extends Controller
      * @ParamConverter("user", class="AppBundle:User")
      */
     public function product_detail($id, User $user){
+        $agent = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -61,6 +62,7 @@ class ClientsProductController extends Controller
 
 
         return $this->render('FOSUserBundle:Clients:products_detail.html.twig',array(
+            'agent'=>$agent,
             'user_data'=>$user_data,
             'stock_data'=>$stock_data,
             'insurance_data'=>$insurance_stock,

@@ -53,7 +53,6 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="index")
-     * @Security("has_role('ROLE_AGENT')")
      */
     public function showIndex(){
         $user = $this->getUser();
@@ -151,6 +150,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/clientslist",name="clientslist")
+     * @Security("has_role('ROLE_AGENT')")
      */
     public function showClients(){
         $user = $this->getUser();
@@ -194,6 +194,11 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $pid = $user->getId();
         $agents = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array('pid'=>$pid));
+        if(count($agents)==0){
+            $if_agent = false;
+        }else{
+            $if_agent = true;
+        }
         $invitations = array();
         foreach($agents as $agent){
             $invitations[] = $agent->getInvite();
@@ -203,7 +208,7 @@ class DefaultController extends Controller
             $users_of_all_agents[] = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array('invitation'=>$invitation));
         }
 
-        return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'users_of_all_agents'=>$users_of_all_agents));
+        return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'users_of_all_agents'=>$users_of_all_agents,'if_agent'=>$if_agent));
 
     }
 

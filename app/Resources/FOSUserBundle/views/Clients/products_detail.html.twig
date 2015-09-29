@@ -13,6 +13,7 @@
                     <li><a href="#tab_1" data-toggle="tab">股票</a></li>
                     <li><a href="#tab_2" data-toggle="tab">保险</a></li>
                     <li><a href="#tab_3" data-toggle="tab">环球基金</a></li>
+                    {% if agent.roles[0]!='ROLE_AGENT_ADMIN' %}
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             产品资料上传 <span class="caret"></span>
@@ -37,6 +38,8 @@
                         </ul>
                     </li>
                     <li class="pull-right"><a href="{{ path('clientslist') }}" class="text-muted"><i class="fa fa-arrow-left">返回客户列表</i></a></li>
+                    {% endif %}
+                    <li class="pull-right"><a href="{{ path('clientsofagents') }}" class="text-muted"><i class="fa fa-arrow-left">返回代理列表</i></a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_0">

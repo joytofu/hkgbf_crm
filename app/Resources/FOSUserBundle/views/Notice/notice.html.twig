@@ -16,13 +16,13 @@
                 <div class="box-body pad">
                     <form method="post" action="{{ path('createnotice') }}">
                         <input type="text" placeholder="请输入标题" style="width:300px;height:35px" class="form-group" id="Notice_title" name="Notice[title]">
-                        <textarea id="Notice_content" name="Notice[content]" class="textarea" placeholder="请输入内容......" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                        <script id="container" name="Notice[content]" type="text/plain"></script>
                         <button class="btn btn-instagram" type="submit">提交</button>
                         {{ form_widget(form._token) }}
                     </form>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 
@@ -39,6 +39,25 @@
             $(".textarea").wysihtml5();
         });
     </script>
+
+    {#富文本编辑器#}
+    <script src="{{ asset('ueditor/ueditor.config.js') }}"></script>
+    <script src="{{ asset('ueditor/ueditor.all.js') }}"></script>
+    <script type="text/javascript">
+        var ue = UE.getEditor('container',{
+            toolbars:[
+                    [
+                        'fullscreen', 'source', '|', 'undo', 'redo', '|', 'bold','italic', 'underline',
+                        'strikethrough',  'pasteplain', 'preview', 'removeformat', 'unlink','cleardoc',
+                        'fontfamily', 'fontsize', 'simpleupload', 'insertimage','link','emotion','justifyleft',
+                        'justifyright','justifycenter','justifyjustify', 'forecolor','backcolor', 'attachment',
+                        'imagecenter','autotypeset','inserttable','charts',
+
+                    ]
+            ]
+        });
+    </script>
+
 
 
 
