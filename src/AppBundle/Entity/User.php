@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use AppBundle\Entity\ToDo;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 
@@ -130,6 +132,11 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Insurance",mappedBy="user",cascade={"persist"})
      */
     protected $insurance;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ToDo",mappedBy="user",cascade={"persist"})
+     */
+    protected $todos;
 
     /**
      * @ORM\Column(type="string",nullable=true)
@@ -452,6 +459,8 @@ class User extends BaseUser
         $this->if_fund_purchased = (boolean) $boolean;
         return $this;
     }
+
+    
 
 
 

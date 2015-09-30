@@ -1,0 +1,71 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+    <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block hidden_username %}{{ username }}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">我的待办事项</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>分类</th>
+                            <th>标题</th>
+                            <th>内容</th>
+                            <th>创建时间</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for todo in todos %}
+                            <tr>
+                                <td>{{ todo.category }}</td>
+                                <td>{{ todo.title }}</td>
+                                <td>{{ todo.content }}</td>
+                                <td>{{ todo.createdAt|date('Y-m-d') }}</td>
+                                <td>
+                                    {% if todo.status==0 %}<span class="label label-warning">待办中</span>
+                                    {% else %}<span class="label label-success">已完成</span>{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{{ path('createtodo') }}"><button class="btn-microsoft">创建待办事项</button></a>
+                </div><!-- /.box-body -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block page_header %}待办事项{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <!--SlimScroll-->
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <!--FastClick-->
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#example1").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+
+{% endblock %}

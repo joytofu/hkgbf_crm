@@ -1,0 +1,112 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}待办事项{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">待办中事项</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">已经完成事项</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                        <div class="box-body">
+                            <table id="todo_data" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>代理</th>
+                                    <th>分类</th>
+                                    <th>标题</th>
+                                    <th>内容</th>
+                                    <th>创建时间</th>
+                                    <th>待办完成</th>
+                                </tr>
+                                </thead>
+                                {% for todo in todos %}
+                                <tr>
+                                        <td>{{ todo.user.name }}</td>
+                                        <td>{{ todo.category }}</td>
+                                        <td>{{ todo.title }}</td>
+                                        <td>{{ todo.content }}</td>
+                                        <td>{{ todo.createdAt|date('Y-m-d') }}</td>
+                                        <td><button class="btn-instagram" onclick="setFinish({{ todo.id }})">完成待办</button></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab_2">
+                        <div class="box-body">
+                            <table id="todo_data" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>代理</th>
+                                    <th>分类</th>
+                                    <th>标题</th>
+                                    <th>内容</th>
+                                    <th>创建时间</th>
+                                    <th>待办完成</th>
+                                </tr>
+                                </thead>
+                                {% for finished_todo in finished_todos %}
+                                <tr>
+                                        <td>{{ finished_todo.user.name }}</td>
+                                        <td>{{ finished_todo.category }}</td>
+                                        <td>{{ finished_todo.title }}</td>
+                                        <td>{{ finished_todo.content }}</td>
+                                        <td>{{ finished_todo.createdAt|date('Y-m-d') }}</td>
+                                    <td><button class="btn-danger" onclick="undoFinish({{ finished_todo.id }})">取消完成</button></td>
+
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <!--SlimScroll-->
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <!--FastClick-->
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#todo_data").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+    <script>
+        function setFinish(id){
+            if(confirm('确定完成该待办事项吗？')){
+                window.location.href="{{ app.request.baseUrl }}/admin/setfinish/"+id;
+            }
+        }
+
+        function undoFinish(id){
+            if(confirm('确定取消该完成事项吗？')){
+                window.location.href="{{ app.request.baseUrl }}/admin/undofinish/"+id;
+            }
+        }
+
+    </script>
+
+{% endblock %}

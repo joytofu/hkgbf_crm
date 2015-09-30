@@ -100,3 +100,7 @@ form:
     company: 单位名称:
     imageFile: 头像
     pid: 选择上级代理管理
+    category: 请选择分类
+    title: 标题
+    content: 内容
+
