@@ -14,7 +14,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_1">
                         <div class="box-body">
-                            <table id="todo_data" class="table table-bordered table-striped">
+                            <table id="alltodo_data" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>代理</th>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="tab-pane" id="tab_2">
                         <div class="box-body">
-                            <table id="todo_data" class="table table-bordered table-striped">
+                            <table id="alltodo_data" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>代理</th>
@@ -83,7 +83,9 @@
     <script src="{{ asset('js/demo.js') }}"></script>
     <script>
         $(function () {
-            $("#todo_data").DataTable();
+            $("#alltodo_data").DataTable({
+                "order":[[4,"desc"]]
+            });
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,

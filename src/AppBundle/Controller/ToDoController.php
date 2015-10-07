@@ -26,15 +26,20 @@ class ToDoController extends Controller
      * @Route("/createtodo", name="createtodo")
      */
     public function createToDo(Request $request){
-        $user = $this->getUser();
-        $todo = new ToDo();
         $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $admins = $em->getRepository('AppBundle:User')->findBy(array('group_id'=>6));
+        $todo = new ToDo();
 
         $form = $this->createForm(new ToDoType(),$todo);
         $form->handleRequest($request);
 
         if($form->isSubmitted()&&$form->isValid()){
             $todo->setUser($user);
+            foreach($admins as $admin){
+                $admin->setAllToDos($todo);
+            }
+
             $em->persist($todo);
             $em->flush();
             return new Response("<script>alert('添加待办事项成功！');window.location.href='/admin/';</script>");
@@ -49,7 +54,7 @@ class ToDoController extends Controller
      */
     public function ToDoListOfUser(){
         $user = $this->getUser();
-        $todos = $this->getDoctrine()->getRepository('AppBundle:ToDo')->findBy(array('user'=>$user));
+        $todos = $this->getDoctrine()->getRepository('AppBundle:ToDo')->findBy(array('user'=>$user),array('createdAt'=>'DESC'));
         return $this->render('FOSUserBundle:ToDo:todo_list.html.twig',array('todos'=>$todos));
     }
 
@@ -59,8 +64,8 @@ class ToDoController extends Controller
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function allToDoList(){
-        $todos = $this->getDoctrine()->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
-        $finished_todos = $this->getDoctrine()->getRepository('AppBundle:ToDo')->findBy(array('status'=>true));
+        $todos = $this->getDoctrine()->getRepository('AppBundle:ToDo')->findBy(array('status'=>false),array('createdAt'=>'DESC'));
+        $finished_todos = $this->getDoctrine()->getRepository('AppBundle:ToDo')->findBy(array('status'=>true),array('createdAt'=>'DESC'));
 
         return $this->render('@FOSUser/ToDo/all_todo_list.html.twig',array('todos'=>$todos,'finished_todos'=>$finished_todos));
     }
@@ -71,8 +76,9 @@ class ToDoController extends Controller
      * @ParamConverter("todo", class="AppBundle:ToDo")
      */
     public function setFinish(ToDo $toDo){
+        $em = $this->getDoctrine()->getManager();
         $toDo->setStatus(true);
-        $this->getDoctrine()->getManager()->flush();
+        $em->flush();
 
         return $this->redirectToRoute('alltodolist');
     }
@@ -88,5 +94,6 @@ class ToDoController extends Controller
 
         return $this->redirectToRoute('alltodolist');
     }
+
 
 }

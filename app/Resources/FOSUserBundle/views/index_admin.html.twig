@@ -88,6 +88,24 @@
         </div>
     </div>
 
+        {% if is_granted('ROLE_ADMIN') %}
+        {#新待办模块#}
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-purple">
+            <div class="inner">
+                <h3>{{ app.user.getUnfinishedToDos|length }}</h3>
+                <p><b>待办事项</b></p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-ios-alarm"></i>
+            </div>
+            <a href="{{ path('alltodolist') }}" class="small-box-footer">
+                查看详情 <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+        {% endif %}
+
     {#甜甜圈统计图块#}
      <div class="col-md-6">
          <div class="box box-danger">

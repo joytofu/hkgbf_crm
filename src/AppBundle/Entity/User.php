@@ -10,8 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
-use AppBundle\Entity\ToDo;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 
@@ -139,6 +137,11 @@ class User extends BaseUser
     protected $todos;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\ToDo",inversedBy="admins",cascade={"persist"})
+     */
+    protected $alltodos;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected $province;
@@ -194,6 +197,8 @@ class User extends BaseUser
         parent::__construct();
         $this->roles = array('ROLE_REGULAR');
         $this->stocks = new ArrayCollection();
+        $this->todos = new ArrayCollection();
+        $this->alltodos = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
 
         // your own logic
@@ -460,7 +465,52 @@ class User extends BaseUser
         return $this;
     }
 
-    
+    public function addToDo(\AppBundle\Entity\ToDo $todos){
+        $this->todos[] = $todos;
+        return $this;
+    }
+
+    public function removeToDo(\AppBundle\Entity\ToDo $todos){
+        $this->todos->removeElement($todos);
+    }
+
+    public function getToDos()
+    {
+        return $this->todos;
+    }
+
+
+    public function getAllToDos(){
+        return $this->alltodos;
+    }
+
+    public function setAllToDos($alltodos){
+        $this->alltodos[] = $alltodos;
+        return $this;
+    }
+
+    /**
+     * This is for admin
+     */
+    public function getUnfinishedToDos(){
+        $unfinishedToDos = array();
+        foreach($this->getAllToDos() as $alltodo){
+            if($alltodo->getStatus()==false){
+                $unfinishedToDos[] = $alltodo;
+            }
+        }
+        return $unfinishedToDos;
+    }
+
+    public function getOngoingToDos(){
+        $ongoingToDos = array();
+        foreach($this->getToDos() as $todo){
+            if($todo->getStatus()==false){
+                $ongoingToDos[] = $todo;
+            }
+        }
+        return $ongoingToDos;
+    }
 
 
 

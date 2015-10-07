@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\JoinTable;
 
 /**
  * @ORM\Entity
@@ -60,8 +62,17 @@ class ToDo
      */
     protected $user;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="alltodos",cascade={"persist"})
+     */
+    protected $admins;
+
+
+
+
     public function __construct(){
         $this->createdAt = new \DateTime('now');
+        $this->admins = new ArrayCollection();
     }
 
     public function getId(){
@@ -118,6 +129,18 @@ class ToDo
     public function setUser(User $user = null){
         $this->user = $user;
     }
+
+    public function getAdmins(){
+        return $this->admins;
+    }
+
+
+    public function setAdmins(User $admins){
+        $this->admins[] = $admins;
+        return $this;
+    }
+
+
 
 
 
