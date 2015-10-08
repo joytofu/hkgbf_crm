@@ -1,5 +1,10 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
 {% block private_css %}
+    <style>
+        .todo{}
+        .todo .tools{display: none;  float: right;  color: #0F5966;}
+        .todo:hover .tools{display:inline-block}
+    </style>
     <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
     <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
 {% endblock %}
@@ -15,7 +20,7 @@
                     <table id="todo_data" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th>分类</th>
+                            <th style="width:60px">分类</th>
                             <th>标题</th>
                             <th>内容</th>
                             <th>创建时间</th>
@@ -23,11 +28,16 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <ul class="todo-list ui-sortable">
                         {% for todo in todos %}
                             <tr>
                                 <td>{{ todo.category }}</td>
                                 <td>{{ todo.title }}</td>
-                                <td>{{ todo.content }}</td>
+                                <td class="todo">{{ todo.content }}<div class="tools">
+                                        <a href="{{ path('edittodo',{'id':todo.id}) }}"><i class="fa fa-edit"></i></a>
+                                        <a href="javascript:void(0)" onclick="deleteToDo({{ todo.id }})"><i class="fa fa-trash-o"></i></a>
+                                    </div>
+                                </td>
                                 <td>{{ todo.createdAt|date('Y-m-d') }}</td>
                                 <td>
                                     {% if todo.status==0 %}<span class="label label-warning">待办中</span>
@@ -35,6 +45,7 @@
                                 </td>
                             </tr>
                         {% endfor %}
+                        </ul>
                         </tbody>
                     </table>
                     <a href="{{ path('createtodo') }}"><button class="btn-microsoft">创建待办事项</button></a>
@@ -68,6 +79,13 @@
                 "autoWidth": false
             });
         });
+    </script>
+    <script>
+        function deleteToDo(id){
+            if(confirm('你确定删除该待办事项吗？')){
+                window.location.href="{{ app.request.baseurl }}/admin/deletetodo/"+id;
+            }
+        }
     </script>
 
 {% endblock %}

@@ -89,15 +89,39 @@ class DefaultController extends Controller
         }
 
         //chart
-        $invitation = $user->getInvite();
-        $normal_clients = $user_data->findBy(array('invitation'=>$invitation,'group_id'=>1));
-        $normal_clients_num = count($normal_clients);
+        $role = $user->getRoles();
+        if($role[0]=='ROLE_AGENT') {
+            $invitation = $user->getInvite();
+            $normal_clients = $user_data->findBy(array('invitation' => $invitation, 'group_id' => 1));
+            $normal_clients_num = count($normal_clients);
 
-        $golden_clients = $user_data->findBy(array('invitation'=>$invitation,'group_id'=>2));
-        $golden_clients_num = count($golden_clients);
+            $golden_clients = $user_data->findBy(array('invitation' => $invitation, 'group_id' => 2));
+            $golden_clients_num = count($golden_clients);
 
-        $diamond_clients = $user_data->findBy(array('invitation'=>$invitation,'group_id'=>3));
-        $diamond_clients_num = count($diamond_clients);
+            $diamond_clients = $user_data->findBy(array('invitation' => $invitation, 'group_id' => 3));
+            $diamond_clients_num = count($diamond_clients);
+        }elseif($role[0]=='ROLE_AGENT_ADMIN'){
+            $pid = $user->getId();
+            $agents = $user_data->findBy(array('pid'=>$pid));
+            $normal_clients = array();
+            $golden_clients = array();
+            $diamond_clients = array();
+            foreach($agents as $agent){
+                $normal_clients = array_merge($normal_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'group_id'=>1)));
+                $golden_clients = array_merge($golden_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'group_id'=>2)));
+                $diamond_clients = array_merge($diamond_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'group_id'=>3)));
+            }
+            $normal_clients_num = count($normal_clients);
+            $golden_clients_num = count($golden_clients);
+            $diamond_clients_num = count($diamond_clients);
+        }elseif($this->isGranted('ROLE_ADMIN')){
+            $normal_clients = $user_data->findBy(array('group_id'=>1));
+            $golden_clients = $user_data->findBy(array('group_id'=>2));
+            $diamond_clients = $user_data->findBy(array('group_id'=>3));
+            $normal_clients_num = count($normal_clients);
+            $golden_clients_num = count($golden_clients);
+            $diamond_clients_num = count($diamond_clients);
+        }
 
 
 

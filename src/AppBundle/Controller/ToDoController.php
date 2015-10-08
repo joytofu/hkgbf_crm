@@ -95,5 +95,31 @@ class ToDoController extends Controller
         return $this->redirectToRoute('alltodolist');
     }
 
+    /**
+     * @Route("/edittodo/{id}", name="edittodo")
+     * @ParamConverter("todo", class="AppBundle:ToDo")
+     */
+    public function editToDo(ToDo $todo, Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new ToDoType(),$todo);
+
+        if($form->isSubmitted()&&$form->isValid()){
+            $em->flush();
+        }
+
+        return $this->render('@FOSUser/ToDo/createToDo.html.twig',array('form'=>$form->createView()));
+    }
+
+    /**
+     * @Route("/deletetodo/{id}", name="deletetodo")
+     * @ParamConverter("todo", class="AppBundle:ToDo")
+     */
+    public function deleteToDo(ToDo $todo){
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($todo);
+        $em->flush();
+        return $this->redirectToRoute('todolist');
+    }
+
 
 }

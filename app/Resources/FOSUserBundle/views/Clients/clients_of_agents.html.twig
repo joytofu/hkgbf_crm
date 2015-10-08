@@ -30,6 +30,7 @@
                                     <th>姓名</th>
                                     <th>手机号码</th>
                                     <th>会员状态</th>
+                                    <th>会员级别</th>
                                     <th>已购买产品</th>
                                 </tr>
                                 </thead>
@@ -43,6 +44,12 @@
                                             <span class="label label-success">已审核</span>
                                             {% else %}
                                             <button class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.roles[0]=='ROLE_REGULAR' %}普通会员
+                                            {% elseif user.roles[0]=='ROLE_GOLDEN' %}金卡会员
+                                            {% elseif user.roles[0]=='ROLE_DIAMOND' %}钻石会员
                                             {% endif %}
                                         </td>
                                         <td>

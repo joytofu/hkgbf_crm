@@ -1,10 +1,14 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
 {% block hidden_username %}{{ username }}{% endblock %}
-{% block page_header %}创建待办事项{% endblock %}
+{% block page_header %}待办事项{% endblock %}
 {% block content %}
     <div class="box box-primary" style="width: 50%;margin-left: 23%">
         <div class="box-header with-border">
-            <h3 class="box-title">创建待办事项</h3>
+            <h3 class="box-title">
+    {% if app.request.requestUri=="/admin/createtodo" %}创建待办事项
+        {% else %}修改待办事项
+            {% endif %}
+        </h3>
         </div>
 
         {{ form_start(form) }}

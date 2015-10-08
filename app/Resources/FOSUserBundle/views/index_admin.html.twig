@@ -55,16 +55,21 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <h3>{{ clients_num }}</h3>
-                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                {% if is_granted('ROLE_ADMIN') %}
                 <p><b>当前用户总数</b></p>
-                 {% else %}
+                 {% elseif app.user.roles[0]=='ROLE_AGENT' %}
                      <p><b>当前客户总数</b></p>
+                {% elseif app.user.roles[0]=='ROLE_AGENT_ADMIN' %}
+                    <p><b>下属代理客户总数</b></p>
                   {% endif %}
             </div>
             <div class="icon">
                 <i class="ion ion-person-stalker"></i>
             </div>
             <a href="{{ path('clientslist') }}" class="small-box-footer">
+            {% if app.user.roles[0]=='ROLE_AGENT_ADMIN' %}
+             <a href="{{ path('clientsofagents') }}" class="small-box-footer">
+              {% endif %}
                 查看详情 <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -110,7 +115,7 @@
      <div class="col-md-6">
          <div class="box box-danger">
              <div class="box-header with-border">
-                 <h3 class="box-title">会员分类统计</h3>
+                 <h3 class="box-title">客户分类统计</h3>
                  <div class="box-tools pull-right">
                      <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                  </div>
