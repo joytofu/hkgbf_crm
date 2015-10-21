@@ -200,14 +200,14 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         if($this->isGranted('ROLE_SUPER_ADMIN')){
-            $data = $em->getRepository('AppBundle:User')->findBy(array('enabled'=>false));
+            $users = $em->getRepository('AppBundle:User')->findBy(array('enabled'=>false));
         }else{
             $invitation = $user->getInvite();
-            $data = $em->getRepository('AppBundle:User')->findBy(array('invitation'=>$invitation,'enabled'=>false));
+            $users = $em->getRepository('AppBundle:User')->findBy(array('invitation'=>$invitation,'enabled'=>false));
         }
 
         return $this->render('FOSUserBundle:Clients:clientsList.html.twig',array(
-            'data'=>$data));
+            'users'=>$users));
 
     }
 

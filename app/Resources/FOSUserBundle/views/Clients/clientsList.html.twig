@@ -37,22 +37,7 @@
                         {% if user.enabled==1 %}
                         <span class="label label-success">已审核</span>
                         {% else %}
-                        <button id="{{ user.id }}" value="{{ user.id }}" class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
-                            <script>
-                                $(document).ready(function(){
-                                    $("#{{ user.id }}").click(function(){
-                                        $.ajax({
-                                            type:"POST",
-                                            url:"{{ app.request.baseurl }}/admin/setenabled/"+$("#{{ user.id }}").val(),
-                                            success:function(data){
-                                                var $verified = "<span class='label label-success'>已审核</span>";
-                                                    $("#{{ user.id }}").replaceWith($verified);
-
-                                             }
-                                        });
-                                    });
-                                });
-                            </script>
+                        <button id="set_enable" value="{{ user.id }}" class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
                         {% endif %}
                     </td>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
@@ -108,6 +93,21 @@
                 "info": true,
                 "autoWidth": false
             });
+        });
+    </script>
+    <script>  /*审核用户*/
+        $(document).on('click','#set_enable',function(){
+                var $user_id = $(this).val();
+                var mythis = $(this);
+                $.ajax({
+                    type:"POST",
+                    url:"{{ app.request.baseurl }}/admin/setenabled/"+$user_id,
+                    success:function(){
+                        var $verified = "<span class='label label-success' id='set_diable' value=" + $user_id +">已审核</span>";
+                        mythis.replaceWith($verified);
+
+                    }
+                });
         });
     </script>
 
