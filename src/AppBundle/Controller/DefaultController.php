@@ -56,6 +56,9 @@ class DefaultController extends Controller
      */
     public function showIndex(){
         $user = $this->getUser();
+        if(!$user){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
         $username = $user->getUsername();
         $em = $this->getDoctrine()->getManager();
         $user_data = $em->getRepository('AppBundle:User');
