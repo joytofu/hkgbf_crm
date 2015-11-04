@@ -104,31 +104,6 @@ class User extends BaseUser
      */
     private $updatedAt;
 
-    /**
-     * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     *
-     * @Vich\UploadableField(mapping="upload_product", fileNameProperty="productName")
-     *
-     * @var File
-     */
-    private $productFile;
-
-    /**
-     * @ORM\Column(type="string", length=255,name="product_name",nullable=true)
-     *
-     * @var string
-     */
-    private $productName;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Stock",mappedBy="user",cascade={"persist"})
-     */
-    protected $stocks;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Insurance",mappedBy="user",cascade={"persist"})
-     */
-    protected $insurance;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ToDo",mappedBy="user",cascade={"persist"})
@@ -141,66 +116,20 @@ class User extends BaseUser
     protected $alltodos;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="user",cascade={"persist"})
      */
-    protected $province;
-
-    /**
-     * @ORM\Column(type="string",nullable=true)
-     */
-    protected $city;
-
-    /**
-     * @ORM\Column(type="string",nullable=true)
-     */
-    protected $district;
-
-    /**
-     * @ORM\Column(type="string",nullable=true)
-     */
-    protected $town;
-
-    /**
-     * @ORM\Column(type="string",nullable=true)
-     */
-    protected $address_detail;
-
-    /**
-     * @ORM\Column(type="float",nullable=true)
-     */
-    protected $latitude;
-
-    /**
-     * @ORM\Column(type="float",nullable=true)
-     */
-    protected $longitude;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $if_stock_purchased;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $if_insurance_purchased;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $if_fund_purchased;
+    protected $clients;
 
 
     public function __construct()
     {
         parent::__construct();
         $this->roles = array('ROLE_REGULAR');
-        $this->stocks = new ArrayCollection();
         $this->todos = new ArrayCollection();
         $this->alltodos = new ArrayCollection();
+        $this->clients = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
 
-        // your own logic
     }
 
     public function getPid(){
@@ -339,130 +268,8 @@ class User extends BaseUser
     public function setProductFile(File $product = null)
     {
         $this->productFile = $product;
-
     }
 
-    /**
-     * @return File
-     */
-    public function getProductFile()
-    {
-        return $this->productFile;
-    }
-
-    /**
-     * @param string $imageName
-     */
-    public function setProductName($productName)
-    {
-        $this->productName = $productName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProductName()
-    {
-        return $this->productName;
-    }
-
-
-    public function addStock(\AppBundle\Entity\Stock $stocks){
-        $this->stocks[] = $stocks;
-        return $this;
-    }
-
-    public function removeStock(\AppBundle\Entity\Stock $stocks){
-        $this->stocks->removeElement($stocks);
-    }
-
-    public function getStocks()
-    {
-        return $this->stocks;
-        }
-
-    public function getProvince(){
-        return $this->province;
-    }
-
-    public function setProvince($province){
-        $this->province = $province;
-    }
-
-    public function getCity(){
-        return $this->city;
-    }
-
-    public function setCity($city){
-        $this->city = $city;
-    }
-
-    public function getDistrict(){
-        return $this->district;
-    }
-
-    public function setDistrict($district){
-        $this->district = $district;
-    }
-
-    public function getTown(){
-        return $this->town;
-    }
-
-    public function setTown($town){
-        $this->town = $town;
-    }
-
-    public function getAddressDetail(){
-        return $this->address_detail;
-    }
-
-    public function setAddressDetail($address_detail){
-        $this->address_detail = $address_detail;
-    }
-
-    public function getLatitude(){
-        return $this->latitude;
-    }
-
-    public function setLatitude($latitude){
-        $this->latitude = $latitude;
-    }
-
-    public function getLongitude(){
-        return $this->longitude;
-    }
-
-    public function setLongitude($longitude){
-        $this->longitude = $longitude;
-    }
-
-    public function getIfStockPurchased(){
-        return $this->if_stock_purchased;
-    }
-
-    public function setIfStockPurchased($boolean){
-        $this->if_stock_purchased = (boolean) $boolean;
-        return $this;
-    }
-
-    public function getIfInsurancePurchased(){
-        return $this->if_insurance_purchased;
-    }
-
-    public function setIfInsurancePurchased($boolean){
-        $this->if_insurance_purchased = (boolean) $boolean;
-        return $this;
-    }
-
-    public function getIfFundPurchased(){
-        return $this->if_fund_purchased;
-    }
-
-    public function setIfFundPurchased($boolean){
-        $this->if_fund_purchased = (boolean) $boolean;
-        return $this;
-    }
 
     public function addToDo(\AppBundle\Entity\ToDo $todos){
         $this->todos[] = $todos;
@@ -511,11 +318,19 @@ class User extends BaseUser
         return $ongoingToDos;
     }
 
+    public function getClients(){
+        return $this->clients;
+    }
 
+    public function addClient(Client $client){
+        $this->clients[] = $client;
+        return $this;
+    }
 
-    /*public function __toString(){
-        return (string) $this->getStocks();
-    }*/
+    public function removeClient(Client $client){
+        $this->clients->remove($client);
+    }
+
 }
 
 

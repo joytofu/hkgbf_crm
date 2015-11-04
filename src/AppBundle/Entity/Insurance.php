@@ -54,26 +54,53 @@ class Insurance {
      */
     protected $sum_insured;
 
+
     /**
      * 投保人姓名
      * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_name;
 
+    /**
+     * @ORM\Column(type="string")
+     */
     protected $ph_name_pinyin;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
     protected $ph_id_card;
+
+    /**
+     * @ORM\Column(type="date")
+     */
     protected $ph_id_card_expired_date;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
     protected $ph_traffic_permit;
+
+    /**
+     * @ORM\Column(type="date")
+     */
     protected $ph_traffic_permit_expired_date;
-    protected $ph_gender;
-    protected $ph_marriage;
-    protected $ph_is_smoking;
-    protected $ph_born_date;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
     protected $ph_tel;
-    protected 
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_email;
 
-
+    protected $ph_employer;
+    protected $ph_position;
+    protected $profession;
+    protected $company_address;
+    protected $company_tel;
 
 
     /**
@@ -82,18 +109,42 @@ class Insurance {
      */
     protected $r_name;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_gender;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_marriage;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $r_is_smoking;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $r_born_date;
+
+    protected $r_tel;
+    protected $r_email;
+    protected $r_address;
+    protected $r_id_address;
+    protected $height;
+    protected $weight;
+    protected $relaitionship_with_ph;
+
+
 
     /**
      * 已经缴费年期
      * @ORM\Column(type="integer")
      * @Assert\GreaterThanOrEqual("0")
      */
-    protected $years;
-
-    /**
-     * @ORM\Column(type="date")
-     */
-    protected $born_date;
+    protected $paid_years;
 
 
     /**
@@ -107,11 +158,10 @@ class Insurance {
     protected $verified = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="stocks")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Clients", inversedBy="insurances")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
-    protected $user;
-
+    protected $client;
 
 
     public function getId(){
@@ -188,20 +238,20 @@ class Insurance {
     }
 
 
-    public function getYears(){
-        return $this->years;
+    public function getPaidYears(){
+        return $this->paid_years;
     }
 
-    public function setYears($years){
-        $this->years = $years;
+    public function setPaidYears($paid_years){
+        $this->paid_years = $paid_years;
     }
 
-    public function getBornDate(){
-        return $this->born_date;
+    public function getRBornDate(){
+        return $this->r_born_date;
     }
 
-    public function setBornDate(\DateTime $date = null){
-        $this->born_date = $date;
+    public function setRBornDate(\DateTime $date = null){
+        $this->r_born_date = $date;
         return $this;
     }
 
@@ -215,13 +265,6 @@ class Insurance {
         return $this;
     }
 
-    public function getUser(){
-        return $this->user;
-    }
-
-    public function setUser(User $user = null){
-        $this->user = $user;
-    }
 
     public function getVerified(){
         return $this->verified;
@@ -232,8 +275,13 @@ class Insurance {
         return $this;
     }
 
-    public function __toString(){
-        return (string) $this->getUser();
+    public function getClient(){
+        return $this->client;
     }
+
+    public function setClient(Client $client = null){
+        $this->client = $client;
+    }
+
 
 }

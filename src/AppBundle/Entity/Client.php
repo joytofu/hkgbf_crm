@@ -14,10 +14,10 @@ use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="clients")
+ * @ORM\Table(name="client")
  * @Vich\Uploadable
  */
-class Clients
+class Client
 {
     /**
      * @ORM\Id
@@ -84,14 +84,14 @@ class Clients
     private $productName;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Stock",mappedBy="user",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Stock",mappedBy="clients",cascade={"persist"})
      */
     protected $stocks;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Insurance",mappedBy="user",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Insurance",mappedBy="client",cascade={"persist"})
      */
-    protected $insurance;
+    protected $insurances;
 
     /**
      * @ORM\Column(type="string",nullable=true)
@@ -148,21 +148,21 @@ class Clients
      */
     protected $vip;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="clients")
+     * @ORM\JoinColumn(name="agent_id", referencedColumnName="id")
+     */
+    protected $user;
+
 
     public function __construct()
     {
         $this->stocks = new ArrayCollection();
+        $this->insurances = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
         $this->vip = "普通会员";
     }
 
-    public function getPid(){
-        return $this->pid;
-    }
-
-    public function setPid($pid){
-        $this->pid = $pid;
-    }
 
     public function setName($name)
     {

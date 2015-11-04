@@ -63,10 +63,10 @@ class Stock
     protected $note;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="stocks")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="stocks")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
-    protected $user;
+    protected $client;
 
 
     public function getId(){
