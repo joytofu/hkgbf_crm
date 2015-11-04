@@ -111,6 +111,7 @@ class ClientsProductController extends Controller
             if(strstr($filename,'stock')){
                 $this->upload_stock_data($user,$dataNum,$excel_data);
             }elseif(strstr($filename,'insurance')){
+                print_r($excel_data);exit;
                 $this->upload_insurance_data($user,$dataNum,$excel_data);
             }elseif(strstr($filename,'fund')){
                 $this->upload_fund_data($user,$dataNum,$excel_data);

@@ -23,48 +23,64 @@ class Insurance {
 
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $insurance_name;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $insurance_number;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date",nullable=true)
      */
     protected $buy_date;
 
     /**
      * 保费
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $insurance_premium;
 
     /**
      * 保额
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $sum_insured;
 
     /**
-     * 投保人
-     * @ORM\Column(type="string")
+     * 投保人姓名
+     * @ORM\Column(type="string",nullable=true)
      */
-    protected $policy_holder;
+    protected $ph_name;
+
+    protected $ph_name_pinyin;
+    protected $ph_id_card;
+    protected $ph_id_card_expired_date;
+    protected $ph_traffic_permit;
+    protected $ph_traffic_permit_expired_date;
+    protected $ph_gender;
+    protected $ph_marriage;
+    protected $ph_is_smoking;
+    protected $ph_born_date;
+    protected $ph_tel;
+    protected 
+
+
+
+
 
     /**
-     * 受保人
-     * @ORM\Column(type="string")
+     * 受保人姓名
+     * @ORM\Column(type="string",nullable=true)
      */
-    protected $recognizee;
+    protected $r_name;
 
 
     /**
@@ -155,22 +171,21 @@ class Insurance {
         $this->sum_insured = $sum_insured;
     }
 
-    public function getPolicyHolder(){
-        return $this->policy_holder;
+    public function getPhName(){
+        return $this->ph_name;
     }
 
-    public function setPolicyHolder($policy_holder){
-        $this->policy_holder = $policy_holder;
+    public function setPhName($ph_name){
+        $this->ph_name = $ph_name;
     }
 
-    public function getRecognizee(){
-        return $this->recognizee;
+    public function getRName(){
+        return $this->r_name;
     }
 
-    public function setRecognizee($recognizee){
-        $this->recognizee = $recognizee;
+    public function setRecognizeeName($r_name){
+        $this->r_name = $r_name;
     }
-
 
 
     public function getYears(){
