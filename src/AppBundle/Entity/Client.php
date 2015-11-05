@@ -382,6 +382,14 @@ class Client
         return $this;
     }
 
+    public function getVip(){
+        return $this->vip;
+    }
+
+    public function setVip($vip){
+        $this->vip = $vip;
+    }
+
 }
 
 

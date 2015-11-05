@@ -16,7 +16,7 @@ class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('group_id','entity',array(
+        $builder->add('roles','choice',array(
             'label'=>'Group',
             'translation_domain'=>'FOSUserBundle',
             'choices'=>array('1'=>'普通会员','2'=>'金卡会员','3'=>'钻石会员')));

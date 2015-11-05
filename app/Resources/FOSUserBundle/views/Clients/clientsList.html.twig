@@ -15,24 +15,20 @@
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                    <th>用户名</th>
                     <th>姓名</th>
                     <th>手机号码</th>
                     <th>会员状态</th>
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <th>会员权限</th>
-                    {% endif %}
+                    <th>客户级别</th>
                     <th>已购买产品</th>
 
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in users %}
+                {% for client in clients %}
                 <tr>
-                    <td><a href="{{ path('productdetail',{'id':user.id}) }}" target="_blank">{{ user.username }}</a>
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('edituserprofile',{'id':user.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.cellphone }}</td>
+                    <td><a href="{{ path('productdetail',{'id':client.id}) }}" target="_blank">{{ client.name }}</a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('edituserprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
+                    <td>{{ client.cellphone }}</td>
                     <td>
                         {% if user.enabled==1 %}
                         <span class="label label-success">已审核</span>
@@ -40,27 +36,17 @@
                         <button id="set_enable" value="{{ user.id }}" class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
                         {% endif %}
                     </td>
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        <td>
-                            {% if user.roles[0]=='ROLE_REGULAR' %}普通会员
-                            {% elseif user.roles[0]=='ROLE_GOLDEN' %}金卡会员
-                            {% elseif user.roles[0]=='ROLE_DIAMOND' %}钻石会员
-                            {% elseif user.roles[0]=='ROLE_AGENT' %}代理
-                            {% elseif user.roles[0]=='ROLE_AGENT_ADMIN' %}代理管理
-                            {% elseif user.roles[0]=='ROLE_ADMIN' %}普通管理员
-                            {% endif %}
-
-                        </td>
-                    {% endif %}
-                    {% if user.roles[0]=='ROLE_AGENT' or user.roles[0]=='ROLE_AGENT_ADMIN' or user.roles[0]=='ROLE_ADMIN' %}
-                    <td></td>
-                    {% else %}
                     <td>
-                        <input style="margin-left: 3%" type="checkbox" {% if user.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
-                        <input style="margin-left: 3%" type="checkbox" {% if user.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
-                        <input style="margin-left: 3%" type="checkbox" {% if user.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
+                            {% if client.vip=='普通会员' %}普通会员
+                            {% elseif client.vip=='金卡会员' %}金卡会员
+                            {% elseif client.vip=='钻石会员' %}钻石会员
+                            {% endif %}
                     </td>
-                    {% endif %}
+                    <td>
+                        <input style="margin-left: 3%" type="checkbox" {% if client.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
+                        <input style="margin-left: 3%" type="checkbox" {% if client.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
+                        <input style="margin-left: 3%" type="checkbox" {% if client.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>

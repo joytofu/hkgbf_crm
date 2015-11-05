@@ -35,15 +35,9 @@ class ProfileController extends BaseProfileController
     {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('AppBundle:User')->find($id);
-        $groupId = $user->getGroupId();
-        $groupName = $em->getRepository('AppBundle:Group')->find($groupId)->getName();
-
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
-            'user' => $user,
-            'groupName'=>$groupName,
-
-
+            'user' => $user
         ));
     }
 

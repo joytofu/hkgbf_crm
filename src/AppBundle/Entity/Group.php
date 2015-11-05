@@ -26,7 +26,7 @@ class Group extends BaseGroup
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="groups")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="groups")
      */
     protected $users;
 

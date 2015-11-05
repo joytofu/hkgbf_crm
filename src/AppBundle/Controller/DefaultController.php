@@ -35,16 +35,16 @@ class DefaultController extends Controller
         $data = $em->getRepository('AppBundle:User');
 
         //ROLE_REGULAR
-        $regular = $data->findBy(array('group_id'=>1));
+        $regular = $data->findBy(array('roles'=>array('ROLE_REGULAR')));
 
         //ROLE_GOLDEN
-        $golden = $data->findBy(array('group_id'=>2));
+        $golden = $data->findBy(array('roles'=>array('ROLE_GOLDEN')));
 
         //ROLE_DIAMOND
-        $diamond = $data->findBy(array('group_id'=>3));
+        $diamond = $data->findBy(array('roles'=>array('ROLE_DIAMOND')));
 
         //ROLE_AGENT
-        $agent = $data->findBy(array('group_id'=>4));
+        $agent = $data->findBy(array('roles'=>array('ROLE_AGENT')));
 
 
         return $this->render('FOSUserBundle:Clients:group.html.twig',array('regular'=>$regular,'golden'=>$golden,'diamond'=>$diamond,'agent'=>$agent));
@@ -95,13 +95,13 @@ class DefaultController extends Controller
         $role = $user->getRoles();
         if($role[0]=='ROLE_AGENT') {
             $invitation = $user->getInvite();
-            $normal_clients = $user_data->findBy(array('invitation' => $invitation, 'group_id' => 1));
+            $normal_clients = $user_data->findBy(array('invitation' => $invitation, 'roles' => array('ROLE_REGULAR')));
             $normal_clients_num = count($normal_clients);
 
-            $golden_clients = $user_data->findBy(array('invitation' => $invitation, 'group_id' => 2));
+            $golden_clients = $user_data->findBy(array('invitation' => $invitation, 'roles' => array('ROLE_GOLDEN')));
             $golden_clients_num = count($golden_clients);
 
-            $diamond_clients = $user_data->findBy(array('invitation' => $invitation, 'group_id' => 3));
+            $diamond_clients = $user_data->findBy(array('invitation' => $invitation, 'roles' => array('ROLE_DIAMOND')));
             $diamond_clients_num = count($diamond_clients);
         }elseif($role[0]=='ROLE_AGENT_ADMIN'){
             $pid = $user->getId();
@@ -110,17 +110,17 @@ class DefaultController extends Controller
             $golden_clients = array();
             $diamond_clients = array();
             foreach($agents as $agent){
-                $normal_clients = array_merge($normal_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'group_id'=>1)));
-                $golden_clients = array_merge($golden_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'group_id'=>2)));
-                $diamond_clients = array_merge($diamond_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'group_id'=>3)));
+                $normal_clients = array_merge($normal_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'roles'=>array('ROLE_REGULAR'))));
+                $golden_clients = array_merge($golden_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'roles'=>array('ROLE_GOLDEN'))));
+                $diamond_clients = array_merge($diamond_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'roles'=>array('ROLE_DIAMOND'))));
             }
             $normal_clients_num = count($normal_clients);
             $golden_clients_num = count($golden_clients);
             $diamond_clients_num = count($diamond_clients);
         }elseif($this->isGranted('ROLE_ADMIN')){
-            $normal_clients = $user_data->findBy(array('group_id'=>1));
-            $golden_clients = $user_data->findBy(array('group_id'=>2));
-            $diamond_clients = $user_data->findBy(array('group_id'=>3));
+            $normal_clients = $user_data->findBy(array('roles'=>array('ROLE_REGULAR')));
+            $golden_clients = $user_data->findBy(array('roles'=>array('ROLE_GOLDEN')));
+            $diamond_clients = $user_data->findBy(array('roles'=>array('ROLE_DIAMOND')));
             $normal_clients_num = count($normal_clients);
             $golden_clients_num = count($golden_clients);
             $diamond_clients_num = count($diamond_clients);
@@ -157,16 +157,16 @@ class DefaultController extends Controller
         $data->setRoles(array($role));
         switch($role){
             case 'ROLE_REGULAR':
-                $data->setGroupId('1');
+                $data->setRoles(array('ROLE_REGULAR'));
                 break;
             case 'ROLE_GOLDEN':
-                $data->setGroupId('2');
+                $data->setRoles(array('ROLE_GOLDEN'));
                 break;
             case 'ROLE_DIAMOND':
-                $data->setGroupId('3');
+                $data->setRoles(array('ROLE_DIAMOND'));
                 break;
             case 'ROLE_AGENT':
-                $data->setGroupId('4');
+                $data->setRoles(array('ROLE_AGENT'));
                 break;
         }
         $em->flush();
@@ -183,16 +183,13 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         if($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $users = $em->getRepository('AppBundle:User')->findAll();
+            $clients = $em->getRepository('AppBundle:Client')->findAll();
         }else{
-            $invitation = $user->getInvite();
-            $users = $em->getRepository('AppBundle:User')->findBy(array('invitation' => $invitation));
+            $clients = $em->getRepository('AppBundle:Client')->findBy(array('user'=>$user));
         }
 
-
-
         return $this->render('FOSUserBundle:Clients:clientsList.html.twig',array(
-           'users'=>$users));
+           'clients'=>$clients));
     }
 
 
@@ -316,22 +313,22 @@ class DefaultController extends Controller
         if($form->isSubmitted()){
             switch($_POST['roles']){
                 case 'ROLE_REGULAR':
-                    $user->setGroupId(1);
+                    $user->setRoles(array('ROLE_REGULAR'));
                     break;
                 case 'ROLE_GOLDEN':
-                    $user->setGroupId(2);
+                    $user->setRoles(array('ROLE_GOLDEN'));
                     break;
                 case 'ROLE_DIAMOND':
-                    $user->setGroupId(3);
+                    $user->setRoles(array('ROLE_DIAMOND'));
                     break;
                 case 'ROLE_AGENT':
-                    $user->setGroupId(4);
+                    $user->setRoles(array('ROLE_AGENT'));
                     break;
                 case 'ROLE_AGENT_ADMIN':
-                    $user->setGroupId(5);
+                    $user->setRoles(array('ROLE_AGENT_ADMIN'));
                     break;
                 case 'ROLE_ADMIN':
-                    $user->setGroupId(6);
+                    $user->setRoles(array('ROLE_ADMIN'));
                     break;
             }
             $user->setRoles(array($_POST['roles']));

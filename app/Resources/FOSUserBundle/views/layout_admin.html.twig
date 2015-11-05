@@ -92,51 +92,7 @@
                     </li><!-- /.messages-menu -->
 
                     <!-- Notifications Menu -->
-                    <li class="dropdown notifications-menu">
-                        <!-- Menu toggle button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <span class="label label-warning">{{ app.user.getUnfinishedToDos|length }}</span>
-                            {% elseif app.user.roles[0]=='ROLE_AGENT' %}
-                            <span class="label label-warning">{{ app.user.getOngoingToDos|length }}</span>
-                            {% endif %}
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <li class="header">你有{{ app.user.getUnfinishedToDos|length }}条待办事项</li>
-                            {% elseif app.user.roles[0]=='ROLE_AGENT' %}
-                            <li class="header">你有{{ app.user.getOngoingToDos|length }}条未完成待办</li>
-                            {% endif %}
-                            <li>
-                                <!-- Inner Menu: contains the notifications -->
-                                <ul class="menu">
-                                    {% if is_granted('ROLE_ADMIN')%}
-                                    {% for unfinishedtodo in app.user.getUnfinishedToDos %}
-                                    <li><!-- start notification -->
-                                        <a href="{{ path('alltodolist') }}">
-                                            <i class="fa fa-users text-aqua"></i> {{ unfinishedtodo.getTitle() }}
-                                        </a>
-                                    </li><!-- end notification -->
-                                    {% endfor %}
-                                    {% elseif app.user.roles[0]=='ROLE_AGENT' %}
-                                        {% for ongoingtodo in app.user.getOngoingToDos %}
-                                            <li>
-                                                <a href="{{ path('todolist') }}">
-                                                    <i class="fa fa-calendar text-navy"></i> {{ ongoingtodo.getTitle() }}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    {% endif %}
-                                </ul>
-                            </li>
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <li class="footer"><a href="{{ path('alltodolist') }}">查看全部</a></li>
-                            {% elseif app.user.roles[0]=='ROLE_AGENT' %}
-                            <li class="footer"><a href="{{ path('todolist') }}">查看全部</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
+                   {{ render(controller('AppBundle:ToDo:getUnfinishedTodos')) }}
                     <!-- Tasks Menu -->
                     <li class="dropdown tasks-menu">
                         <!-- Menu Toggle Button -->

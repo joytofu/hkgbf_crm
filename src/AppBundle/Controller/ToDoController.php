@@ -8,7 +8,7 @@
 
 namespace AppBundle\Controller;
 
-
+use AppBundle\Entity\Insurance;
 use AppBundle\Entity\ToDo;
 use AppBundle\Form\ToDoType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpKernel\Client;
+
 /**
  * @Route("/admin")
  */
@@ -28,18 +30,13 @@ class ToDoController extends Controller
     public function createToDo(Request $request){
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $admins = $em->getRepository('AppBundle:User')->findBy(array('group_id'=>6));
         $todo = new ToDo();
 
-        $form = $this->createForm(new ToDoType(),$todo);
+        $form = $this->createForm(new ToDoType($user),$todo);
         $form->handleRequest($request);
 
         if($form->isSubmitted()&&$form->isValid()){
             $todo->setUser($user);
-            foreach($admins as $admin){
-                $admin->setAllToDos($todo);
-            }
-
             $em->persist($todo);
             $em->flush();
             return new Response("<script>alert('添加待办事项成功！');window.location.href='/admin/';</script>");
@@ -120,6 +117,19 @@ class ToDoController extends Controller
         $em->flush();
         return $this->redirectToRoute('todolist');
     }
+
+    public function getUnfinishedTodosAction(){
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $role = $user->getRoles();
+        if($role[0]=='ROLE_ADMIN'||$role[0]=='ROLE_SUPER_ADMIN'){
+            $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
+        }elseif($role[0]=='ROLE_AGENT'){
+            $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('user'=>$user,'status'=>false));
+        }
+        return $this->render('@FOSUser/ToDo/unfinished_todos.html.twig',array('unfinished_todos'=>$unfinished_todos));
+    }
+
 
 
 }

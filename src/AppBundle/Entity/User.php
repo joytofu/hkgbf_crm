@@ -52,7 +52,6 @@ class User extends BaseUser
     protected $company;
 
 
-
     /**
      * this is invitation code corresponding to invite property, which users register account with.
      * @ORM\Column(type="string",nullable=true)
@@ -64,22 +63,6 @@ class User extends BaseUser
      * @ORM\Column(type="string",nullable=true)
      */
     protected $invite;
-
-
-    /**
-     * @ORM\Column(type="integer",nullable=true)
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Group",inversedBy="id")
-     */
-    protected $group_id;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group", inversedBy="users")
-     * @ORM\JoinTable(name="fos_user_user_group",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     */
-    protected $groups;
 
 
     /**
@@ -110,10 +93,6 @@ class User extends BaseUser
      */
     protected $todos;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\ToDo",inversedBy="admins",cascade={"persist"})
-     */
-    protected $alltodos;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="user",cascade={"persist"})
@@ -126,7 +105,6 @@ class User extends BaseUser
         parent::__construct();
         $this->roles = array('ROLE_REGULAR');
         $this->todos = new ArrayCollection();
-        $this->alltodos = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
 
@@ -196,28 +174,6 @@ class User extends BaseUser
         return $this->id;
     }
 
-    /**
-     * Set group_id
-     *
-     * @param integer $groupId
-     * @return User
-     */
-    public function setGroupId($groupId)
-    {
-        $this->group_id = $groupId;
-
-        return $this;
-    }
-
-    /**
-     * Get group_id
-     *
-     * @return integer
-     */
-    public function getGroupId()
-    {
-        return $this->group_id;
-    }
 
 
     /**
@@ -265,12 +221,6 @@ class User extends BaseUser
     }
 
 
-    public function setProductFile(File $product = null)
-    {
-        $this->productFile = $product;
-    }
-
-
     public function addToDo(\AppBundle\Entity\ToDo $todos){
         $this->todos[] = $todos;
         return $this;
@@ -285,38 +235,6 @@ class User extends BaseUser
         return $this->todos;
     }
 
-
-    public function getAllToDos(){
-        return $this->alltodos;
-    }
-
-    public function setAllToDos($alltodos){
-        $this->alltodos[] = $alltodos;
-        return $this;
-    }
-
-    /**
-     * This is for admin
-     */
-    public function getUnfinishedToDos(){
-        $unfinishedToDos = array();
-        foreach($this->getAllToDos() as $alltodo){
-            if($alltodo->getStatus()==false){
-                $unfinishedToDos[] = $alltodo;
-            }
-        }
-        return $unfinishedToDos;
-    }
-
-    public function getOngoingToDos(){
-        $ongoingToDos = array();
-        foreach($this->getToDos() as $todo){
-            if($todo->getStatus()==false){
-                $ongoingToDos[] = $todo;
-            }
-        }
-        return $ongoingToDos;
-    }
 
     public function getClients(){
         return $this->clients;

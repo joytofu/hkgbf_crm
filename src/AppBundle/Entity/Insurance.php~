@@ -1,0 +1,418 @@
+<?php
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="insurance")
+ */
+class Insurance {
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $insurance_name;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $insurance_number;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $type;
+
+    /**
+     * @ORM\Column(type="date",nullable=true)
+     */
+    protected $buy_date;
+
+    /**
+     * 保费
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    protected $insurance_premium;
+
+    /**
+     * 保额
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    protected $sum_insured;
+
+
+    /**
+     * 投保人姓名
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $ph_name;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_name_pinyin;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $ph_id_card;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $ph_id_card_expired_date;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $ph_traffic_permit;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $ph_traffic_permit_expired_date;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $ph_id_address;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $ph_tel;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_email;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_gender;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_marriage;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $ph_is_smoking;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $ph_born_date;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $ph_height;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $ph_weight;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_employer;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_position;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ph_profession;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $ph_company_address;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $ph_company_tel;
+
+
+    /**
+     * 受保人姓名
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $r_name;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_name_pinyin;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $r_id_card;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $r_id_card_expired_date;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $r_traffic_permit;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $r_traffic_permit_expired_date;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_gender;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_marriage;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $r_is_smoking;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $r_born_date;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $r_tel;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_email;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $r_address;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $r_id_address;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $r_height;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $r_weight;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $relaitionship_with_ph;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_employer;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_position;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $r_profession;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $r_company_address;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $r_company_tel;
+
+
+
+    /**
+     * 已经缴费年期
+     * @ORM\Column(type="integer")
+     * @Assert\GreaterThanOrEqual("0")
+     */
+    protected $paid_years;
+
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $next_pay_date;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $verified = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Clients", inversedBy="insurances")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     */
+    protected $client;
+
+
+    public function getId(){
+        return $this->id;
+    }
+
+    public function setId($id){
+        $this->id = $id;
+    }
+
+    public function getInsuranceName(){
+        return $this->insurance_name;
+    }
+
+    public function setInsuranceName($insurance_name){
+        $this->insurance_name = $insurance_name;
+    }
+
+    public function getInsuranceNumber(){
+        return $this->insurance_number;
+    }
+
+    public function setInsuranceNumber($insurance_number){
+        $this->insurance_number = $insurance_number;
+    }
+
+    public function getType(){
+        return $this->type;
+    }
+
+    public function setType($type){
+        $this->type = $type;
+    }
+
+    public function getBuyDate(){
+        return $this->buy_date;
+    }
+
+    public function setBuyDate(\DateTime $date = null){
+        $this->buy_date = $date;
+        return $this;
+    }
+
+    public function getInsurancePremium(){
+        return $this->insurance_premium;
+    }
+
+    public function setInsurancePremium($insurance_preminum){
+        $this->insurance_premium = $insurance_preminum;
+    }
+
+    public function getSumInsured(){
+        return $this->sum_insured;
+    }
+
+    public function setSumInsured($sum_insured){
+        $this->sum_insured = $sum_insured;
+    }
+
+    public function getPhName(){
+        return $this->ph_name;
+    }
+
+    public function setPhName($ph_name){
+        $this->ph_name = $ph_name;
+    }
+
+    public function getRName(){
+        return $this->r_name;
+    }
+
+    public function setRecognizeeName($r_name){
+        $this->r_name = $r_name;
+    }
+
+
+    public function getPaidYears(){
+        return $this->paid_years;
+    }
+
+    public function setPaidYears($paid_years){
+        $this->paid_years = $paid_years;
+    }
+
+    public function getRBornDate(){
+        return $this->r_born_date;
+    }
+
+    public function setRBornDate(\DateTime $date = null){
+        $this->r_born_date = $date;
+        return $this;
+    }
+
+
+    public function getNextPayDate(){
+        return $this->next_pay_date;
+    }
+
+    public function setNextPayDate(\DateTime $date = null){
+        $this->next_pay_date = $date;
+        return $this;
+    }
+
+
+    public function getVerified(){
+        return $this->verified;
+    }
+
+    public function setVerified($boolean){
+        $this->verified = (boolean) $boolean;
+        return $this;
+    }
+
+    public function getClient(){
+        return $this->client;
+    }
+
+    public function setClient(Client $client = null){
+        $this->client = $client;
+    }
+
+
+}

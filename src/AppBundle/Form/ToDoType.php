@@ -1,37 +1,45 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2015-9-30
- * Time: 9:16
- */
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Insurance;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ToDoType extends AbstractType
 {
+    private $user_obj;
+    public function __construct(User $user){   //����agent����
+        $this->user_obj = $user;
+    }
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('category','choice',array('placeholder'=>'请选择分类','choices'=>array('股票'=>'股票','保险'=>'保险','期货'=>'期货','基金'=>'基金')))
-            ->add('title','text',array('label'=>'form.title','translation_domain' => 'FOSUserBundle'))
-            ->add('content','textarea',array('label'=>'form.content','translation_domain' => 'FOSUserBundle'));
-
+            ->add('title')
+            ->add('Insurance',new InsuranceType($this->user_obj))
+            ->add('productFile','vich_file')
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\ToDo'
+            'data_class' => 'AppBundle\Entity\ToDo',
+            'csrf_protection' => false
         ));
     }
 
-    public function getName(){
-        return 'ToDo';
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'todo';
     }
-
 }

@@ -98,7 +98,7 @@
     <div class="col-lg-3 col-xs-6">
         <div class="small-box bg-purple">
             <div class="inner">
-                <h3>{{ app.user.getUnfinishedToDos|length }}</h3>
+                <h3>{{ render(controller('AppBundle:ToDo:getUnfinishedTodos')) }}</h3>
                 <p><b>待办事项</b></p>
             </div>
             <div class="icon">
