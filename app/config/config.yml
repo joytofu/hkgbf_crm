@@ -151,3 +151,4 @@ vich_uploader:
             upload_destination: %kernel.root_dir%/../web/product/upload
             inject_on_load:     true
             delete_on_update:   false
+            namer:              vich_uploader.namer_uniqid

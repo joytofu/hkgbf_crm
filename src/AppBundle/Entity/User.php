@@ -95,7 +95,7 @@ class User extends BaseUser
 
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="user",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="agent",cascade={"persist"})
      */
     protected $clients;
 

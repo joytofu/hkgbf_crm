@@ -37,19 +37,10 @@ class ToDo
     protected $title;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Insurance",mappedBy="todo")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Insurance",mappedBy="todo",cascade={"persist"})
+     * @ORM\JoinColumn(name="insurance_id",referencedColumnName="id")
      */
     protected $insurance;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $category;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $createdAt;
 
 
     /**
@@ -82,8 +73,6 @@ class ToDo
 
 
 
-
-
     public function __construct(){
         $this->createdAt = new \DateTime('now');
     }
@@ -100,14 +89,6 @@ class ToDo
         $this->title = $title;
     }
 
-
-    public function getCategory(){
-        return $this->category;
-    }
-
-    public function setCategory($category){
-        $this->category = $category;
-    }
 
     public function getCreatedAt(){
         return $this->createdAt;

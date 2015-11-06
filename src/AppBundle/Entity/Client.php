@@ -152,7 +152,7 @@ class Client
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinColumn(name="agent_id", referencedColumnName="id")
      */
-    protected $user;
+    protected $agent;
 
 
     public function __construct()
@@ -388,6 +388,29 @@ class Client
 
     public function setVip($vip){
         $this->vip = $vip;
+    }
+
+    public function getInsurances(){
+        return $this->insurances;
+    }
+
+    public function addInsurance(Insurance $insurance){
+        $this->insurances[] = $insurance;
+        return $this;
+    }
+
+    public function removeInsurance(Insurance $insurance){
+        $this->insurances->removeElement($insurance);
+        return $this;
+    }
+
+    public function getAgent(){
+        return $this->agent;
+    }
+
+    public function setAgent(User $agent){
+        $this->agent = $agent;
+        return $this;
     }
 
 }

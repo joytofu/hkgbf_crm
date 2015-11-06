@@ -37,6 +37,22 @@ class ToDoController extends Controller
 
         if($form->isSubmitted()&&$form->isValid()){
             $todo->setUser($user);
+            $insurance = $todo->getInsurance();
+            if(isset($_POST['todo']['Insurance']['client'])&&$_POST['todo']['Insurance']['client']!=null){
+                $client = $em->getRepository('AppBundle:Client')->find($_POST['todo']['Insurance']['client']);
+                $insurance->setClient($client);
+                $insurance->setTodo($todo);
+            }else{
+                $client = new \AppBundle\Entity\Client();
+                $insurance->setClient($client);
+                $insurance->setTodo($todo);
+                $client->addInsurance($insurance);
+                $client->setAgent($user);
+                $client->setName($_POST['todo']['Insurance']['ph_name']);
+                $client->setCellphone($_POST['todo']['Insurance']['ph_tel']);
+                $client->setIfInsurancePurchased(true);
+                $client->setCompany($_POST['todo']['Insurance']['ph_company_address']);
+            }
             $em->persist($todo);
             $em->flush();
             return new Response("<script>alert('添加待办事项成功！');window.location.href='/admin/';</script>");

@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class InsuranceType extends AbstractType
 {
     private $user_obj;
-    public function __construct(User $user){   //����agentduixian
+    public function __construct(User $user){   //传入agentduixian
         $this->user_obj = $user;
     }
 
@@ -34,12 +34,13 @@ class InsuranceType extends AbstractType
             ->add('ph_id_card_expired_date')
             ->add('ph_traffic_permit')
             ->add('ph_traffic_permit_expired_date')
+            ->add('ph_address')
             ->add('ph_id_address')
             ->add('ph_tel')
             ->add('ph_email')
-            ->add('ph_gender')
-            ->add('ph_marriage')
-            ->add('ph_is_smoking')
+            ->add('ph_gender','choice',array('choices'=>array('男'=>'男','女'=>'女'),'expanded'=>true))
+            ->add('ph_marriage','choice',array('expanded'=>true,'choices'=>array('未婚'=>'未婚','已婚'=>'已婚','离异'=>'离异','丧偶'=>'丧偶')))
+            ->add('ph_is_smoking','choice',array('choices'=>array('1'=>'是','0'=>'否'),'expanded'=>true))
             ->add('ph_born_date','date',array('widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(1932,1997,1)))
             ->add('ph_height')
             ->add('ph_weight')
@@ -54,9 +55,9 @@ class InsuranceType extends AbstractType
             ->add('r_id_card_expired_date')
             ->add('r_traffic_permit')
             ->add('r_traffic_permit_expired_date')
-            ->add('r_gender')
-            ->add('r_marriage')
-            ->add('r_is_smoking')
+            ->add('r_gender','choice',array('choices'=>array('男'=>'男','女'=>'女'),'required'=>false,'empty_data'=>null))
+            ->add('r_marriage','choice',array('required'=>false,'empty_data'=>null,'choices'=>array('未婚'=>'未婚','已婚'=>'已婚','离异'=>'离异','丧偶'=>'丧偶')))
+            ->add('r_is_smoking','choice',array('choices'=>array('1'=>'是','0'=>'否'),'required'=>false,'empty_data'=>null))
             ->add('r_born_date','date',array('widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(1932,1997,1)))
             ->add('r_tel')
             ->add('r_email')
@@ -76,6 +77,10 @@ class InsuranceType extends AbstractType
             ->add('productFile','vich_file')
             ->add('client','entity',array(
                 'class'=>'AppBundle\Entity\Client',
+                'placeholder'=>'请选择所属客户，如新客户请留空',
+                'required'=>false,
+                'mapped'=>false,
+                'choice_label'=>'name',
                 'query_builder'=>function(EntityRepository $er){
                     return $er->createQueryBuilder('c')
                         ->where('c.user = :user')

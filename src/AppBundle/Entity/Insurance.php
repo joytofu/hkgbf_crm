@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity
@@ -69,7 +70,7 @@ class Insurance {
     protected $ph_name_pinyin;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_id_card;
 
@@ -79,7 +80,7 @@ class Insurance {
     protected $ph_id_card_expired_date;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_traffic_permit;
 
@@ -89,12 +90,17 @@ class Insurance {
     protected $ph_traffic_permit_expired_date;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $ph_address;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_id_address;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_tel;
 
@@ -149,12 +155,12 @@ class Insurance {
     protected $ph_profession;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_company_address;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $ph_company_tel;
 
@@ -221,12 +227,12 @@ class Insurance {
     protected $r_email;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_address;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_id_address;
 
@@ -261,7 +267,7 @@ class Insurance {
     protected $r_profession;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_company_address;
 
@@ -291,13 +297,13 @@ class Insurance {
     protected $verified = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="insurances")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="insurances",cascade={"persist"})
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     protected $client;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\ToDo",inversedBy="insurance")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\ToDo",inversedBy="insurance",cascade={"persist"})
      */
     protected $todo;
 
@@ -553,6 +559,22 @@ class Insurance {
     public function getPhTrafficPermitExpiredDate()
     {
         return $this->ph_traffic_permit_expired_date;
+    }
+
+    public function setPhAddress($ph_address)
+    {
+        $this->ph_address = $ph_address;
+
+    }
+
+    /**
+     * Get r_address
+     *
+     * @return string
+     */
+    public function getPhAddress()
+    {
+        return $this->ph_address;
     }
 
     /**
@@ -1357,15 +1379,7 @@ class Insurance {
         $this->todo = $todo;
     }
 
-    /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $product
-     */
+
     public function setProductFile(File $product = null)
     {
         $this->productFile = $product;
@@ -1377,9 +1391,7 @@ class Insurance {
         }
     }
 
-    /**
-     * @return File
-     */
+
     public function getProductFile()
     {
         return $this->productFile;
