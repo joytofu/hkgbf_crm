@@ -113,14 +113,16 @@ class ToDoController extends Controller
      * @ParamConverter("todo", class="AppBundle:ToDo")
      */
     public function editToDo(ToDo $todo, Request $request){
+        $agent = $this->getUser();
+        $client_id = $todo->getInsurance()->getClient()->getId();
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(new ToDoType(),$todo);
+        $form = $this->createForm(new ToDoType($agent),$todo);
 
         if($form->isSubmitted()&&$form->isValid()){
             $em->flush();
         }
 
-        return $this->render('@FOSUser/ToDo/createToDo.html.twig',array('form'=>$form->createView()));
+        return $this->render('@FOSUser/ToDo/createToDo.html.twig',array('form'=>$form->createView(),'client_id'=>$client_id));
     }
 
     /**

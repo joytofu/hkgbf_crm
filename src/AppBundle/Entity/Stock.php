@@ -131,12 +131,12 @@ class Stock
         $this->current_price = $current_price;
     }
 
-    public function getUser(){
-        return $this->user;
+    public function getClient(){
+        return $this->client;
     }
 
-    public function setUser(User $user = null){
-        $this->user = $user;
+    public function setClient(Client $client = null){
+        $this->client = $client;
     }
 
 
@@ -149,7 +149,7 @@ class Stock
     }
 
     public function __toString(){
-        return (string) $this->getUser();
+        return (string) $this->getClient();
     }
 
 

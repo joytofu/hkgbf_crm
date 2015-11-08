@@ -31,6 +31,7 @@ class ToDo
      */
     protected $id;
 
+
     /**
      * @ORM\Column(type="string")
      */
@@ -69,7 +70,15 @@ class ToDo
      *
      * @var \DateTime
      */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     *
+     * @var \DateTime
+     */
     private $updatedAt;
+
 
 
 

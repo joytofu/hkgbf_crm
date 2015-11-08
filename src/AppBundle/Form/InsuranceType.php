@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class InsuranceType extends AbstractType
 {
     private $user_obj;
-    public function __construct(User $user){   //传入agentduixian
+    public function __construct(User $user){   //传入agent对象
         $this->user_obj = $user;
     }
 
@@ -83,8 +83,8 @@ class InsuranceType extends AbstractType
                 'choice_label'=>'name',
                 'query_builder'=>function(EntityRepository $er){
                     return $er->createQueryBuilder('c')
-                        ->where('c.user = :user')
-                        ->setParameters(array('user'=>$this->user_obj))
+                        ->where('c.agent = :agent')
+                        ->setParameters(array('agent'=>$this->user_obj))
                         ->orderBy('c.id','ASC');
                 }));
     }

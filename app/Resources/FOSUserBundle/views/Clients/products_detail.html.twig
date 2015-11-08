@@ -2,7 +2,7 @@
 {% block private_css %}
     <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
 {% endblock %}
-{% block page_header %}{{ username }}购买产品详情{% endblock %}
+{% block page_header %}{{ client_name }}购买产品详情{% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-md-12">
@@ -54,13 +54,13 @@
                                 </tr>
                                 </thead>
                                 <tr>
-                                    <td>{{ user_data.email }}</td>
-                                    <td>{{ user_data.company }}</td>
-                                    <td>{{ user_data.province }}{{ user_data.city }}{{ user_data.district }}{% if user_data.address_detail is defined %}{{ user_data.address_detail }}{% endif %}</td>
-                                    <td>{% if user_data.groupid==1 %}普通会员
-                                        {% elseif user_data.groupid==2 %}<b style="color:#f39c12">金卡会员</b>
-                                        {% elseif user_data.groupid==3 %}<b style="color:#c7254e">钻石会员</b>
-                                        {% elseif user_data.groupid==4 %}<b style="color:darkblue">渠道代理</b>{% endif %}
+                                    <td>{{ client_data.email }}</td>
+                                    <td>{{ client_data.company }}</td>
+                                    <td>{{ client_data.province }}{{ client_data.city }}{{ client_data.district }}{% if client_data.address_detail is defined %}{{ client_data.address_detail }}{% endif %}</td>
+                                    <td>{% if client_data.vip==1 %}普通会员
+                                        {% elseif client_data.vip==2 %}<b style="color:#f39c12">金卡会员</b>
+                                        {% elseif client_data.vip==3 %}<b style="color:#c7254e">钻石会员</b>
+                                        {% elseif client_data.vip==4 %}<b style="color:darkblue">渠道代理</b>{% endif %}
                                     </td>
 
                                 </tr>
@@ -138,12 +138,20 @@
                                         <td>{{ data.insuranceNumber }}</td>
                                         <td>{{ data.type }}</td>
                                         <td>{{ data.buyDate|date('Y-m-d') }}</td>
-                                        <td>{{ data.PolicyHolder }}</td>
-                                        <td>{{ data.Recognizee }}</td>
+                                        <td>{{ data.getPhName() }}</td>
+                                        {% if data.getRName is not null %}
+                                        <td>{{ data.getRName() }}</td>
+                                        {% else %}
+                                        <td>{{ data.getPhName() }}</td>
+                                        {% endif %}
                                         <td>{{ data.insurancePremium }}</td>
                                         <td>{{ data.sumInsured }}</td>
-                                        <td>{{ data.BornDate|date('Y-m-d') }}</td>
-                                        <td>{{ data.Years }}</td>
+                                        {% if data.RBornDate is null %}
+                                        <td>{{ data.PhBornDate|date('Y-m-d') }}</td>
+                                        {% else %}
+                                        <td>{{ data.RBornDate|date('Y-m-d') }}</td>
+                                        {% endif %}
+                                        <td>{{ data.getPaidYears() }}</td>
                                         <td>{{ data.NextPayDate|date('Y-m-d') }}</td>
                                         <td>
                                             {% if data.Verified==true %}<span class="label label-success">已审核</span>

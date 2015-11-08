@@ -42,6 +42,11 @@ class Client
     /**
      * @ORM\Column(type="string",nullable=true)
      */
+    protected $email;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
     protected $company;
 
 
@@ -84,7 +89,7 @@ class Client
     private $productName;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Stock",mappedBy="clients",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Stock",mappedBy="client",cascade={"persist"})
      */
     protected $stocks;
 
@@ -182,6 +187,14 @@ class Client
     public function getCellphone()
     {
         return $this->cellphone;
+    }
+
+    public function getEmail(){
+        return $this->email;
+    }
+
+    public function setEmail($email){
+        $this->email = $email;
     }
 
     public function setCompany($company)

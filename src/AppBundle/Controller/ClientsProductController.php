@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Client;
 use AppBundle\Form\InsuranceType;
 use AppBundle\Form\StockType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,39 +35,34 @@ class ClientsProductController extends Controller
      * 客户产品详情
      * @Route("/product_detail/{id}", name="productdetail")
      * @Method({"GET","POST"})
-     * @ParamConverter("user", class="AppBundle:User")
+     * @ParamConverter("client", class="AppBundle:Client")
      */
-    public function product_detail($id, User $user){
+    public function product_detail($id, Client $client){
         $agent = $this->getUser();
 
-        $em = $this->getDoctrine()->getManager();
-
-        //get private data of user
-        $user_data = $em->getRepository('AppBundle:User')->find($id);
-
         //get stock data of user
-        $stock_data = $em->getRepository('AppBundle:Stock')->findBy(array('user'=>$id));
+        $stock_data = $client->getStocks();
         $sum = 0;
         foreach($stock_data as $value){
             $sum+=$value->calculateProfitAndLoss();
         }
 
         //get insurance data of user
-        $insurance_stock = $em->getRepository('AppBundle:Insurance')->findBy(array('user'=>$id));
+        $insurance_data = $client->getInsurances();
 
         //get name of current user
-        $username = $user->getUsername();
+        $client_name = $client->getName();
 
         //create upload form
-        $upload_form = $this->createUploadForm($user);
+        $upload_form = $this->createUploadForm($client);
 
 
         return $this->render('FOSUserBundle:Clients:products_detail.html.twig',array(
             'agent'=>$agent,
-            'user_data'=>$user_data,
+            'client_data'=>$client,
             'stock_data'=>$stock_data,
-            'insurance_data'=>$insurance_stock,
-            'username'=>$username,
+            'insurance_data'=>$insurance_data,
+            'client_name'=>$client_name,
             'sum'=>$sum,
             'user_id'=>$id,
             'upload_form'=>$upload_form->createView()));
@@ -236,9 +232,9 @@ class ClientsProductController extends Controller
 
     /**
      * @Route("/addstocks/{id}",name="addstocks")
-     * @ParamConverter("user", class="AppBundle:User")
+     * @ParamConverter("client", class="AppBundle:Client")
      */
-    public function addStocks(User $user,Request $request,$id){
+    public function addStocks(Client $client,Request $request,$id){
 
         $stock = new Stock();
 
@@ -247,7 +243,7 @@ class ClientsProductController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted()&&$form->isValid()){
-            $stock->setUser($user);
+            $stock->setClient($client);
             $em->persist($stock);
             $em->flush();
 
@@ -259,9 +255,9 @@ class ClientsProductController extends Controller
 
     /**
      * @Route("/addinsurance/{id}", name="addinsurance")
-     * @ParamConverter("user", class="AppBundle:User")
+     * @ParamConverter("client", class="AppBundle:Client")
      */
-    public function addInsurance(User $user,Request $request,$id){
+    public function addInsurance(Client $client,Request $request,$id){
         $insurance = new Insurance();
 
         $form = $this->createForm(new InsuranceType(),$insurance);
@@ -269,7 +265,7 @@ class ClientsProductController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted()&&$form->isValid()){
-            $insurance->setUser($user);
+            $insurance->setClient($client);
             $em->persist($insurance);
             $em->flush();
 
@@ -288,7 +284,7 @@ class ClientsProductController extends Controller
      */
     public function editStock(Stock $stock,Request $request,$id){
         $em = $this->getDoctrine()->getManager();
-        $user_id = $stock->getUser()->getId();
+        $client_id = $stock->getClient()->getId();
 
 
         $form = $this->createForm(new StockType(),$stock);
@@ -304,7 +300,7 @@ class ClientsProductController extends Controller
         return $this->render('@FOSUser/Clients/edit_stock.html.twig',array(
             'form'=>$form->createView(),
             'id'=>$id,
-            'user_id'=>$user_id,
+            'client_id'=>$client_id,
             'delete_form'=>$delete_form->createView()));
     }
 
@@ -317,7 +313,7 @@ class ClientsProductController extends Controller
      */
     public function editInsurance(Insurance $insurance, Request $request,$id){
         $em = $this->getDoctrine()->getManager();
-        $user_id = $insurance->getUser()->getId();
+        $client_id = $insurance->getClient()->getId();
 
 
         $form = $this->createForm(new InsuranceType(),$insurance);
@@ -333,7 +329,7 @@ class ClientsProductController extends Controller
         return $this->render('@FOSUser/Clients/edit_insurance.html.twig',array(
             'form'=>$form->createView(),
             'id'=>$id,
-            'user_id'=>$user_id,
+            'client_id'=>$client_id,
             'delete_form'=>$delete_form->createView()));
     }
 
@@ -343,7 +339,7 @@ class ClientsProductController extends Controller
      * @ParamConverter("stock", class="AppBundle:Stock")
      */
     public function deleteStock(Stock $stock, Request $request){
-        $user_id = $stock->getUser()->getId();
+        $client_id = $stock->getClient()->getId();
 
         $form = $this->createDeleteForm($stock,'deletestock');
         $form->handleRequest($request);
@@ -354,7 +350,7 @@ class ClientsProductController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('productdetail',array('id'=>$user_id));
+        return $this->redirectToRoute('productdetail',array('id'=>$client_id));
     }
 
     /**
@@ -363,7 +359,7 @@ class ClientsProductController extends Controller
      * @ParamConverter("insurance", class="AppBundle:Insurance")
      */
     public function deleteInsurance(Insurance $insurance, Request $request){
-        $user_id = $insurance->getUser()->getId();
+        $client_id = $insurance->getClient()->getId();
 
         $form = $this->createDeleteForm($insurance,'deleteinsurance');
         $form->handleRequest($request);
@@ -373,7 +369,7 @@ class ClientsProductController extends Controller
             $em->remove($insurance);
             $em->flush();
         }
-        return $this->redirectToRoute('productdetail',array('id'=>$user_id));
+        return $this->redirectToRoute('productdetail',array('id'=>$client_id));
     }
 
 
@@ -383,13 +379,13 @@ class ClientsProductController extends Controller
      * @ParamConverter("stock", class="AppBundle:Stock")
      */
     public function delete_stock_2(Stock $stock){
-        $user_id = $stock->getUser()->getId();
+        $client_id = $stock->getClient()->getId();
         $em = $this->getDoctrine()->getManager();
         $em->remove($stock);
         $em->flush();
         echo "<script>alert('删除成功!')</script>";
 
-        return $this->redirectToRoute('productdetail',array('id'=>$user_id));
+        return $this->redirectToRoute('productdetail',array('id'=>$client_id));
     }
 
 
@@ -399,22 +395,22 @@ class ClientsProductController extends Controller
      * @ParamConverter("insurance", class="AppBundle:Insurance")
      */
     public function delete_insurance_2(Insurance $insurance){
-        $user_id = $insurance->getUser()->getId();
+        $client_id = $insurance->getClient()->getId();
         $em = $this->getDoctrine()->getManager();
         $em->remove($insurance);
         $em->flush();
         echo "<script>alert('删除成功!')</script>";
 
-        return $this->redirectToRoute('productdetail',array('id'=>$user_id));
+        return $this->redirectToRoute('productdetail',array('id'=>$client_id));
     }
 
     /**
-     * @Route("/delete_user/{id}", name="deleteuser")
-     * @ParamConverter("user", class="AppBundle:User")
+     * @Route("/delete_client/{id}", name="deleteclient")
+     * @ParamConverter("client", class="AppBundle:Client")
      */
-    public function deleteUser(User $user){
+    public function deleteClient(Client $client){
         $em = $this->getDoctrine()->getManager();
-        $em->remove($user);
+        $em->remove($client);
         $em->flush();
 
         return $this->redirectToRoute('group');
@@ -430,12 +426,6 @@ class ClientsProductController extends Controller
             ->setMethod('DELETE')
             ->getForm();
     }
-
-
-
-
-
-
 
 
 }

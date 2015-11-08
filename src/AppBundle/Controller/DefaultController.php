@@ -180,12 +180,12 @@ class DefaultController extends Controller
      * @Security("has_role('ROLE_AGENT')")
      */
     public function showClients(){
-        $user = $this->getUser();
+        $agent = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         if($this->isGranted('ROLE_SUPER_ADMIN')) {
             $clients = $em->getRepository('AppBundle:Client')->findAll();
         }else{
-            $clients = $em->getRepository('AppBundle:Client')->findBy(array('user'=>$user));
+            $clients = $em->getRepository('AppBundle:Client')->findBy(array('agent'=>$agent));
         }
 
         return $this->render('FOSUserBundle:Clients:clientsList.html.twig',array(

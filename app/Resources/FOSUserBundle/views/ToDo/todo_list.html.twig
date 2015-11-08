@@ -11,7 +11,7 @@
 {% block hidden_username %}{{ username }}{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-7" style="margin-left: 20%">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">我的待办事项</h3>
@@ -20,9 +20,7 @@
                     <table id="todo_data" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th style="width:60px">分类</th>
                             <th>标题</th>
-                            <th>内容</th>
                             <th>创建时间</th>
                             <th>状态</th>
                         </tr>
@@ -31,9 +29,7 @@
                         <ul class="todo-list ui-sortable">
                         {% for todo in todos %}
                             <tr>
-                                <td>{{ todo.category }}</td>
-                                <td>{{ todo.title }}</td>
-                                <td class="todo">{{ todo.content }}<div class="tools">
+                                <td>{{ todo.title }}<div class="tools" style="display: inline">
                                         <a href="{{ path('edittodo',{'id':todo.id}) }}"><i class="fa fa-edit"></i></a>
                                         <a href="javascript:void(0)" onclick="deleteToDo({{ todo.id }})"><i class="fa fa-trash-o"></i></a>
                                     </div>
@@ -68,7 +64,7 @@
     <script>
         $(function () {
             $("#todo_data").DataTable({
-                "order":[[3,"desc"]]
+                "order":[[1,"desc"]]
             });
             $('#example2').DataTable({
                 "paging": true,

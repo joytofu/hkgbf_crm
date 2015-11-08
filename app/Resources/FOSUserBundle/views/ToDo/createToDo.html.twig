@@ -143,3 +143,11 @@
     </div>
 
 {% endblock %}
+
+{% block private_js %}
+{% if client_id is defined %}
+<script>
+   $('#todo_Insurance_client').find("option[value={{ client_id }}]").attr("selected",true);
+</script>
+    {% endif %}
+{% endblock %}

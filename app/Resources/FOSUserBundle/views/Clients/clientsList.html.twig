@@ -17,7 +17,6 @@
                 <tr>
                     <th>姓名</th>
                     <th>手机号码</th>
-                    <th>会员状态</th>
                     <th>客户级别</th>
                     <th>已购买产品</th>
 
@@ -29,13 +28,6 @@
                     <td><a href="{{ path('productdetail',{'id':client.id}) }}" target="_blank">{{ client.name }}</a>
                         {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('edituserprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
                     <td>{{ client.cellphone }}</td>
-                    <td>
-                        {% if user.enabled==1 %}
-                        <span class="label label-success">已审核</span>
-                        {% else %}
-                        <button id="set_enable" value="{{ user.id }}" class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
-                        {% endif %}
-                    </td>
                     <td>
                             {% if client.vip=='普通会员' %}普通会员
                             {% elseif client.vip=='金卡会员' %}金卡会员
