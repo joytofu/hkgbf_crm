@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
     <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
 {% endblock %}
+{% block page_header %}所有客户{% endblock %}
 {% block hidden_username %}{{ username }}{% endblock %}
 {% block content %}
 <div class="row">
@@ -26,7 +27,7 @@
                 {% for client in clients %}
                 <tr>
                     <td><a href="{{ path('productdetail',{'id':client.id}) }}" target="_blank">{{ client.name }}</a>
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('edituserprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('editclientprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
                     <td>{{ client.cellphone }}</td>
                     <td>
                             {% if client.vip=='普通会员' %}普通会员
@@ -49,7 +50,6 @@
     </div>
     </div>
 {% endblock %}
-{% block page_header %}{% if is_granted('ROLE_SUPER_ADMIN') %}所有用户{% else %}我的客户{% endif %}{% endblock %}
 {% block private_js %}
     <!--DataTables-->
     <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>

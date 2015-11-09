@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Group;
 use AppBundle\Entity\Notice;
 use AppBundle\Entity\User;
 use AppBundle\Form\CreateUserType;
@@ -233,7 +234,6 @@ class DefaultController extends Controller
         }
 
         return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'users_of_all_agents'=>$users_of_all_agents,'if_agent'=>$if_agent));
-
     }
 
     /**
@@ -254,6 +254,15 @@ class DefaultController extends Controller
             return new Response("<script>alert('添加成功!');window.location.href='$noticelist_url';</script>");
         }
         return $this->render('FOSUserBundle:Notice:notice.html.twig',array('form'=>$form->createView()));
+    }
+
+    /**
+     * @Route("/agentslist",name="agentslist")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function AgentsList(){
+        $em = $this->getDoctrine()->getManager();
+        return $this->render('@FOSUser/Agents/agentsList.html.twig',array('agents'=>$agents));
     }
 
     /**

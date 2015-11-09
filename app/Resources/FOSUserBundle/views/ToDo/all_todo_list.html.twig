@@ -18,9 +18,8 @@
                                 <thead>
                                 <tr>
                                     <th>代理</th>
-                                    <th>分类</th>
+                                    <th>客户</th>
                                     <th>标题</th>
-                                    <th>内容</th>
                                     <th>创建时间</th>
                                     <th>待办完成</th>
                                 </tr>
@@ -28,9 +27,8 @@
                                 {% for todo in todos %}
                                 <tr>
                                         <td>{{ todo.user.name }}</td>
-                                        <td>{{ todo.category }}</td>
+                                        <td>{{ todo.insurance.getClient().getName() }}</td>
                                         <td>{{ todo.title }}</td>
-                                        <td>{{ todo.content }}</td>
                                         <td>{{ todo.createdAt|date('Y-m-d') }}</td>
                                         <td><button class="btn-instagram" onclick="setFinish({{ todo.id }})">完成待办</button></td>
                                 </tr>
@@ -44,9 +42,8 @@
                                 <thead>
                                 <tr>
                                     <th>代理</th>
-                                    <th>分类</th>
+                                    <th>客户</th>
                                     <th>标题</th>
-                                    <th>内容</th>
                                     <th>创建时间</th>
                                     <th>待办完成</th>
                                 </tr>
@@ -54,9 +51,8 @@
                                 {% for finished_todo in finished_todos %}
                                 <tr>
                                         <td>{{ finished_todo.user.name }}</td>
-                                        <td>{{ finished_todo.category }}</td>
+                                        <td>{{ finished_todo.insurance.getClient().getName() }}</td>
                                         <td>{{ finished_todo.title }}</td>
-                                        <td>{{ finished_todo.content }}</td>
                                         <td>{{ finished_todo.createdAt|date('Y-m-d') }}</td>
                                     <td><button class="btn-danger" onclick="undoFinish({{ finished_todo.id }})">取消完成</button></td>
 

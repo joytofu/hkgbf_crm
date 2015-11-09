@@ -39,6 +39,11 @@ class User extends BaseUser
     protected $name;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $role_name;
+
+    /**
      * @ORM\Column(type="bigint",nullable=true)
      * @Assert\Length(max="11",maxMessage="手机号码过长，请重新输入！")
      * @Assert\Length(min="11",minMessage="手机号码过短，请重新输入！")
@@ -98,6 +103,12 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="agent",cascade={"persist"})
      */
     protected $clients;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RoleName", inversedBy="users")
+     * @ORM\JoinColumn(name="role_name_id", referencedColumnName="id")
+     */
+    protected $role_name;
 
 
     public function __construct()

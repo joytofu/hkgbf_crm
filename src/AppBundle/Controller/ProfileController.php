@@ -9,8 +9,11 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Entity\LatLng;
+use AppBundle\Form\EditAgentProfileType;
+use AppBundle\Form\EditClientProfileType;
 use AppBundle\Form\EditProfileType;
 use FOS\UserBundle\Form\Type\ProfileFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -55,7 +58,6 @@ class ProfileController extends BaseProfileController
         $editForm->handleRequest($request);
 
         if($editForm->isSubmitted()&&$editForm->isValid()){
-
             $em->flush();
             return $this->redirectToRoute('userdetail',array('id'=>$user->getId()));
         }
@@ -121,36 +123,51 @@ class ProfileController extends BaseProfileController
 
     /**
      * edit user profile. only admin is granted.
-     * @Route("/admin/edituserprofile/{id}", name="edituserprofile")
-     * @ParamConverter("user", class="AppBundle:User")
+     * @Route("/admin/editclientprofile/{id}", name="editclientprofile")
+     * @ParamConverter("client", class="AppBundle:Client")
      */
-    public function editUserProfile(Request $request, User $user,$id){
-        $form = $this->createForm(new EditProfileType(),$user);
+    public function editUserProfile(Request $request, Client $client,$id){
+        $form = $this->createForm(new EditClientProfileType(),$client);
         $em = $this->getDoctrine()->getManager();
-        $username = $user->getUsername();
+        $clientname = $client->getName();
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
         $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
-        $address = $this->getCurrentAddress($user,$direct_cities);
+        $address = $this->getCurrentAddress($client,$direct_cities);
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
 
 
             //将地址写入数组
-            $this->setAddress($em,$direct_cities,$user,$hkmt);
+            $this->setAddress($em,$direct_cities,$client,$hkmt);
 
             $em->flush();
             $group_url = $this->generateUrl('group');
             return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
         }
 
-        return $this->render('FOSUserBundle:Profile:edit_user_profile.html.twig',array(
-            'username'=>$username,
-            'user'=>$user,
+        return $this->render('FOSUserBundle:Profile:edit_client_profile.html.twig',array(
+            'clientname'=>$clientname,
+            'client'=>$client,
             'address'=>$address,
             'form'=>$form->createView(),
             'id'=>$id));
+    }
 
+    /**
+     * @Route("/admin/editagentprofile/{id}",name="editagentprofile")
+     * @ParamConverter("agent", class="AppBundle:Agent")
+     */
+    public function editAgentProfile(User $agent, Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new EditAgentProfileType(),$agent);
+        $form->handleRequest($request);
+        if($form->isSubmitted()&&$form->isValid()){
+            $em->flush();
+            $redirect_url = $this->generateUrl('');
+            return new Response("<script>alert('修改成功！');window.location.href='$redirect_url'</script>");
+        }
+        return $this->render('@FOSUser/Profile/edit_agent_profile.html.twig',array('form'=>$form));
     }
 
     protected function setAddress($em,$direct_cities,User $user,$hkmt){
@@ -204,20 +221,20 @@ class ProfileController extends BaseProfileController
         }
     }
 
-    protected function getCurrentAddress(User $user,$direct_cities){
+    protected function getCurrentAddress(Client $client,$direct_cities){
         $address = array();
-        if($user->getProvince()&&!in_array($user->getProvince(),$direct_cities)){
-            $address[] = $user->getProvince();
-            $address[] = $user->getCity();
-            $address[] = $user->getDistrict();
-            $address[] = $user->getTown();
-            $address[] = $user->getAddressDetail();
+        if($client->getProvince()&&!in_array($client->getProvince(),$direct_cities)){
+            $address[] = $client->getProvince();
+            $address[] = $client->getCity();
+            $address[] = $client->getDistrict();
+            $address[] = $client->getTown();
+            $address[] = $client->getAddressDetail();
             $address = implode("",$address);
-        }elseif($user->getProvince()&&in_array($user->getProvince(),$direct_cities)){
-            $address[] = $user->getProvince();
-            $address[] = $user->getDistrict();
-            $address[] = $user->getTown();
-            $address[] = $user->getAddressDetail();
+        }elseif($client->getProvince()&&in_array($client->getProvince(),$direct_cities)){
+            $address[] = $client->getProvince();
+            $address[] = $client->getDistrict();
+            $address[] = $client->getTown();
+            $address[] = $client->getAddressDetail();
             $address = implode("",$address);
         }else{
             $address = null;

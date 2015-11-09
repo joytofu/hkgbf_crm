@@ -1,0 +1,104 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block hidden_username %}{{ username }}{% endblock %}
+
+{% block content %}
+
+    <div class="box box-primary" style="width: 50%;margin-left: 23%">
+    <div class="box-header with-border">
+        <h3 class="box-title">用户个人信息</h3>
+        <div style="float:right">
+            <a href="{{ path('group') }}"><button class="btn btn-dropbox">返回用户分组列表</button></a>
+        </div>
+    </div>
+    {{ form_start(form,{'attr':{'role':'form'}}) }}
+    <form method="post" action="{{ path('editclientprofile',{'id':id}) }}" {{ form_enctype(form) }} role="form">
+    <div class="box-body">
+        <div class="form-group">
+            {{ form_widget(form.imageFile) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.cellphone) }}
+        </div>
+        <div class="form-group">
+        {{ form_row(form.email) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.company) }}
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="editProfile_address">原地址</label>
+            <input type="text" class="form-control" value="{{ address }}" readonly>
+        </div>
+        <div class="form-group" id="area">
+            <label class="control-label" for="editProfile_address">新地址</label>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="editProfile_if_stock_purchased" name="editProfile[if_stock_purchased]" value="1" {% if client.ifStockPurchased==true %}checked{% endif %}>已买股票
+            <input style="margin-left: 3%" type="checkbox" id="editProfile_if_insurance_purchased" name="editProfile[if_insurance_purchased]" value="1" {% if client.ifInsurancePurchased==true %}checked{% endif %}>已买保险
+            <input style="margin-left: 3%" type="checkbox" id="editProfile_if_fund_purchased" name="editProfile[if_fund_purchased]" value="1" {% if client.ifFundPurchased==true %}checked{% endif %}>已买基金
+        </div>
+
+    </div>
+    <div class="box-footer">
+    <button class="btn btn-primary" type="submit" id="_submit" name="_submit" >保存修改</button>
+    </div>
+        {{ form_row(form._token) }}
+        </form>
+    </div>
+
+{% endblock content %}
+{% block page_header %}用户信息{% endblock %}
+
+{% block private_js %}
+    <script type="text/javascript" src="{{ asset('js/area_picker/area.js') }}"></script>
+    <script>
+        $(function(){
+            add_select(0);
+
+            $('body').on('change', '#area select', function() {
+                var $me = $(this);
+                var $next = $me.next();
+
+                /**
+                 * 如果下一级已经是当前所选地区的子地区，则不进行处理
+                 */
+                if ($me.val() == $next.data('pid')) {
+                    return;
+
+                }
+                $me.nextAll().remove();
+                add_select($me.val());
+                var $textarea = "<textarea style='width: 100%' class='form-group has-feedback' name='address_detail' id='address_detail' rows='3' placeholder='请输入具体地址'></textarea>";
+                $('#area').append($textarea);
+            });
+
+            function add_select(pid) {
+                var area_names = area['name'+pid];
+                if (!area_names) {
+                    return false;
+                }
+                var area_codes = area['code'+pid];
+                var $select = $('<select>');
+                $select.attr('name', 'area[]');
+                $select.attr('class','form-control');
+                $select.data('pid', pid);
+                if (area_codes[0] != -1) {
+                    area_names.unshift("请选择地区");
+                    area_codes.unshift(-1);
+                }
+                for (var idx in area_codes) {
+                    var $option = $('<option>');
+                    $option.attr('value', area_codes[idx]);
+                    $option.text(area_names[idx]);
+                    $select.append($option);
+                }
+                $('#area').append($select);
+            };
+        });
+    </script>
+{% endblock %}
+
