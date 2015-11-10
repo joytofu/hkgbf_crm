@@ -38,10 +38,6 @@ class User extends BaseUser
      */
     protected $name;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $role_name;
 
     /**
      * @ORM\Column(type="bigint",nullable=true)
@@ -114,7 +110,6 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->roles = array('ROLE_REGULAR');
         $this->todos = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
@@ -258,6 +253,15 @@ class User extends BaseUser
 
     public function removeClient(Client $client){
         $this->clients->remove($client);
+    }
+
+    public function getRoleName(){
+        return $this->role_name;
+    }
+
+    public function setRoleName(RoleName $roleName){
+        $this->role_name = $roleName;
+        return $this;
     }
 
 }

@@ -10,31 +10,27 @@
     <div class="col-xs-12">
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">代理个人信息</h3>
+            <h3 class="box-title">渠道管理个人信息</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-            <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                    <th>用户名</th>
-                    <th>姓名</th>
-                    <th>手机号码</th>
-                    <th>公司</th>
+             <div class="nav-tabs-custom">
+                 <ul class="nav nav-tabs">
+                     {% set i=1 %}
+                     {% for agent_admin in agent_admins %}
+                     <li {% if i==1 %}class="active"{% endif %}><a href="#agent_{{ i }}" data-toggle="tab">{{ agent_admin.name }}</a></li>
+                     {% set i=i+1 %}
+                     {% endfor %}
 
-                </tr>
-                </thead>
-                <tbody>
-                {% for agent in agents %}
-                <tr>
-                    <td>{{ agent.username }}</td>
-                    <td>{{ agent.name }}</td>
-                    <td>{{ agent.cellphone }}</td>
-                    <td>{{ agent.company }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <a href="{{ path('create_user') }}"><button class="btn-microsoft">创建代理</button></a>
+                 </ul>
+                 <div class="tab-content">
+                     {% set j=1 %}
+                     {% for agent_admin in agent_admins  %}
+                     {{ render(controller('AppBundle:Default:getAgents',{'agent_admin_id':agent_admin.id,'j':j})) }}
+                      {% set j=j+1 %}
+                     {% endfor %}
+                 </div>
+            </div>
+            <a href="{{ path('create_user',{'role':'agent'}) }}"><button class="btn-microsoft">创建代理</button></a>
         </div><!-- /.box-body -->
     </div>
     </div>
@@ -52,7 +48,7 @@
     <script src="{{ asset('js/demo.js') }}"></script>
     <script>
         $(function () {
-            $("#example1").DataTable();
+            $("#agent").DataTable();
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,

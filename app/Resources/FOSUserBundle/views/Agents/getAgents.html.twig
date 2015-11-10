@@ -1,0 +1,25 @@
+<div class="tab-pane {% if j==1 %}active{% endif %}" id="agent_{{ j }}">
+    <div class="box-body">
+        <table id="agent" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>姓名</th>
+                <th>手机号码</th>
+                <th>公司</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for agent in agents %}
+                <tr>
+                    <td>{{ agent.username }}</td>
+                    <td>{{ agent.name }}</td>
+                    <td>{{ agent.cellphone }}</td>
+                    <td>{{ agent.company }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

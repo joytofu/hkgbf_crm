@@ -78,6 +78,9 @@ class DefaultController extends Controller
             $unverified_num = count($unverified_clients);
         }
 
+        //todos
+        $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
+
         //notice
         $data = $em->getRepository('AppBundle:Notice')->findBy(array(),array('createdAt'=>'DESC'));
         if($data) {
@@ -135,6 +138,7 @@ class DefaultController extends Controller
             'lastlogin'=>$login['date'],
             'clients_num'=>$clients_num,
             'unverified_num'=>$unverified_num,
+            'unfinished_todos'=>$unfinished_todos,
             'notice'=>$notice,
             'notice_active'=>$notice_active,
             'normal_clients'=>$normal_clients,
@@ -260,9 +264,29 @@ class DefaultController extends Controller
      * @Route("/agentslist",name="agentslist")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function AgentsList(){
+    public function agentsList(){
         $em = $this->getDoctrine()->getManager();
-        return $this->render('@FOSUser/Agents/agentsList.html.twig',array('agents'=>$agents));
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
+        $agent_admins = $em->getRepository('AppBundle:User')->findBy(array('role_name'=>$role_name));
+        return $this->render('@FOSUser/Agents/agentsList.html.twig',array('agent_admins'=>$agent_admins));
+    }
+
+    /**
+     * @Route("/adminslist",name="adminslist")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     */
+    public function adminsList(){
+        $em = $this->getDoctrine()->getManager();
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(2);
+        $admins = $em->getRepository('AppBundle:User')->findBy(array('role_name'=>$role_name));
+        return $this->render('@FOSUser/Admins/adminsList.html.twig',array('admins'=>$admins));
+
+    }
+
+    public function getAgentsAction($agent_admin_id,$j){
+        $em = $this->getDoctrine()->getManager();
+        $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$agent_admin_id));
+        return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'j'=>$j));
     }
 
     /**
@@ -311,42 +335,42 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/createuser", name="create_user")
+     * @Route("/create/{role}", name="create_user")
      */
-    public function creatUser(Request $request){
+    public function creatUser(Request $request,$role){
         $user = new User();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new CreateUserType(),$user);
         $form->handleRequest($request);
+        $role_name_agent_admin = $em->getRepository('AppBundle:RoleName')->find(3);
+        $agent_admins = $em->getRepository('AppBundle:User')->findBy(array('role_name'=>$role_name_agent_admin));
 
         if($form->isSubmitted()){
-            switch($_POST['roles']){
-                case 'ROLE_REGULAR':
-                    $user->setRoles(array('ROLE_REGULAR'));
-                    break;
-                case 'ROLE_GOLDEN':
-                    $user->setRoles(array('ROLE_GOLDEN'));
-                    break;
-                case 'ROLE_DIAMOND':
-                    $user->setRoles(array('ROLE_DIAMOND'));
-                    break;
-                case 'ROLE_AGENT':
-                    $user->setRoles(array('ROLE_AGENT'));
-                    break;
-                case 'ROLE_AGENT_ADMIN':
-                    $user->setRoles(array('ROLE_AGENT_ADMIN'));
-                    break;
-                case 'ROLE_ADMIN':
-                    $user->setRoles(array('ROLE_ADMIN'));
-                    break;
+            if($role=='admin'){
+                $user->setRoles(array('ROLE_ADMIN'));
+                $role_name=$em->getRepository('AppBundle:RoleName')->find(2);
+                $user->setRoleName($role_name);
+            }elseif($role=='agent'){
+                switch ($_POST['roles']) {
+                    case 'ROLE_AGENT':
+                        $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
+                        $user->setRoles(array('ROLE_AGENT'));
+                        $user->setRoleName($role_name);
+                        break;
+                    case 'ROLE_AGENT_ADMIN':
+                        $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
+                        $user->setRoles(array('ROLE_AGENT_ADMIN'));
+                        $user->setRoleName($role_name);
+                        break;
+                }
+                $user->setRoles(array($_POST['roles']));
             }
-            $user->setRoles(array($_POST['roles']));
             $em->persist($user);
             $em->flush();
-            return new Response("<script>alert('创建用户成功');window.location.href='/admin/clientslist';</script>");
+            return new Response("<script>alert('创建成功');window.location.href='/admin/clientslist';</script>");
         }
 
-        return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView()));
+        return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView(),'agent_admins'=>$agent_admins));
     }
 
 

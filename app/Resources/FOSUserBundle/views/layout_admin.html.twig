@@ -213,7 +213,7 @@
                 <!-- Optionally, you can add icons to the links -->
                 <li {% if app.request.requestUri=="/admin/" %}class="active"{% endif %}><a href="{{ path('index') }}"><i class="fa fa-home"></i> <span>首页</span></a></li>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li {% if app.request.requestUri=="/admin/clientslist" %}class="active"{% endif %}><a href="{{ path('clientslist') }}"><i class="fa fa-user"></i> <span>所有客户</span></a></li>
+                    <li {% if app.request.requestUri=="/admin/clientslist" %}class="active"{% endif %}><a href="{{ path('clientslist') }}"><i class="fa fa-user"></i> <span>客户</span></a></li>
                 {% elseif app.user.roles[0]=='ROLE_AGENT' %}
                     <li {% if app.request.requestUri=="/admin/clientslist" %}class="active"{% endif %}><a href="{{ path('clientslist') }}"><i class="fa fa-users"></i> <span>我的客户</span></a></li>
                 {% elseif is_granted('ROLE_AGENT_ADMIN') %}
@@ -222,9 +222,11 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <li {% if app.request.requestUri=="/admin/agentslist" %}class="active"{% endif %}><a href="{{ path('agentslist') }}"><i class="fa fa-user"></i> <span>代理</span></a></li>
                 {% endif %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li {% if app.request.requestUri=="/admin/adminslist" %}class="active"{% endif %}><a href="{{ path('adminslist') }}"><i class="fa fa-user"></i> <span>管理员</span></a></li>
+                {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                 <li {% if app.request.requestUri=="/admin/modifyrole" %}class="active"{% endif %}><a href="{{ path('group') }}"><i class="fa fa-users"></i> <span>客户分组</span></a></li>
-                <li><a href=""><i class="fa fa-user"></i><span>所有代理</span></a></li>
                 <li {% if app.request.requestUri=="/admin/noticelist" %}class="active"{% endif %}><a href="{{ path('noticelist') }}"><i class="fa fa-file"></i> <span>通知公告</span></a></li>
                 {% endif %}
                 {% if app.user.roles[0]=='ROLE_AGENT' %}

@@ -1,25 +1,30 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
 {% block hidden_username %}{{ username }}{% endblock %}
-{% block page_header %}创建用户{% endblock %}
+{% block page_header %}创建代理{% endblock %}
 {% block content %}
     <div class="box box-primary" style="width: 50%;margin-left: 23%">
         <div class="box-header with-border">
-            <h3 class="box-title">创建用户</h3>
+            <h3 class="box-title">创建代理</h3>
         </div>
 
         {{ form_start(form) }}
         <div class="box-body">
-            <div class="form-group">
+            {% if app.request.requestUri=='/admin/create/agent' %}
+            <div class="form-group" id="head">
                 <label class="control-label">角色权限</label>
                 <select id="roles" name="roles">
-                    <option value="ROLE_AGENT_ADMIN">代理管理</option>
-                    <option value="ROLE_AGENT">代理</option>
-                    <option value="ROLE_REGULAR">普通会员</option>
-                    <option value="ROLE_GOLDEN">金卡会员</option>
-                    <option value="ROLE_DIAMOND">钻石会员</option>
-                    <option value="ROLE_ADMIN">普通管理员</option>
+                    <option value="ROLE_AGENT_ADMIN">渠道管理</option>
+                    <option value="ROLE_AGENT" id="role_agent">渠道代理</option>
+                </select>
+                <select id="role_agent_admin" name="role_agent_admin" style="visibility: hidden">
+                    {% for agent_admin in agent_admins %}
+                        <option value="{{ agent_admin.id }}">{{ agent_admin.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
+             {% else %}
+                <input type="hidden" name="roles" value="ROLE_ADMIN">
+             {% endif %}
             <div class="form-group">
                 {{ form_widget(form.imageFile) }}
             </div>
@@ -41,8 +46,22 @@
         </div>
 
         <div class="box-footer">
-            <button class="btn btn-primary" type="submit" id="_submit" name="_submit" >添加用户</button>
+            <button class="btn btn-primary" type="submit" id="_submit" name="_submit" >添加代理</button>
         </div>
         {{ form_end(form) }}
     </div>
+{% endblock %}
+{% block private_js %}
+    <script>
+        $(function(){
+            $(document).on('change','#roles',function(){
+                var $visibility = $('#role_agent_admin').attr('style');
+                if($visibility=='visibility:show'){
+                    $('#role_agent_admin').attr('style','visibility:show');
+                }else{
+                    $('#role_agent_admin').attr('style','visibility:hidden');
+                }
+            })
+        })
+    </script>
 {% endblock %}

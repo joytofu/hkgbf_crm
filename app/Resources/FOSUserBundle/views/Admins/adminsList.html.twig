@@ -1,0 +1,80 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+    <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block page_header %}所有管理员{% endblock %}
+{% block hidden_username %}{{ username }}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">管理员信息</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="admin" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>手机号码</th>
+                            <th>状态</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.username }}</td>
+                                <td>{{ admin.cellphone }}</td>
+                                <td><span class="label label-success">{% if admin.enabled==true %}已审核{% else %}审核中{% endif %}</span></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{{ path('create_user',{'role':'admin'}) }}"><button class="btn-microsoft">创建管理员</button></a>
+                </div><!-- /.box-body -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <!--SlimScroll-->
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <!--FastClick-->
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#admin").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+    <script>  /*审核用户*/
+        $(document).on('click','#set_enable',function(){
+            var $user_id = $(this).val();
+            var mythis = $(this);
+            $.ajax({
+                type:"POST",
+                url:"{{ app.request.baseurl }}/admin/setenabled/"+$user_id,
+                success:function(){
+                    var $verified = "<span class='label label-success' id='set_diable' value=" + $user_id +">已审核</span>";
+                    mythis.replaceWith($verified);
+
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
