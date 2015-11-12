@@ -27,12 +27,16 @@
                 {% for client in clients %}
                 <tr>
                     <td><a href="{{ path('productdetail',{'id':client.id}) }}" target="_blank">{{ client.name }}</a>
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}|<a href="{{ path('editclientprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>{% endif %}</td>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            |<a href="{{ path('editclientprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>
+                            <a href="javascript:void(0)" onclick="deleteClient({{ client.id }})"><i class="fa fa-remove" style="color:darkred"></i></a>
+                        {% endif %}
+                    </td>
                     <td>{{ client.cellphone }}</td>
                     <td>
-                            {% if client.vip=='普通会员' %}普通会员
-                            {% elseif client.vip=='金卡会员' %}金卡会员
-                            {% elseif client.vip=='钻石会员' %}钻石会员
+                            {% if client.vip=='普通会员' %}<span class="label bg-aqua">普通会员</span>
+                            {% elseif client.vip=='金卡会员' %}<span class="label bg-blue">金卡会员</span>
+                            {% elseif client.vip=='钻石会员' %}<span class="label bg-purple">钻石会员</span>
                             {% endif %}
                     </td>
                     <td>
@@ -44,7 +48,9 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <a href="{{ path('create_user') }}"><button class="btn-microsoft">创建用户</button></a>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('createclient') }}"><button class="btn btn-primary">新客户</button></a>
+            {% endif %}
         </div><!-- /.box-body -->
     </div>
     </div>
@@ -87,6 +93,13 @@
                     }
                 });
         });
+    </script>
+    <script>
+        function deleteClient(id){
+            if(confirm('你确定删除该客户?')){
+                window.location.href="{{ app.request.baseUrl }}/admin/deleteclient/"+id;
+            }
+        }
     </script>
 
 {% endblock %}

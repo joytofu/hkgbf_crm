@@ -107,6 +107,8 @@ class User extends BaseUser
     protected $role_name;
 
 
+
+
     public function __construct()
     {
         parent::__construct();
@@ -263,6 +265,8 @@ class User extends BaseUser
         $this->role_name = $roleName;
         return $this;
     }
+
+
 
 }
 

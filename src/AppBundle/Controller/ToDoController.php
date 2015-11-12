@@ -142,7 +142,7 @@ class ToDoController extends Controller
         $role = $user->getRoles();
         if($role[0]=='ROLE_ADMIN'||$role[0]=='ROLE_SUPER_ADMIN'){
             $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
-        }elseif($role[0]=='ROLE_AGENT'){
+        }elseif($role[0]=='ROLE_AGENT'||$role[0]=='ROLE_AGENT_ADMIN'){
             $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('user'=>$user,'status'=>false));
         }
         return $this->render('@FOSUser/ToDo/unfinished_todos.html.twig',array('unfinished_todos'=>$unfinished_todos));

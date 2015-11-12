@@ -17,6 +17,7 @@
                     <option value="ROLE_AGENT" id="role_agent">渠道代理</option>
                 </select>
                 <select id="role_agent_admin" name="role_agent_admin" style="visibility: hidden">
+                    <option value>请选择上级渠道管理</option>
                     {% for agent_admin in agent_admins %}
                         <option value="{{ agent_admin.id }}">{{ agent_admin.name }}</option>
                     {% endfor %}
@@ -54,12 +55,12 @@
 {% block private_js %}
     <script>
         $(function(){
+
             $(document).on('change','#roles',function(){
-                var $visibility = $('#role_agent_admin').attr('style');
-                if($visibility=='visibility:show'){
-                    $('#role_agent_admin').attr('style','visibility:show');
-                }else{
-                    $('#role_agent_admin').attr('style','visibility:hidden');
+               if(this.value=='ROLE_AGENT'){
+                   $('#role_agent_admin').attr('style','visibility:show');
+               }else{
+                   $('#role_agent_admin').attr('style','visibility:hidden');
                 }
             })
         })

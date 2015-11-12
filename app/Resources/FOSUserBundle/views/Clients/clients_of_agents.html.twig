@@ -13,49 +13,34 @@
                 <ul class="nav nav-tabs">
                     {% set i=1 %}
                     {% for agent in agents %}
-                    <li id="t{{ i }}"><a href="#tab_{{ i }}" data-toggle="tab">{{ agent.name }}</a></li>
-                    {% set i=i+1 %}
+                    <li id="t{{ agent.id }}" {% if i==1 %}class="active"{% endif %}><a href="#tab_{{ agent.id }}" data-toggle="tab">{{ agent.name }}</a></li>
+                        {% set i=i+1 %}
                     {% endfor %}
                 </ul>
                 <div class="tab-content">
-                    {% set j=1 %}
+
                     {% set k=1 %}
-                    {% for users in users_of_all_agents %}
-                    <div class="tab-pane" id="tab_{{ j }}">
+                    {% for agent in agents %}
+                    <div class="tab-pane {% if k==1 %}active{% endif %}" id="tab_{{ agent.id }}">
                         <div class="box-body">
                             <table id="products_list{{ k }}" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>用户名</th>
                                     <th>姓名</th>
                                     <th>手机号码</th>
-                                    <th>会员状态</th>
                                     <th>会员级别</th>
                                     <th>已购买产品</th>
                                 </tr>
                                 </thead>
-                                {% for user in users %}
+                                {% for client in agent.getClients() %}
                                     <tr>
-                                        <td><a href="{{ path('productdetail',{'id':user.id}) }}" target="_blank">{{ user.username }}</a></td>
-                                        <td>{{ user.name }}</td>
-                                        <td>{{ user.cellphone }}</td>
+                                        <td><a href="{{ path('productdetail',{'id':client.getId()}) }}" target="_blank">{{ client.name }}</a></td>
+                                        <td>{{ client.cellphone }}</td>
+                                        <td>{{ client.vip }}</td>
                                         <td>
-                                            {% if user.enabled==true %}
-                                            <span class="label label-success">已审核</span>
-                                            {% else %}
-                                            <button class="btn btn-warning" style="padding: 1px 5px;font-size:13px"><b>未审核</b></button>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if user.roles[0]=='ROLE_REGULAR' %}普通会员
-                                            {% elseif user.roles[0]=='ROLE_GOLDEN' %}金卡会员
-                                            {% elseif user.roles[0]=='ROLE_DIAMOND' %}钻石会员
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <input style="margin-left: 3%" type="checkbox" {% if user.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
-                                            <input style="margin-left: 3%" type="checkbox" {% if user.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
-                                            <input style="margin-left: 3%" type="checkbox" {% if user.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -63,7 +48,6 @@
                             {% set k=k+1 %}
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
-                        {% set j=j+1 %}
                     {% endfor %}
                 </div><!-- /.tab-content -->
             </div><!-- nav-tabs-custom -->

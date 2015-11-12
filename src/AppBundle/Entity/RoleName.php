@@ -30,12 +30,18 @@ class RoleName
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User",mappedBy="role_name",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="role_name",cascade={"persist"})
+     */
+    protected $clients;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client",mappedBy="role_name",cascade={"persist"})
      */
     protected $users;
 
     public function __construct(){
         $this->users = new ArrayCollection();
+        $this->clients = new ArrayCollection();
     }
 
     public function getId(){
@@ -48,6 +54,20 @@ class RoleName
 
     public function setName($name){
         $this->name = $name;
+    }
+
+    public function getClients(){
+        return $this->clients;
+    }
+
+    public function addClient(Client $client){
+        $this->clients[] = $client;
+        return $this;
+    }
+
+    public function removeClient(Client $client){
+        $this->clients->removeElement($client);
+        return $this;
     }
 
     public function getUsers(){

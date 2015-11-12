@@ -75,23 +75,10 @@
         </div>
     </div>
 
-        {#新注册用户块#}
-    <div class="col-lg-3 col-xs-6">
-        <div class="small-box bg-green">
-            <div class="inner">
-                <h3>{{ unverified_num }}</h3>
-
-                <p><b>新注册用户</b></p>
-
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a href="{{ path('unverifiedclientslist') }}" class="small-box-footer">
-                查看详情 <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
+        {% if is_granted('ROLE_ADMIN') %}
+        {#渠道代理块#}
+    {{ render(controller('AppBundle:Default:getAgentsCount')) }}
+        {% endif %}
 
         {% if is_granted('ROLE_ADMIN') %}
         {#新待办模块#}

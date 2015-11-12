@@ -21,7 +21,7 @@ class EditClientProfileType extends AbstractType
         $builder
             ->add('name',null,array('label'=>'姓名'))
             ->add('cellphone','text',array('label'=>'手机号码'))
-            ->add('email', 'email', array('label' => 'form.email'))
+            ->add('email', 'email', array('label' => '电子邮箱'))
             ->add('company',null,array('label'=>'公司名称'))
             ->add('imageFile','vich_image',array('label'=>'头像','allow_delete'=>'false','required'=>false))
             ->add('if_stock_purchased','checkbox',array('required'=>false))

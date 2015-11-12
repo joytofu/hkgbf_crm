@@ -33,22 +33,23 @@ class DefaultController extends Controller
     public function all_users_profile()
     {
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('AppBundle:User');
+        $data = $em->getRepository('AppBundle:Client');
 
         //ROLE_REGULAR
-        $regular = $data->findBy(array('roles'=>array('ROLE_REGULAR')));
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
+        $regular = $data->findBy(array('role_name'=>$role_name));
 
         //ROLE_GOLDEN
-        $golden = $data->findBy(array('roles'=>array('ROLE_GOLDEN')));
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(6);
+        $golden = $data->findBy(array('role_name'=>$role_name));
 
         //ROLE_DIAMOND
-        $diamond = $data->findBy(array('roles'=>array('ROLE_DIAMOND')));
-
-        //ROLE_AGENT
-        $agent = $data->findBy(array('roles'=>array('ROLE_AGENT')));
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(7);
+        $diamond = $data->findBy(array('role_name'=>$role_name));
 
 
-        return $this->render('FOSUserBundle:Clients:group.html.twig',array('regular'=>$regular,'golden'=>$golden,'diamond'=>$diamond,'agent'=>$agent));
+
+        return $this->render('FOSUserBundle:Clients:group.html.twig',array('regular'=>$regular,'golden'=>$golden,'diamond'=>$diamond));
     }
 
 
@@ -130,9 +131,6 @@ class DefaultController extends Controller
             $diamond_clients_num = count($diamond_clients);
         }
 
-
-
-
         return $this->render('FOSUserBundle::index_admin.html.twig',array(
             'username'=>$username,
             'lastlogin'=>$login['date'],
@@ -149,34 +147,42 @@ class DefaultController extends Controller
             'diamond_clients_num'=>$diamond_clients_num));
     }
 
+    public function getAgentsCountAction(){
+        $em = $this->getDoctrine()->getManager();
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
+        $agents = $em->getRepository('AppBundle:User')->findBy(array('role_name'=>$role_name));
+        return $this->render('@FOSUser/count/agents_count.html.twig',array('agents'=>$agents));
+    }
+
 
 
     /**
      * modify role of users
      * @Route("/modifyrole/{id}/{role}", name="modify_role")
      */
-    public function modifyRole(Request $request,$id,$role)
+    public function modifyRole($id,$role)
     {
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('AppBundle:User')->find($id);
-        $data->setRoles(array($role));
+        $client = $em->getRepository('AppBundle:Client')->find($id);
         switch($role){
             case 'ROLE_REGULAR':
-                $data->setRoles(array('ROLE_REGULAR'));
+                $vip = '普通会员';
+                $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
                 break;
             case 'ROLE_GOLDEN':
-                $data->setRoles(array('ROLE_GOLDEN'));
+                $vip = '金卡会员';
+                $role_name = $em->getRepository('AppBundle:RoleName')->find(6);
                 break;
             case 'ROLE_DIAMOND':
-                $data->setRoles(array('ROLE_DIAMOND'));
-                break;
-            case 'ROLE_AGENT':
-                $data->setRoles(array('ROLE_AGENT'));
+                $vip = '钻石会员';
+                $role_name = $em->getRepository('AppBundle:RoleName')->find(7);
                 break;
         }
+        $client->setVip($vip);
+        $client->setRoleName($role_name);
         $em->flush();
         echo "<script>alert('设置成功！')</script>";
-        return $this->redirectToRoute('all_users_profile');
+        return $this->redirectToRoute('group');
     }
 
 
@@ -220,6 +226,7 @@ class DefaultController extends Controller
      * @Route("/clientsofagents", name="clientsofagents")
      */
     public function clientsOfAgents(){
+        $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $pid = $user->getId();
         $agents = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array('pid'=>$pid));
@@ -228,16 +235,13 @@ class DefaultController extends Controller
         }else{
             $if_agent = true;
         }
-        $invitations = array();
+        $clients = array();
         foreach($agents as $agent){
-            $invitations[] = $agent->getInvite();
-        }
-        $users_of_all_agents = array();
-        foreach($invitations as $invitation){
-            $users_of_all_agents[] = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array('invitation'=>$invitation));
+            $clients[] = $em->getRepository('AppBundle:Client')->findBy(array('agent'=>$agent));
         }
 
-        return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'users_of_all_agents'=>$users_of_all_agents,'if_agent'=>$if_agent));
+
+        return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'clients'=>$clients,'if_agent'=>$if_agent));
     }
 
     /**
@@ -288,6 +292,7 @@ class DefaultController extends Controller
         $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$agent_admin_id));
         return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'j'=>$j));
     }
+
 
     /**
      * @Route("/noticelist", name="noticelist")
@@ -356,6 +361,7 @@ class DefaultController extends Controller
                         $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
                         $user->setRoles(array('ROLE_AGENT'));
                         $user->setRoleName($role_name);
+                        $user->setPid($_POST['role_agent_admin']);
                         break;
                     case 'ROLE_AGENT_ADMIN':
                         $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
@@ -367,11 +373,13 @@ class DefaultController extends Controller
             }
             $em->persist($user);
             $em->flush();
-            return new Response("<script>alert('创建成功');window.location.href='/admin/clientslist';</script>");
+            $redirect_url = $this->generateUrl($role.'slist');
+            return new Response("<script>alert('创建成功');window.location.href='$redirect_url';</script>");
         }
 
         return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView(),'agent_admins'=>$agent_admins));
     }
+
 
 
 

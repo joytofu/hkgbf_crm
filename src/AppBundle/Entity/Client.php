@@ -159,6 +159,17 @@ class Client
      */
     protected $agent;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RoleName", inversedBy="users")
+     * @ORM\JoinColumn(name="role_name_id", referencedColumnName="id")
+     */
+    protected $role_name;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $kill;
+
 
     public function __construct()
     {
@@ -166,6 +177,7 @@ class Client
         $this->insurances = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
         $this->vip = "普通会员";
+        $this->kill = "kill";
     }
 
 
@@ -424,6 +436,23 @@ class Client
     public function setAgent(User $agent){
         $this->agent = $agent;
         return $this;
+    }
+
+    public function getRoleName(){
+        return $this->role_name;
+    }
+
+    public function setRoleName(RoleName $roleName){
+        $this->role_name = $roleName;
+        return $this;
+    }
+
+    public function getKill(){
+        return $this->kill;
+    }
+
+    public function setKill($kill){
+        $this->kill = $kill;
     }
 
 }

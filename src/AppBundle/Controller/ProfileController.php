@@ -12,10 +12,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Entity\LatLng;
+use AppBundle\Form\CreateClientType;
 use AppBundle\Form\EditAgentProfileType;
-use AppBundle\Form\EditClientProfileType;
-use AppBundle\Form\EditProfileType;
 use FOS\UserBundle\Form\Type\ProfileFormType;
+use AppBundle\Form\EditClientProfileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,6 +90,97 @@ class ProfileController extends BaseProfileController
     }
 
     /**
+     * create client. only admin is granted.
+     * @Route("/admin/createclient", name="createclient")
+     */
+    public function createClient(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $client = new Client();
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
+        $form = $this->createForm(new CreateClientType($role_name),$client);
+        $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
+        $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
+
+        $form->handleRequest($request);
+        if($form->isSubmitted()&&$form->isValid()){
+
+            //将地址写入数组
+            $this->setAddress($em,$direct_cities,$client,$hkmt);
+
+            if(isset($_POST['createClient']['if_stock_purchased'])){
+                $client->setIfStockPurchased($_POST['createClient']['if_stock_purchased']);
+            }
+            if(isset($_POST['createClient']['if_insurance_purchased'])){
+                $client->setIfInsurancePurchased($_POST['createClient']['if_insurance_purchased']);
+            }
+            if(isset($_POST['createClient']['if_fund_purchased'])){
+                $client->setIfFundPurchased($_POST['createClient']['if_fund_purchased']);
+            }
+            $em->persist($client);
+            $em->flush();
+            $redirect_url = $this->generateUrl('clientslist');
+            return new Response("<script>alert('添加成功');window.location.href='$redirect_url';</script>");
+        }
+
+        return $this->render('@FOSUser/Clients/create_client.html.twig',array(
+            'client'=>$client,
+            'form'=>$form->createView()));
+    }
+
+
+    /**
+     * edit user profile. only admin is granted.
+     * @Route("/admin/editclientprofile/{id}", name="editclientprofile")
+     * @ParamConverter("client", class="AppBundle:Client")
+     */
+    public function editClientProfile(Request $request, Client $client,$id){
+        $form = $this->createForm(new EditClientProfileType(),$client);
+        $em = $this->getDoctrine()->getManager();
+        $clientname = $client->getName();
+        $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
+        $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
+        $address = $this->getCurrentAddress($client,$direct_cities);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted()&&$form->isValid()){
+
+            //将地址写入数组
+            $this->setAddress($em,$direct_cities,$client,$hkmt);
+            if(isset($_POST['editProfile']['if_stock_purchased'])){
+                $client->setIfStockPurchased($_POST['editProfile']['if_stock_purchased']);
+            }
+            if(isset($_POST['editProfile']['if_insurance_purchased'])){
+                $client->setIfInsurancePurchased($_POST['editProfile']['if_insurance_purchased']);
+            }
+            if(isset($_POST['editProfile']['if_fund_purchased'])){
+                $client->setIfFundPurchased($_POST['editProfile']['if_fund_purchased']);
+            }
+
+            $em->flush();
+            $group_url = $this->generateUrl('group');
+            return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
+        }
+
+        return $this->render('FOSUserBundle:Profile:edit_client_profile.html.twig',array(
+            'clientname'=>$clientname,
+            'client'=>$client,
+            'address'=>$address,
+            'form'=>$form->createView(),
+            'id'=>$id));
+    }
+
+    /**
+     * @Route("/admin/deleteclient/{id}",name="deleteclient")
+     * @ParamConverter("client", class="AppBundle:Client")
+     */
+    public function deleteClient(Client $client){
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($client);
+        $em->flush();
+        return $this->redirectToRoute('clientslist');
+    }
+
+    /**
      * edit private profile of your own
      * @Route("/admin/editprofile", name="editprofile")
      */
@@ -121,38 +212,6 @@ class ProfileController extends BaseProfileController
     }
 
 
-    /**
-     * edit user profile. only admin is granted.
-     * @Route("/admin/editclientprofile/{id}", name="editclientprofile")
-     * @ParamConverter("client", class="AppBundle:Client")
-     */
-    public function editUserProfile(Request $request, Client $client,$id){
-        $form = $this->createForm(new EditClientProfileType(),$client);
-        $em = $this->getDoctrine()->getManager();
-        $clientname = $client->getName();
-        $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
-        $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
-        $address = $this->getCurrentAddress($client,$direct_cities);
-
-        $form->handleRequest($request);
-        if($form->isSubmitted()&&$form->isValid()){
-
-
-            //将地址写入数组
-            $this->setAddress($em,$direct_cities,$client,$hkmt);
-
-            $em->flush();
-            $group_url = $this->generateUrl('group');
-            return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
-        }
-
-        return $this->render('FOSUserBundle:Profile:edit_client_profile.html.twig',array(
-            'clientname'=>$clientname,
-            'client'=>$client,
-            'address'=>$address,
-            'form'=>$form->createView(),
-            'id'=>$id));
-    }
 
     /**
      * @Route("/admin/editagentprofile/{id}",name="editagentprofile")
@@ -170,7 +229,7 @@ class ProfileController extends BaseProfileController
         return $this->render('@FOSUser/Profile/edit_agent_profile.html.twig',array('form'=>$form));
     }
 
-    protected function setAddress($em,$direct_cities,User $user,$hkmt){
+    protected function setAddress($em,$direct_cities,Client $client,$hkmt){
         //将地址写入数组
         if($_POST['area']&&$_POST['area'][0]!=-1) {
             $areaData = $em->getRepository('AppBundle:Area');
@@ -182,41 +241,41 @@ class ProfileController extends BaseProfileController
 
             //再将地址写入省市区镇，作经纬度之用
             if (in_array($add[0], $direct_cities)) {   //4个直辖市、2个特别行政区和台湾
-                $user->setProvince($add[0]);
-                $user->setCity($add[0]);
+                $client->setProvince($add[0]);
+                $client->setCity($add[0]);
                 if(!in_array($add[0],$hkmt)) {
-                    $user->setDistrict($add[1]);
-                    $user->setTown($add[2]);
+                    $client->setDistrict($add[1]);
+                    $client->setTown($add[2]);
                 }else{
-                    $user->setDistrict($add[2]);
+                    $client->setDistrict($add[2]);
                 }
-                $user->setAddressDetail($add[3]);
+                $client->setAddressDetail($add[3]);
                 $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
-                    'province' => $user->getProvince(),
-                    'district' => $user->getDistrict()));
-                $this->setLatLng($latlng_data, $user);
+                    'province' => $client->getProvince(),
+                    'district' => $client->getDistrict()));
+                $this->setLatLng($latlng_data, $client);
             } else {  //非直辖市
-                $user->setProvince($add[0]);
-                $user->setCity($add[1]);
+                $client->setProvince($add[0]);
+                $client->setCity($add[1]);
                 if ($add[1] != "中山市") {  //非中山市
-                    $user->setDistrict($add[2]);
-                    $user->setTown($add[3]);
+                    $client->setDistrict($add[2]);
+                    $client->setTown($add[3]);
                     if(!empty($add[4])) {
-                        $user->setAddressDetail($add[4]);
+                        $client->setAddressDetail($add[4]);
                     }
                     $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
-                        'province' => $user->getProvince(),
-                        'city' => $user->getCity(),
-                        'district' => $user->getDistrict()));
+                        'province' => $client->getProvince(),
+                        'city' => $client->getCity(),
+                        'district' => $client->getDistrict()));
                 } else {  //是中山市
-                    $user->setTown($add[2]);
-                    $user->setAddressDetail($add[3]);
+                    $client->setTown($add[2]);
+                    $client->setAddressDetail($add[3]);
                     $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array(
-                        'province' => $user->getProvince(),
-                        'city' => $user->getCity(),
-                        'district' => $user->getDistrict()));
+                        'province' => $client->getProvince(),
+                        'city' => $client->getCity(),
+                        'district' => $client->getDistrict()));
                 }
-                $this->setLatLng($latlng_data, $user);
+                $this->setLatLng($latlng_data, $client);
             }
         }
     }

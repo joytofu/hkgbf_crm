@@ -7,12 +7,15 @@
     <div class="box-header with-border">
         <h3 class="box-title">用户个人信息</h3>
         <div style="float:right">
-            <a href="{{ path('clientslist') }}"><button class="btn btn-dropbox">返回用户列表</button></a>
+            <a href="{{ path('group') }}"><button class="btn btn-dropbox">返回用户分组列表</button></a>
         </div>
     </div>
     {{ form_start(form,{'attr':{'role':'form'}}) }}
-    <form method="post" action="{{ path('editclientprofile',{'id':id}) }}" {{ form_enctype(form) }} role="form">
+    <form method="post" action="{{ path('createclient') }}" {{ form_enctype(form) }} role="form">
     <div class="box-body">
+        <div class="form-group">
+            {{ form_row(form.agent) }}
+        </div>
         <div class="form-group">
             {{ form_widget(form.imageFile) }}
         </div>
@@ -29,17 +32,13 @@
         <div class="form-group">
             {{ form_row(form.company) }}
         </div>
-        <div class="form-group">
-            <label class="control-label" for="editProfile_address">原地址</label>
-            <input type="text" class="form-control" value="{{ address }}" readonly>
-        </div>
         <div class="form-group" id="area">
-            <label class="control-label" for="editProfile_address">新地址</label>
+            <label class="control-label" for="createClient_address">地址</label>
         </div>
         <div class="form-group">
-            <input type="checkbox" id="editProfile_if_stock_purchased" name="editProfile[if_stock_purchased]"  {% if client.ifStockPurchased==true %}checked{% endif %}>已买股票
-            <input style="margin-left: 3%" type="checkbox" id="editProfile_if_insurance_purchased" name="editProfile[if_insurance_purchased]"  {% if client.ifInsurancePurchased==true %}checked{% endif %}>已买保险
-            <input style="margin-left: 3%" type="checkbox" id="editProfile_if_fund_purchased" name="editProfile[if_fund_purchased]"  {% if client.ifFundPurchased==true %}checked{% endif %}>已买基金
+            <input type="checkbox" id="createClient_if_stock_purchased" name="createClient[if_stock_purchased]">已买股票
+            <input style="margin-left: 3%" type="checkbox" id="createClient_if_insurance_purchased" name="createClient[if_insurance_purchased]">已买保险
+            <input style="margin-left: 3%" type="checkbox" id="createClient_if_fund_purchased" name="createClient[if_fund_purchased]">已买基金
         </div>
 
     </div>
