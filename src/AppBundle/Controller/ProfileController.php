@@ -187,18 +187,18 @@ class ProfileController extends BaseProfileController
     public function editProfile(Request $request){
         $user = $this->getUser();
         $username = $user->getUsername();
-        $form = $this->createForm(new EditProfileType(),$user);
+        $form = $this->createForm(new EditAgentProfileType(),$user);
         $em = $this->getDoctrine()->getManager();
 
-        $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
+        /*$direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
         $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
-        $address = $this->getCurrentAddress($user,$direct_cities);
+        $address = $this->getCurrentAddress($user,$direct_cities);*/
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
 
             //将地址写入数组
-            $this->setAddress($em,$direct_cities,$user,$hkmt);
+            /*$this->setAddress($em,$direct_cities,$user,$hkmt);*/
             $em->flush();
             $editprofile_url = $this->generateUrl('editprofile');
             return new Response("<script>alert('修改成功');window.location.href='$editprofile_url';</script>");
@@ -207,7 +207,6 @@ class ProfileController extends BaseProfileController
         return $this->render('FOSUserBundle:Profile:edit_profile.html.twig',array(
             'user'=>$user,
             'form'=>$form->createView(),
-            'address'=>$address,
             'username'=>$username));
     }
 
@@ -215,9 +214,9 @@ class ProfileController extends BaseProfileController
 
     /**
      * @Route("/admin/editagentprofile/{id}",name="editagentprofile")
-     * @ParamConverter("agent", class="AppBundle:Agent")
+     * @ParamConverter("agent", class="AppBundle:User")
      */
-    public function editAgentProfile(User $agent, Request $request){
+    public function editAgentProfile(User $agent, Request $request,$id){
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new EditAgentProfileType(),$agent);
         $form->handleRequest($request);
@@ -226,7 +225,7 @@ class ProfileController extends BaseProfileController
             $redirect_url = $this->generateUrl('');
             return new Response("<script>alert('修改成功！');window.location.href='$redirect_url'</script>");
         }
-        return $this->render('@FOSUser/Profile/edit_agent_profile.html.twig',array('form'=>$form));
+        return $this->render('@FOSUser/Profile/edit_agent_profile.html.twig',array('form'=>$form->createView(),'id'=>$id));
     }
 
     protected function setAddress($em,$direct_cities,Client $client,$hkmt){

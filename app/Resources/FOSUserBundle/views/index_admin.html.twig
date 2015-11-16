@@ -184,19 +184,19 @@
                            markers: [
                                {% for normal_client in normal_clients %}
                                {latLng: [{{ normal_client.longitude }},{{ normal_client.latitude }}],
-                                   name: "{{ normal_client.username }},{{ normal_client.city }}{{ normal_client.district }}{{ normal_client.town }}",
+                                   name: "{{ normal_client.name }},{{ normal_client.city }}{{ normal_client.district }}{{ normal_client.town }}",
                                    style:{fill:'#3A5FCD'}},
                                {% endfor %}
 
                                {% for golden_client in golden_clients %}
                                {latLng: [{{ golden_client.longitude }},{{ golden_client.latitude }}],
-                                   name: "{{ golden_client.username }},{{ golden_client.city }}{{ golden_client.district }}{{ golden_client.town }}",
+                                   name: "{{ golden_client.name }},{{ golden_client.city }}{{ golden_client.district }}{{ golden_client.town }}",
                                    style:{fill:'#EEEE00'}},
                                {% endfor %}
 
                                {% for diamond_client in diamond_clients %}
                                {latLng: [{{ diamond_client.longitude }},{{ diamond_client.latitude }}],
-                                   name: "{{ diamond_client.username }},{{ diamond_client.city }}{{ diamond_client.district }}{{ diamond_client.town }}",
+                                   name: "{{ diamond_client.name }},{{ diamond_client.city }}{{ diamond_client.district }}{{ diamond_client.town }}",
                                    style:{fill:'#8B0A50'}},
                                {% endfor %}
 

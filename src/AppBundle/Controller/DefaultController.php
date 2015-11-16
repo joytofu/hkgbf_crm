@@ -63,21 +63,9 @@ class DefaultController extends Controller
         }
         $username = $user->getUsername();
         $em = $this->getDoctrine()->getManager();
-        $user_data = $em->getRepository('AppBundle:User');
+        $client_data = $em->getRepository('AppBundle:Client');
         $lastlogin = $user->getLastLogin();
         $login = get_object_vars($lastlogin);
-        if($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $clients = $user_data->findAll();
-            $clients_num = count($clients);
-            $unverified_clients = $user_data->findBy(array('enabled'=>false));
-            $unverified_num = count($unverified_clients);
-        }else{
-            $invitation = $user->getInvite();
-            $clients = $user_data->findBy(array('invitation' => $invitation));
-            $clients_num = count($clients);
-            $unverified_clients = $user_data->findBy(array('invitation'=>$invitation,'enabled'=>false));
-            $unverified_num = count($unverified_clients);
-        }
 
         //todos
         $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
@@ -96,46 +84,45 @@ class DefaultController extends Controller
             $notice_active = null;
         }
 
-        //chart
+        //chart&clients count
         $role = $user->getRoles();
         if($role[0]=='ROLE_AGENT') {
-            $invitation = $user->getInvite();
-            $normal_clients = $user_data->findBy(array('invitation' => $invitation, 'roles' => array('ROLE_REGULAR')));
+            $normal_clients = $client_data->findBy(array('agent' => $user, 'vip'=>'普通会员'));
             $normal_clients_num = count($normal_clients);
 
-            $golden_clients = $user_data->findBy(array('invitation' => $invitation, 'roles' => array('ROLE_GOLDEN')));
+            $golden_clients = $client_data->findBy(array('agent' => $user, 'vip'=>'金卡会员'));
             $golden_clients_num = count($golden_clients);
 
-            $diamond_clients = $user_data->findBy(array('invitation' => $invitation, 'roles' => array('ROLE_DIAMOND')));
+            $diamond_clients = $client_data->findBy(array('agent' => $user, 'vip'=>'钻石会员'));
             $diamond_clients_num = count($diamond_clients);
         }elseif($role[0]=='ROLE_AGENT_ADMIN'){
             $pid = $user->getId();
-            $agents = $user_data->findBy(array('pid'=>$pid));
+            $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$pid));
             $normal_clients = array();
             $golden_clients = array();
             $diamond_clients = array();
             foreach($agents as $agent){
-                $normal_clients = array_merge($normal_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'roles'=>array('ROLE_REGULAR'))));
-                $golden_clients = array_merge($golden_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'roles'=>array('ROLE_GOLDEN'))));
-                $diamond_clients = array_merge($diamond_clients,$user_data->findBy(array('invitation'=>$agent->getInvite(),'roles'=>array('ROLE_DIAMOND'))));
+                $normal_clients = array_merge($normal_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'普通会员')));
+                $golden_clients = array_merge($golden_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'金卡会员')));
+                $diamond_clients = array_merge($diamond_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'钻石会员')));
             }
             $normal_clients_num = count($normal_clients);
             $golden_clients_num = count($golden_clients);
             $diamond_clients_num = count($diamond_clients);
         }elseif($this->isGranted('ROLE_ADMIN')){
-            $normal_clients = $user_data->findBy(array('roles'=>array('ROLE_REGULAR')));
-            $golden_clients = $user_data->findBy(array('roles'=>array('ROLE_GOLDEN')));
-            $diamond_clients = $user_data->findBy(array('roles'=>array('ROLE_DIAMOND')));
+            $normal_clients = $client_data->findBy(array('vip'=>'普通会员'));
+            $golden_clients = $client_data->findBy(array('vip'=>'金卡会员'));
+            $diamond_clients = $client_data->findBy(array('vip'=>'钻石会员'));
             $normal_clients_num = count($normal_clients);
             $golden_clients_num = count($golden_clients);
             $diamond_clients_num = count($diamond_clients);
         }
+        $clients_num = $normal_clients_num+ $golden_clients_num+$diamond_clients_num;
 
         return $this->render('FOSUserBundle::index_admin.html.twig',array(
             'username'=>$username,
             'lastlogin'=>$login['date'],
             'clients_num'=>$clients_num,
-            'unverified_num'=>$unverified_num,
             'unfinished_todos'=>$unfinished_todos,
             'notice'=>$notice,
             'notice_active'=>$notice_active,
