@@ -13,6 +13,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Entity\LatLng;
 use AppBundle\Form\CreateClientType;
+use AppBundle\Form\CreateUserType;
 use AppBundle\Form\EditAgentProfileType;
 use FOS\UserBundle\Form\Type\ProfileFormType;
 use AppBundle\Form\EditClientProfileType;
@@ -157,7 +158,7 @@ class ProfileController extends BaseProfileController
             }
 
             $em->flush();
-            $group_url = $this->generateUrl('group');
+            $group_url = $this->generateUrl('clientslist');
             return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
         }
 
@@ -170,14 +171,25 @@ class ProfileController extends BaseProfileController
     }
 
     /**
-     * @Route("/admin/deleteclient/{id}",name="deleteclient")
-     * @ParamConverter("client", class="AppBundle:Client")
-     */
+ * @Route("/admin/deleteclient/{id}",name="deleteclient")
+ * @ParamConverter("client", class="AppBundle:Client")
+ */
     public function deleteClient(Client $client){
         $em = $this->getDoctrine()->getManager();
         $em->remove($client);
         $em->flush();
         return $this->redirectToRoute('clientslist');
+    }
+
+    /**
+     * @Route("/admin/deleteagent/{id}",name="deleteagent")
+     * @ParamConverter("agent", class="AppBundle:User")
+     */
+    public function deleteAgent(User $user){
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+        return $this->redirectToRoute('agentslist');
     }
 
     /**
@@ -214,18 +226,22 @@ class ProfileController extends BaseProfileController
 
     /**
      * @Route("/admin/editagentprofile/{id}",name="editagentprofile")
-     * @ParamConverter("agent", class="AppBundle:User")
+     * @ParamConverter("user", class="AppBundle:User")
      */
     public function editAgentProfile(User $agent, Request $request,$id){
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(new EditAgentProfileType(),$agent);
+        $form = $this->createForm(new CreateUserType(),$agent);
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+            /*if(isset($_POST['password'])){
+                $userManager = $this->get('fos_user.user_manager');
+                $userManager->updatePassword($agent);
+            }*/
             $em->flush();
-            $redirect_url = $this->generateUrl('');
+            $redirect_url = $this->generateUrl('agentslist');
             return new Response("<script>alert('修改成功！');window.location.href='$redirect_url'</script>");
         }
-        return $this->render('@FOSUser/Profile/edit_agent_profile.html.twig',array('form'=>$form->createView(),'id'=>$id));
+        return $this->render('FOSUserBundle:Profile:edit_agent_profile.html.twig',array('form'=>$form->createView(),'id'=>$id,'agent'=>$agent));
     }
 
     protected function setAddress($em,$direct_cities,Client $client,$hkmt){
@@ -317,11 +333,20 @@ class ProfileController extends BaseProfileController
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->findUserBy(array('id'=>$id));
         $user->setEnabled(true);
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('agentslist');
+    }
 
-
-        return $this->redirectToRoute('clientslist');
+    /**
+     * @Route("/admin/setdisabled/{id}",name="setdisable")
+     * @Method({"POST"})
+     */
+    public function setDisableData($id){
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $userManager->findUserBy(array('id'=>$id));
+        $user->setEnabled(false);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('agentslist');
     }
 
     /**

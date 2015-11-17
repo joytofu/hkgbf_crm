@@ -20,7 +20,6 @@
                      <li {% if i==1 %}class="active"{% endif %}><a href="#agent_{{ i }}" data-toggle="tab">{{ agent_admin.name }}</a></li>
                      {% set i=i+1 %}
                      {% endfor %}
-
                  </ul>
                  <div class="tab-content">
                      {% set j=1 %}
@@ -61,17 +60,32 @@
     </script>
     <script>  /*审核用户*/
         $(document).on('click','#set_enable',function(){
-                var $user_id = $(this).val();
+                var $user_id = $(this).attr('value');
                 var mythis = $(this);
                 $.ajax({
                     type:"POST",
                     url:"{{ app.request.baseurl }}/admin/setenabled/"+$user_id,
                     success:function(){
-                        var $verified = "<span class='label label-success' id='set_diable' value=" + $user_id +">已审核</span>";
+                        var $verified = "<span class='label label-success' id='set_diable' style='cursor:pointer' value=" + $user_id +">已审核</span>";
                         mythis.replaceWith($verified);
 
                     }
                 });
+        });
+
+        /*取消审核*/
+        $(document).on('click','#set_disable',function(){
+            var $user_id = $(this).attr('value');
+            var mythis = $(this);
+            $.ajax({
+                type:"POST",
+                url:"{{ app.request.baseurl }}/admin/setdisabled/"+$user_id,
+                success:function(){
+                    var $verified = "<span class='label label-warning' id='set_enable' style='cursor:pointer' value=" + $user_id +">审核中</span>";
+                    mythis.replaceWith($verified);
+
+                }
+            });
         });
     </script>
 

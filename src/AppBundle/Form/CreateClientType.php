@@ -25,6 +25,9 @@ class CreateClientType extends AbstractType
             ->add('cellphone',null,array('label'=>'手机号码','required'=>true))
             ->add('imageFile','vich_image',array('label'=>'头像', 'required'=>false))
             ->add('company',null,array('label'=>'单位名称'))
+            ->add('if_stock_purchased',null,array('label'=>'已买股票'))
+            ->add('if_insurance_purchased',null,array('label'=>'已买保险'))
+            ->add('if_fund_purchased',null,array('label'=>'已买基金'))
             ->add('agent','entity',array(
                 'class'=>'AppBundle\Entity\User',
                 'placeholder'=>'请选择所属代理',

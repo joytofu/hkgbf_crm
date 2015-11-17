@@ -7,15 +7,18 @@
                 <th>姓名</th>
                 <th>手机号码</th>
                 <th>公司</th>
+                <th>状态</th>
             </tr>
             </thead>
             <tbody>
             {% for agent in agents %}
                 <tr>
-                    <td>{{ agent.username }}</td>
+                    <td>{{ agent.username }}<a href="{{ path('editagentprofile',{'id':agent.id}) }}"><i class="fa fa-wrench"></i></a>
+                        <a href="javascript:void(0)" onclick="deleteAgent({{ agent.id }})"><i class="fa fa-remove" style="color:darkred"></i></a></td>
                     <td>{{ agent.name }}</td>
                     <td>{{ agent.cellphone }}</td>
                     <td>{{ agent.company }}</td>
+                    <td>{% if agent.enabled==true %}<span class="label label-success" id="set_disable" style="cursor:pointer" value="{{ agent.id }}">已审核</span>{% elseif agent.enabled==false %}<span class="label label-warning" id="set_enable" value="{{ agent.id }}" style="cursor:pointer">审核中</span>{% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>

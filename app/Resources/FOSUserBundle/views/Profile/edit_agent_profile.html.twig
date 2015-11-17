@@ -7,14 +7,31 @@
     <div class="box-header with-border">
         <h3 class="box-title">用户个人信息</h3>
         <div style="float:right">
-            <a href="{{ path('group') }}"><button class="btn btn-dropbox">返回用户分组列表</button></a>
+            <a href="{{ path('agentslist') }}"><button class="btn btn-dropbox">返回代理列表</button></a>
         </div>
     </div>
-    {{ form_start(form,{'attr':{'role':'form'}}) }}
-    <form method="post" action="{{ path('editclientprofile',{'id':id}) }}" {{ form_enctype(form) }} role="form">
+
+    <form method="post" action="{{ path('editagentprofile',{'id':id}) }}" {{ form_enctype(form) }} role="form">
     <div class="box-body">
         <div class="form-group">
             {{ form_widget(form.imageFile) }}
+        </div>
+        <div class="form-group">
+            <label class="control-label required" for="createUser_username">用户名:{{ agent.username }}</label>
+            <input type="hidden" id="createUser_username" name="createUser[username]" required="required" maxlength="255" pattern=".{2,}" class="form-control" value="{{ agent.username }}">
+        </div>
+        {#<div class="form-group">
+            <div class="form-group">
+                <label class="control-label" for="createUser_plainPassword_first">密码：</label>
+                <input type="password" id="createUser_plainPassword_first" name="createUser[plainPassword][first]" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="createUser_plainPassword_second">确认密码：</label>
+                <input type="password" id="createUser_plainPassword_second" name="createUser[plainPassword][second]" class="form-control">
+            </div>
+        </div>#}
+        <div class="form-group">
+            {{ form_row(form.plainPassword) }}
         </div>
 
         <div class="form-group">
@@ -36,13 +53,10 @@
         <div class="form-group" id="area">
             <label class="control-label" for="editProfile_address">新地址</label>
         </div>#}
-
-
     </div>
     <div class="box-footer">
     <button class="btn btn-primary" type="submit" id="_submit" name="_submit" >保存修改</button>
     </div>
-        {{ form_row(form._token) }}
         </form>
     </div>
 

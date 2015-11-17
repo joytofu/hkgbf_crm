@@ -457,6 +457,7 @@ abstract class User implements UserInterface, GroupableInterface
     public function setPassword($password)
     {
         $this->password = $password;
+        
 
         return $this;
     }

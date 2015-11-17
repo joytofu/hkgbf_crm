@@ -39,8 +39,9 @@ class User extends BaseUser
     protected $name;
 
 
+
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      * @Assert\Length(max="11",maxMessage="手机号码过长，请重新输入！")
      * @Assert\Length(min="11",minMessage="手机号码过短，请重新输入！")
      * @Assert\Regex(pattern="/^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/", message="手机号码不正确，请重新输入!")
@@ -135,6 +136,7 @@ class User extends BaseUser
     {
         return $this->name;
     }
+
 
     public function setCellphone($cellphone)
     {
