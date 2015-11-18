@@ -27,10 +27,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use FOS\UserBundle\Controller\ProfileController as BaseProfileController;
 use AppBundle\Form\EditUsersType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class ProfileController extends BaseProfileController
 {
+
+
     /**
      * Show the user information
      * @Route("/userdetail/{id}", name="userdetail")
@@ -198,8 +202,11 @@ class ProfileController extends BaseProfileController
      */
     public function editProfile(Request $request){
         $user = $this->getUser();
+        if(!$user){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
         $username = $user->getUsername();
-        $form = $this->createForm(new EditAgentProfileType(),$user);
+        $form = $this->createForm(new CreateUserType(),$user);
         $em = $this->getDoctrine()->getManager();
 
         /*$direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
@@ -208,11 +215,11 @@ class ProfileController extends BaseProfileController
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
-
-            //将地址写入数组
-            /*$this->setAddress($em,$direct_cities,$user,$hkmt);*/
+            if($user->getPlainPassword()!==0){
+                $user->setPasswordRequestedAt(new \DateTime('now'));
+            }
             $em->flush();
-            $editprofile_url = $this->generateUrl('editprofile');
+            $editprofile_url = $this->generateUrl('index');
             return new Response("<script>alert('修改成功');window.location.href='$editprofile_url';</script>");
         }
 
@@ -233,10 +240,9 @@ class ProfileController extends BaseProfileController
         $form = $this->createForm(new CreateUserType(),$agent);
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
-            /*if(isset($_POST['password'])){
-                $userManager = $this->get('fos_user.user_manager');
-                $userManager->updatePassword($agent);
-            }*/
+            if($agent->getPlainPassword()!==0){
+                $agent->setPasswordRequestedAt(new \DateTime('now'));
+            }
             $em->flush();
             $redirect_url = $this->generateUrl('agentslist');
             return new Response("<script>alert('修改成功！');window.location.href='$redirect_url'</script>");

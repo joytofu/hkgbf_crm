@@ -18,20 +18,17 @@
         </div>
         <div class="form-group">
             <label class="control-label required" for="createUser_username">用户名:{{ agent.username }}</label>
-            <input type="hidden" id="createUser_username" name="createUser[username]" required="required" maxlength="255" pattern=".{2,}" class="form-control" value="{{ agent.username }}">
+            <input type="hidden" id="createUser_username" name="createUser[username]"  value="{{ agent.username }}">
         </div>
-        {#<div class="form-group">
+        <div class="form-group">
             <div class="form-group">
                 <label class="control-label" for="createUser_plainPassword_first">密码：</label>
-                <input type="password" id="createUser_plainPassword_first" name="createUser[plainPassword][first]" class="form-control">
+                <input type="password" id="createUser_plainPassword_first" name="createUser[plainPassword][first]" class="form-control" placeholder="如要修改密码请填写新密码，如不修改请留空">
             </div>
             <div class="form-group">
                 <label class="control-label" for="createUser_plainPassword_second">确认密码：</label>
-                <input type="password" id="createUser_plainPassword_second" name="createUser[plainPassword][second]" class="form-control">
+                <input type="password" id="createUser_plainPassword_second" name="createUser[plainPassword][second]" class="form-control" placeholder="请再次输入密码">
             </div>
-        </div>#}
-        <div class="form-group">
-            {{ form_row(form.plainPassword) }}
         </div>
 
         <div class="form-group">

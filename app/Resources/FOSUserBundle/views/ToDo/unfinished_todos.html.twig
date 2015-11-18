@@ -4,14 +4,14 @@
         <i class="fa fa-bell-o"></i>
         {% if is_granted('ROLE_ADMIN') %}
             <span class="label label-warning">{{ unfinished_todos|length }}</span>
-        {% elseif app.user.roles[0]=='ROLE_AGENT' %}
+        {% elseif app.user.roles[0]=='ROLE_AGENT' or app.user.roles[0]=='ROLE_AGENT_ADMIN' %}
             <span class="label label-warning">{{ unfinished_todos|length }}</span>
         {% endif %}
     </a>
     <ul class="dropdown-menu">
         {% if is_granted('ROLE_ADMIN') %}
             <li class="header">你有{{ unfinished_todos|length }}条待办事项</li>
-        {% elseif app.user.roles[0]=='ROLE_AGENT' %}
+        {% elseif app.user.roles[0]=='ROLE_AGENT' or app.user.roles[0]=='ROLE_AGENT_ADMIN' %}
             <li class="header">你有{{ unfinished_todos|length }}条未完成待办</li>
         {% endif %}
         <li>
@@ -25,7 +25,7 @@
                             </a>
                         </li><!-- end notification -->
                     {% endfor %}
-                {% elseif app.user.roles[0]=='ROLE_AGENT' %}
+                {% elseif app.user.roles[0]=='ROLE_AGENT' or app.user.roles[0]=='ROLE_AGENT_ADMIN' %}
                     {% for ongoingtodo in unfinished_todos %}
                         <li>
                             <a href="{{ path('todolist') }}">
