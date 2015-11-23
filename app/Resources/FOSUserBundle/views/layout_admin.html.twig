@@ -60,7 +60,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- Messages: style can be found in dropdown.less-->
-                    <li class="dropdown messages-menu">
+                    {#<li class="dropdown messages-menu">
                         <!-- Menu toggle button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-envelope-o"></i>
@@ -90,12 +90,12 @@
                             </li>
                             <li class="footer"><a href="#">查看全部信息</a></li>
                         </ul>
-                    </li><!-- /.messages-menu -->
+                    </li>#}<!-- /.messages-menu -->
 
                     <!-- Notifications Menu -->
                    {{ render(controller('AppBundle:ToDo:getUnfinishedTodos')) }}
                     <!-- Tasks Menu -->
-                    <li class="dropdown tasks-menu">
+                    {#<li class="dropdown tasks-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-flag-o"></i>
@@ -128,7 +128,7 @@
                                 <a href="#">View all tasks</a>
                             </li>
                         </ul>
-                    </li>
+                    </li>#}
                     <!-- User Account Menu -->
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
@@ -171,9 +171,9 @@
                         </ul>
                     </li>
                     <!-- Control Sidebar Toggle Button -->
-                    <li>
+                    {#<li>
                         <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                    </li>
+                    </li>#}
                 </ul>
             </div>
         </nav>
@@ -234,13 +234,13 @@
                 {% elseif is_granted('ROLE_ADMIN') %}
                 <li {% if app.request.requestUri=="/admin/alltodolist" %}class="active"{% endif %}><a href="{{ path('alltodolist') }}"><i class="fa fa-list"></i> <span>待办事项</span></a></li>
                 {% endif %}
-                <li class="treeview">
+                {#<li class="treeview">
                     <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
                         <li><a href="#">Link in level 2</a></li>
                         <li><a href="#">Link in level 2</a></li>
                     </ul>
-                </li>
+                </li>#}
             </ul><!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->
@@ -279,7 +279,7 @@
         <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
     </footer>
 
-    <!-- Control Sidebar -->
+   {# <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
@@ -340,7 +340,7 @@
     </aside><!-- /.control-sidebar -->
     <!-- Add the sidebar's background. This div must be placed
          immediately after the control sidebar -->
-    <div class="control-sidebar-bg"></div>
+    <div class="control-sidebar-bg"></div>#}
 </div><!-- ./wrapper -->
 
 <!-- REQUIRED JS SCRIPTS -->
