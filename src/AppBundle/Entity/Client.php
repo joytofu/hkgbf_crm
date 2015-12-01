@@ -166,6 +166,12 @@ class Client
     protected $role_name;
 
     /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User",inversedBy="single_client",cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id",referencedColumnName="id")
+     */
+    protected $single_user;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $kill;
@@ -453,6 +459,15 @@ class Client
 
     public function setKill($kill){
         $this->kill = $kill;
+    }
+
+    public function getSingleUser(){
+        return $this->single_user;
+    }
+
+    public function setSingleUser(User $user){
+        $this->single_user = $user;
+        return $this;
     }
 
 }

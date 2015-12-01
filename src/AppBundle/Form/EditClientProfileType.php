@@ -19,6 +19,7 @@ class EditClientProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('single_user',new CreateUserType())
             ->add('name',null,array('label'=>'姓名'))
             ->add('cellphone','text',array('label'=>'手机号码'))
             ->add('email', 'email', array('label' => '电子邮箱'))

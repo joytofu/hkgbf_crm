@@ -28,7 +28,7 @@ class DefaultController extends Controller
     /**
      * load users who are grouped by ROLES
      * @Route("/group", name="group")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function all_users_profile()
     {
@@ -60,6 +60,9 @@ class DefaultController extends Controller
         $user = $this->getUser();
         if(!$user){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+        if($user->getRoleName()->getId()==5){
+            return $this->redirectToRoute('client_index');
         }
         $username = $user->getUsername();
         $em = $this->getDoctrine()->getManager();
@@ -134,6 +137,13 @@ class DefaultController extends Controller
             'diamond_clients_num'=>$diamond_clients_num));
     }
 
+    /**
+     * @Route("/clientindex",name="client_index")
+     */
+    public function clientIndex(){
+        return $this->render('@FOSUser/Clients/client_index.html.twig',array());
+    }
+
     public function getAgentsCountAction(){
         $em = $this->getDoctrine()->getManager();
         $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
@@ -180,7 +190,7 @@ class DefaultController extends Controller
     public function showClients(){
         $agent = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        if($this->isGranted('ROLE_SUPER_ADMIN')) {
+        if($this->isGranted('ROLE_ADMIN')) {
             $clients = $em->getRepository('AppBundle:Client')->findAll();
         }else{
             $clients = $em->getRepository('AppBundle:Client')->findBy(array('agent'=>$agent));

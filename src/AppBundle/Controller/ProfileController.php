@@ -101,6 +101,11 @@ class ProfileController extends BaseProfileController
     public function createClient(Request $request){
         $em = $this->getDoctrine()->getManager();
         $client = new Client();
+        //设置会员级别
+        $normal = $em->getRepository('AppBundle:RoleName')->find(5);
+        $client->setRoleName($normal);
+
+
         $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
         $form = $this->createForm(new CreateClientType($role_name),$client);
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
@@ -108,6 +113,30 @@ class ProfileController extends BaseProfileController
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+            $user = $client->getSingleUser();
+            $user->setRoleName($normal);
+            $user->setEnabled(true);
+
+            //设置手机、邮箱、公司到client表
+            $cellphone = $_POST['createClient']['single_user']['cellphone'];
+            $email = $_POST['createClient']['single_user']['email'];
+            $company = $_POST['createClient']['single_user']['company'];
+            if(isset($cellphone)){
+                $client->setCellphone($cellphone);
+            }
+            if(isset($email)){
+                $client->setEmail($email);
+            }
+            if(isset($company)){
+                $client->setCompany($company);
+            }
+
+
+            //设置对应的代理
+            if(isset($_POST['createClient']['agent'])){
+                $agent = $em->getRepository('AppBundle:User')->find($_POST['createClient']['agent']);
+                $client->setAgent($agent);
+            }
 
             //将地址写入数组
             $this->setAddress($em,$direct_cities,$client,$hkmt);
@@ -121,6 +150,7 @@ class ProfileController extends BaseProfileController
             if(isset($_POST['createClient']['if_fund_purchased'])){
                 $client->setIfFundPurchased($_POST['createClient']['if_fund_purchased']);
             }
+            $user->setSingleClient($client);
             $em->persist($client);
             $em->flush();
             $redirect_url = $this->generateUrl('clientslist');
@@ -141,6 +171,7 @@ class ProfileController extends BaseProfileController
     public function editClientProfile(Request $request, Client $client,$id){
         $form = $this->createForm(new EditClientProfileType(),$client);
         $em = $this->getDoctrine()->getManager();
+        $user = $client->getSingleUser();
         $clientname = $client->getName();
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
         $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
@@ -148,6 +179,9 @@ class ProfileController extends BaseProfileController
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+            if($user->getPlainPassword()!==0){
+                $user->setPasswordRequestedAt(new \DateTime('now'));
+            }
 
             //将地址写入数组
             $this->setAddress($em,$direct_cities,$client,$hkmt);

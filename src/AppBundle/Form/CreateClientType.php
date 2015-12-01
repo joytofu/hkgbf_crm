@@ -20,6 +20,7 @@ class CreateClientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('single_user',new CreateUserType())
             ->add('name',null,array('label'=>'客户姓名','required'=>true))
             ->add('email',null,array('label'=>'电子邮箱'))
             ->add('cellphone',null,array('label'=>'手机号码','required'=>true))
@@ -46,6 +47,7 @@ class CreateClientType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Client',
+
         ));
     }
 

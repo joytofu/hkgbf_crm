@@ -27,7 +27,7 @@
                 {% for client in clients %}
                 <tr>
                     <td><a href="{{ path('productdetail',{'id':client.id}) }}" target="_blank">{{ client.name }}</a>
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        {% if is_granted('ROLE_ADMIN') %}
                             |<a href="{{ path('editclientprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>
                             <a href="javascript:void(0)" onclick="deleteClient({{ client.id }})"><i class="fa fa-remove" style="color:darkred"></i></a>
                         {% endif %}
