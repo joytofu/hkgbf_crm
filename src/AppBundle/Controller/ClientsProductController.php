@@ -499,10 +499,17 @@ class ClientsProductController extends Controller
 
     /**
      * @Route("/statement_detail/{id}",name="statement_detail")
+     * @ParamConverter("statement", class="AppBundle:Statement")
      */
-    public function statement_detail(){
+    public function statement_detail(Statement $statement){
+        $client_of_statement = $statement->getClient();
         $user = $this->getUser();
         $client = $user->getSingleClient();
+        if($client_of_statement!==$client){
+            $redirect_url = "/admin/client_index";
+            return new Response("<script>alert('你没有权限浏览该用户数据!');window.location.href='$redirect_url'</script>");
+        }
+        return $this->render("@FOSUser/Clients/statement_detail.html.twig",array('statement'=>$statement));
 
     }
 
