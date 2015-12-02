@@ -10,7 +10,9 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Statement;
 use AppBundle\Form\InsuranceType;
+use AppBundle\Form\StatementType;
 use AppBundle\Form\StockType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\User;
@@ -54,7 +56,11 @@ class ClientsProductController extends Controller
         $client_name = $client->getName();
 
         //create upload form
-        $upload_form = $this->createUploadForm($client);
+        $upload_form = $this->createUploadForm('productFile',$client,'upload_data');
+
+        //create upload statement form
+        $statement = new Statement();
+        $statement_form = $this->createForm(new StatementType($statement));
 
 
         return $this->render('FOSUserBundle:Clients:products_detail.html.twig',array(
@@ -65,24 +71,26 @@ class ClientsProductController extends Controller
             'client_name'=>$client_name,
             'sum'=>$sum,
             'user_id'=>$id,
-            'upload_form'=>$upload_form->createView()));
+            'upload_form'=>$upload_form->createView(),
+            'statement_form'=>$statement_form->createView()));
     }
 
     /**
      * 客户产品资料上传
      * @Route("/product_upload/{id}", name="upload_data")
-     * @ParamConverter("user", class="AppBundle:User")
+     * @ParamConverter("client", class="AppBundle:Client")
      * @Method({"GET","POST"})
      */
-    public function uploadProductFile(User $user,Request $request){
-
-        $form = $this->createUploadForm($user);
+    public function uploadProductFile(Client $client,Request $request){
+        $url="upload_data";
+        $form = $this->createUploadForm('productFile',$client,$url);
         $form->handleRequest($request);
         $file = $form['productFile']->getData();
 
 
         if($form->isSubmitted()) {
-            $filename = $file->getClientOriginalName();
+            $data = $this->handleExcelData($file);
+            /*$filename = $file->getClientOriginalName();
             $ext = $file->getClientOriginalExtension();
             $ext_arr = array('xlsx','xls');
 
@@ -101,16 +109,15 @@ class ClientsProductController extends Controller
             $objReader = PHPExcel_IOFactory::createReader($fileType);//获取文件读取操作对象
             $objPHPExcel = $objReader->load($filename2);//加载文件
             $excel_data = $objPHPExcel->getSheet(0)->toArray();//读取第1个sheet里的数据 全部放入到数组中
-            $dataNum = count($excel_data);
+            $dataNum = count($excel_data);*/
 
             //判断上传的文件名，选择对应资料写入器
-            if(strstr($filename,'stock')){
-                $this->upload_stock_data($user,$dataNum,$excel_data);
-            }elseif(strstr($filename,'insurance')){
-                print_r($excel_data);exit;
-                $this->upload_insurance_data($user,$dataNum,$excel_data);
-            }elseif(strstr($filename,'fund')){
-                $this->upload_fund_data($user,$dataNum,$excel_data);
+            if(strstr($data['filename'],'stock')){
+                $this->upload_stock_data($client,$data['dataNum'],$data['excel_data']);
+            }elseif(strstr($data['filename'],'insurance')){
+                $this->upload_insurance_data($client,$data['dataNum'],$data['excel_data']);
+            }elseif(strstr($data['filename'],'fund')){
+                $this->upload_fund_data($client,$data['dataNum'],$data['excel_data']);
             }else{
                 return new Response("<script>alert('非法文件名!')</script>");
             }
@@ -215,20 +222,72 @@ class ClientsProductController extends Controller
     }
 
     /**
+     * handle statement data
+     * @Route("/upload_statement/{id}",name="upload_statement")
+     * @ParamConverter("client", class="AppBundle:Client")
+     * @Method({"GET","POST"})
+     */
+    public function upload_statement(Client $client,Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $statement = new Statement();
+        $form = $this->createForm(new StatementType($statement));
+        $form->handleRequest($request);
+        $file = $form['statement_file']->getData();
+        if($form->isSubmitted()) {
+            $data = $this->handleExcelData($file);
+            $content = array_splice($data['excel_data'],1);
+            $content = serialize($content);
+            $statement->setContent($content);
+            $statement->setClient($client);
+            $em->persist($statement);
+            $em->flush();
+
+        }
+        $redirect_url = "/admin/clientslist";
+        return new Response("<script>alert('添加日结单成功!');window.location.href='$redirect_url';</script>");
+    }
+
+    protected function handleExcelData($file){
+        $filename = $file->getClientOriginalName();
+        $ext = $file->getClientOriginalExtension();
+        $new_filename = md5(uniqid(mt_rand(),7)).".".$ext;
+        $ext_arr = array('xlsx','xls','csv');
+
+        //判断上传的文件类型是否合法
+        if(!in_array($ext,$ext_arr)){
+            return new Response("<script>alert('非法文件类型!')</script>");
+        }
+
+        $rootdir = $this->get('kernel')->getRootDir();
+        $destination = $rootdir. "/../web/product/upload";
+        $file->move($destination,$new_filename); //移动上传文件到指定路径
+
+        require $rootdir . "/../bundles/PHPExcel/PHPExcel/IOFactory.php";//载入PHPExcel类文件
+        $filename2 = $rootdir . "/../web/product/upload/".$new_filename; //上传后文件绝对路径
+        $fileType = PHPExcel_IOFactory::identify($filename2);//自动获取文件的类型提供给phpexcel用
+        $objReader = PHPExcel_IOFactory::createReader($fileType);//获取文件读取操作对象
+        $objPHPExcel = $objReader->load($filename2);//加载文件
+        $excel_data = $objPHPExcel->getSheet(0)->toArray();//读取第1个sheet里的数据 全部放入到数组中
+        $dataNum = count($excel_data);
+        $data = array('filename'=>$filename,'excel_data'=>$excel_data,'dataNum'=>$dataNum);
+        return $data;
+    }
+
+    /**
      * 环球基金资料写入器
      */
     protected function upload_fund_data(){
 
     }
 
-    protected function createUploadForm($entity_object){
-        $url = "upload_data";
+    protected function createUploadForm($field,$entity_object,$url){
         return $this->createFormBuilder($entity_object)
-            ->add('productFile','vich_file',array('label'=>"上传文件"))
+            ->add($field,'vich_file',array('label'=>"上传文件"))
             ->setAction($this->generateUrl($url,array('id'=>$entity_object->getId())))
             ->setMethod('POST')
             ->getForm();
     }
+
 
     /**
      * @Route("/addstocks/{id}",name="addstocks")
@@ -425,6 +484,26 @@ class ClientsProductController extends Controller
             ->setAction($this->generateUrl($gUrl, array('id' => $object_entity->getId())))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    /**
+     * @Route("/statements_list",name="statements_list")
+     */
+    public function statements_list(){
+        $user = $this->getUser();
+        $client = $user->getSingleClient();
+        $statements = $client->getStatements();
+
+        return $this->render('@FOSUser/Clients/statements_list.html.twig',array('statements'=>$statements));
+    }
+
+    /**
+     * @Route("/statement_detail/{id}",name="statement_detail")
+     */
+    public function statement_detail(){
+        $user = $this->getUser();
+        $client = $user->getSingleClient();
+
     }
 
 

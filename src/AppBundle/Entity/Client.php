@@ -88,6 +88,8 @@ class Client
      */
     private $productName;
 
+
+
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Stock",mappedBy="client",cascade={"persist"})
      */
@@ -175,6 +177,11 @@ class Client
      * @ORM\Column(type="string", nullable=true)
      */
     protected $kill;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Statement",mappedBy="client")
+     */
+    protected $statements;
 
 
     public function __construct()
@@ -314,6 +321,7 @@ class Client
     {
         return $this->productName;
     }
+
 
 
     public function addStock(\AppBundle\Entity\Stock $stocks){
@@ -467,6 +475,20 @@ class Client
 
     public function setSingleUser(User $user){
         $this->single_user = $user;
+        return $this;
+    }
+
+    public function getStatements(){
+        return $this->statements;
+    }
+
+    public function addStatement(Statement $statement){
+        $this->statements[] = $statement;
+        return $this;
+    }
+
+    public function removeStatement(Statement $statement){
+        $this->statements->removeElement($statement);
         return $this;
     }
 

@@ -10,6 +10,7 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_0" data-toggle="tab">客户详细信息</a></li>
+                    <li><a href="#tab_4" data-toggle="tab">交易日结单</a></li>
                     <li><a href="#tab_1" data-toggle="tab">股票</a></li>
                     <li><a href="#tab_2" data-toggle="tab">保险</a></li>
                     <li><a href="#tab_3" data-toggle="tab">环球基金</a></li>
@@ -66,6 +67,33 @@
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                    <div class="tab-pane" id="tab_4">
+                        <div class="box-body">
+                            <table id="products_list4" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>产品</th>
+                                    <th>点击查看</th>
+                                </tr>
+                                </thead>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <form name="statement" method="post" action="{{ path('upload_statement',{'id':user_id}) }}" enctype="multipart/form-data">
+                                <div class="vich-file">
+                                    <div class="form-group">
+                                        <label class="control-label required" for="statement_statement_file_file">上传日结单</label>
+                                        <input type="file" id="statement_statement_file_file" name="statement[statement_file][file]" required="required">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </form>
+                        </div><!-- /.box-body -->
                     </div>
                     <div class="tab-pane" id="tab_1">
                         <div class="box-body">
@@ -204,6 +232,7 @@
                 "autoWidth": true
             });
             $('#products_list3').DataTable();
+            $('#products_list4').DataTable();
         });
     </script>
     <script>

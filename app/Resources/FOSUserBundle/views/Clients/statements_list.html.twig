@@ -1,0 +1,50 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block page_header %}日结单列表{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+            <div class="box-body">
+                <table id="statement" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>类别</th>
+                        <th>点击查看</th>
+                    </tr>
+                    </thead>
+                    {% for statement in statements %}
+                        <tr>
+                            <td>{{ statement.getUpdatedAt()|date('Y-m-d') }}</td>
+                            <td>股票</td>
+                            <td><button class="btn btn-facebook">查看详情</button></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#statement").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+        });
+    </script>
+{% endblock %}

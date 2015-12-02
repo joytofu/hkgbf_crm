@@ -1,0 +1,93 @@
+{% extends '@FOSUser/layout_admin.html.twig' %}
+{% block page_header %}日结单详情{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-body">
+                <table id="statement" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <td>交易所成交号</td>
+                        <td>资金帐号</td>
+                        <td>名称</td>
+                        <td>合约</td>
+                        <td>买卖</td>
+                        <td>开平</td>
+                        <td>成交价</td>
+                        <td>成交量</td>
+                        <td>委托价</td>
+                        <td>委托合约</td>
+                        <td>手续费</td>
+                        <td>成交日期</td>
+                        <td>成交时间</td>
+                        <td>会员号</td>
+                        <td>系统号</td>
+                        <td>成交来源</td>
+                        <td>定单类型</td>
+                        <td>合约类型</td>
+                        <td>市场日期</td>
+                        <td>市场时间</td>
+                        <td>T+1</td>
+                        <td>委托号</td>
+                        <td>成交号</td>
+                        <td>平盈</td>
+                        <td>流号</td>
+                        <td>权利金</td>
+                        <td>手续费币种</td>
+                    </tr>
+                    </thead>
+                    {% for statement in statements %}
+                        <tr>
+                            <td>statement.0</td>
+                            <td>statement.1</td>
+                            <td>statement.2</td>
+                            <td>statement.3</td>
+                            <td>statement.4</td>
+                            <td>statement.5</td>
+                            <td>statement.6</td>
+                            <td>statement.7</td>
+                            <td>statement.8</td>
+                            <td>statement.9</td>
+                            <td>statement.10</td>
+                            <td>statement.11</td>
+                            <td>statement.12</td>
+                            <td>statement.13</td>
+                            <td>statement.14</td>
+                            <td>statement.15</td>
+                            <td>statement.16</td>
+                            <td>statement.17</td>
+                            <td>statement.18</td>
+                            <td>statement.19</td>
+                            <td>statement.20</td>
+                            <td>statement.21</td>
+                            <td>statement.22</td>
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#statement").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+        });
+    </script>
+{% endblock %}

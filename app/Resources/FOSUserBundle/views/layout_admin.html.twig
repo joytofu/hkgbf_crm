@@ -93,7 +93,9 @@
                     </li>#}<!-- /.messages-menu -->
 
                     <!-- Notifications Menu -->
+                    {% if app.user.getRoleName().getId()==5 %}{% else %}
                    {{ render(controller('AppBundle:ToDo:getUnfinishedTodos')) }}
+                    {% endif %}
                     <!-- Tasks Menu -->
                     {#<li class="dropdown tasks-menu">
                         <!-- Menu Toggle Button -->
@@ -233,6 +235,7 @@
                 <li {% if app.request.requestUri=="/admin/todolist" %}class="active"{% endif %}><a href="{{ path('todolist') }}"><i class="fa fa-list"></i> <span>待办事项</span></a></li>
                 {% elseif is_granted('ROLE_ADMIN') %}
                 <li {% if app.request.requestUri=="/admin/alltodolist" %}class="active"{% endif %}><a href="{{ path('alltodolist') }}"><i class="fa fa-list"></i> <span>待办事项</span></a></li>
+                {% else %}
                 {% endif %}
                 {#<li class="treeview">
                     <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
