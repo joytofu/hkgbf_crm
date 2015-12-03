@@ -62,6 +62,8 @@ class ClientsProductController extends Controller
         $statement = new Statement();
         $statement_form = $this->createForm(new StatementType($statement));
 
+        //get current statements
+        $statements = $client->getStatements();
 
         return $this->render('FOSUserBundle:Clients:products_detail.html.twig',array(
             'agent'=>$agent,
@@ -71,6 +73,7 @@ class ClientsProductController extends Controller
             'client_name'=>$client_name,
             'sum'=>$sum,
             'user_id'=>$id,
+            'statements'=>$statements,
             'upload_form'=>$upload_form->createView(),
             'statement_form'=>$statement_form->createView()));
     }
@@ -221,31 +224,6 @@ class ClientsProductController extends Controller
         }
     }
 
-    /**
-     * handle statement data
-     * @Route("/upload_statement/{id}",name="upload_statement")
-     * @ParamConverter("client", class="AppBundle:Client")
-     * @Method({"GET","POST"})
-     */
-    public function upload_statement(Client $client,Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $statement = new Statement();
-        $form = $this->createForm(new StatementType($statement));
-        $form->handleRequest($request);
-        $file = $form['statement_file']->getData();
-        if($form->isSubmitted()) {
-            $data = $this->handleExcelData($file);
-            $content = array_splice($data['excel_data'],1);
-            $content = serialize($content);
-            $statement->setContent($content);
-            $statement->setClient($client);
-            $em->persist($statement);
-            $em->flush();
-
-        }
-        $redirect_url = "/admin/clientslist";
-        return new Response("<script>alert('添加日结单成功!');window.location.href='$redirect_url';</script>");
-    }
 
     protected function handleExcelData($file){
         $filename = $file->getClientOriginalName();
@@ -486,6 +464,76 @@ class ClientsProductController extends Controller
             ->getForm();
     }
 
+
+    /**
+     * handle statement data
+     * @Route("/upload_statement/{id}",name="upload_statement")
+     * @ParamConverter("client", class="AppBundle:Client")
+     * @Method({"GET","POST"})
+     */
+    public function upload_statement(Client $client,Request $request,$id){
+        $em = $this->getDoctrine()->getManager();
+        $statement = new Statement();
+        $form = $this->createForm(new StatementType($statement));
+        $form->handleRequest($request);
+        $file = $form['statement_file']->getData();
+        if($form->isSubmitted()) {
+            $data = $this->handleExcelData($file);
+            $content = array_splice($data['excel_data'],1);
+            $tr_arr = array();
+            foreach($content as $value){
+                $td_arr = array();
+                foreach($value as $td){
+                    $td_arr[] = '<td>'.$td.'</td>';
+                }
+                $tds = implode("",$td_arr);
+                $tdss = '<tr>'.$tds.'</tr>';
+                $tr_arr[] = $tdss;
+            }
+            $content = implode("",$tr_arr);
+            $statement->setContent($content);
+            $statement->setClient($client);
+            $em->persist($statement);
+            $em->flush();
+
+        }
+        $redirect_url = "/admin/product_detail/".$id;
+        return new Response("<script>alert('添加日结单成功!');window.location.href='$redirect_url';</script>");
+    }
+
+    /**
+     * @Route("/edit_statement/{id}",name="edit_statement")
+     * @ParamConverter("statement", class="AppBundle:Statement")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function edit_statement(Statement $statement,Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $client_id = $statement->getClient()->getId();
+        $form = $this->createForm(new StatementType($statement));
+        $form->handleRequest($request);
+        $file = $form['statement_file']->getData();
+        if($form->isSubmitted()) {
+            $data = $this->handleExcelData($file);
+            $content = array_splice($data['excel_data'],1);
+            $tr_arr = array();
+            foreach($content as $value){
+                $td_arr = array();
+                foreach($value as $td){
+                    $td_arr[] = '<td>'.$td.'</td>';
+                }
+                $tds = implode("",$td_arr);
+                $tdss = '<tr>'.$tds.'</tr>';
+                $tr_arr[] = $tdss;
+            }
+            $content = implode("",$tr_arr);
+            $statement->setContent($content);
+            $em->flush();
+        }
+        $redirect_url = "/admin/product_detail/".$client_id;
+        return new Response("<script>alert('修改日结单成功!');window.location.href='$redirect_url';</script>");
+    }
+
     /**
      * @Route("/statements_list",name="statements_list")
      */
@@ -501,7 +549,7 @@ class ClientsProductController extends Controller
      * @Route("/statement_detail/{id}",name="statement_detail")
      * @ParamConverter("statement", class="AppBundle:Statement")
      */
-    public function statement_detail(Statement $statement){
+    public function statement_detail_for_client(Statement $statement){
         $client_of_statement = $statement->getClient();
         $user = $this->getUser();
         $client = $user->getSingleClient();
@@ -509,7 +557,34 @@ class ClientsProductController extends Controller
             $redirect_url = "/admin/client_index";
             return new Response("<script>alert('你没有权限浏览该用户数据!');window.location.href='$redirect_url'</script>");
         }
-        return $this->render("@FOSUser/Clients/statement_detail.html.twig",array('statement'=>$statement));
+        $content = $statement->getContent();
+        $updatedAt = $statement->getUpdatedAt();
+        return $this->render("@FOSUser/Clients/statement_detail.html.twig",array('content'=>$content,'updatedAt'=>$updatedAt));
+
+    }
+
+    /**
+     * @Route("/stm_detail/{id}",name="stm_detail")
+     * @ParamConverter("statement", class="AppBundle:Statement")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function statement_detail_for_admin(Statement $statement){
+        $content = $statement->getContent();
+        $updatedAt = $statement->getUpdatedAt();
+        return $this->render('@FOSUser/Clients/statement_detail.html.twig',array('content'=>$content,'statement'=>$statement,'updatedAt'=>$updatedAt));
+    }
+
+    /**
+     * @Route("/delete_statement/{id}",name="delete_statement")
+     * @ParamConverter("statement", class="AppBundle:Statement")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function delete_statement(Statement $statement){
+        $client_id = $statement->getClient()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($statement);
+        $em->flush();
+        return $this->redirectToRoute('productdetail',array('id'=>$client_id));
 
     }
 

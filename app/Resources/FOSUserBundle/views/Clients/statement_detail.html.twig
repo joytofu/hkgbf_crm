@@ -1,71 +1,47 @@
 {% extends '@FOSUser/layout_admin.html.twig' %}
-{% block page_header %}ÈÕ½áµ¥ÏêÇé{% endblock %}
+{% block page_header %}{{ updatedAt|date('Y-m-d') }}æ—¥ç»“å•è¯¦æƒ…{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xd-12">
+            <div class="box">
             <div class="box-body">
-                <table id="statement" class="table table-bordered table-striped">
+                <table id="statement" class="table table-bordered table-striped" style="font-size: 12px">
                     <thead>
                     <tr>
-                        <td>½»Ò×Ëù³É½»ºÅ</td>
-                        <td>×Ê½ğÕÊºÅ</td>
-                        <td>Ãû³Æ</td>
-                        <td>ºÏÔ¼</td>
-                        <td>ÂòÂô</td>
-                        <td>¿ªÆ½</td>
-                        <td>³É½»¼Û</td>
-                        <td>³É½»Á¿</td>
-                        <td>Î¯ÍĞ¼Û</td>
-                        <td>Î¯ÍĞºÏÔ¼</td>
-                        <td>ÊÖĞø·Ñ</td>
-                        <td>³É½»ÈÕÆÚ</td>
-                        <td>³É½»Ê±¼ä</td>
-                        <td>»áÔ±ºÅ</td>
-                        <td>ÏµÍ³ºÅ</td>
-                        <td>³É½»À´Ô´</td>
-                        <td>¶¨µ¥ÀàĞÍ</td>
-                        <td>ºÏÔ¼ÀàĞÍ</td>
-                        <td>ÊĞ³¡ÈÕÆÚ</td>
-                        <td>ÊĞ³¡Ê±¼ä</td>
-                        <td>T+1</td>
-                        <td>Î¯ÍĞºÅ</td>
-                        <td>³É½»ºÅ</td>
-                        <td>Æ½Ó¯</td>
-                        <td>Á÷ºÅ</td>
-                        <td>È¨Àû½ğ</td>
-                        <td>ÊÖĞø·Ñ±ÒÖÖ</td>
+                        <th>äº¤æ˜“æ‰€æˆäº¤å·</th>
+                        <th>èµ„é‡‘å¸å·</th>
+                        <th>åç§°</th>
+                        <th>åˆçº¦</th>
+                        <th>ä¹°å–</th>
+                        <th>å¼€å¹³</th>
+                        <th>æˆäº¤ä»·</th>
+                        <th>æˆäº¤é‡</th>
+                        <th>å§”æ‰˜ä»·</th>
+                        <th>å§”æ‰˜åˆçº¦</th>
+                        <th>æ‰‹ç»­è´¹</th>
+                        <th>æˆäº¤æ—¥æœŸ</th>
+                        <th>æˆäº¤æ—¶é—´</th>
+                        <th>ä¼šå‘˜å·</th>
+                        <th>ç³»ç»Ÿå·</th>
+                        <th>æˆäº¤æ¥æº</th>
+                        <th>å®šå•ç±»å‹</th>
+                        <th>åˆçº¦ç±»å‹</th>
+                        <th>å¸‚åœºæ—¥æœŸ</th>
+                        <th>å¸‚åœºæ—¶é—´</th>
+                        <th>T+1</th>
+                        <th>å§”æ‰˜å·</th>
+                        <th>æˆäº¤å·</th>
+                        <th>å¹³ç›ˆ</th>
+                        <th>æµå·</th>
+                        <th>æƒåˆ©é‡‘</th>
+                        <th>æ‰‹ç»­è´¹å¸ç§</th>
                     </tr>
                     </thead>
-                    {% for statement in statements %}
-                        <tr>
-                            <td>statement.0</td>
-                            <td>statement.1</td>
-                            <td>statement.2</td>
-                            <td>statement.3</td>
-                            <td>statement.4</td>
-                            <td>statement.5</td>
-                            <td>statement.6</td>
-                            <td>statement.7</td>
-                            <td>statement.8</td>
-                            <td>statement.9</td>
-                            <td>statement.10</td>
-                            <td>statement.11</td>
-                            <td>statement.12</td>
-                            <td>statement.13</td>
-                            <td>statement.14</td>
-                            <td>statement.15</td>
-                            <td>statement.16</td>
-                            <td>statement.17</td>
-                            <td>statement.18</td>
-                            <td>statement.19</td>
-                            <td>statement.20</td>
-                            <td>statement.21</td>
-                            <td>statement.22</td>
-
-                        </tr>
-                    {% endfor %}
-
+                    <tbody>
+                   {{ content|raw }}
+                    </tbody>
                 </table>
+            </div>
             </div>
         </div>
     </div>

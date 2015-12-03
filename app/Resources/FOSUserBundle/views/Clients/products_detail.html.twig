@@ -58,10 +58,10 @@
                                     <td>{{ client_data.email }}</td>
                                     <td>{{ client_data.company }}</td>
                                     <td>{{ client_data.province }}{{ client_data.city }}{{ client_data.district }}{% if client_data.address_detail is defined %}{{ client_data.address_detail }}{% endif %}</td>
-                                    <td>{% if client_data.vip==1 %}普通会员
-                                        {% elseif client_data.vip==2 %}<b style="color:#f39c12">金卡会员</b>
-                                        {% elseif client_data.vip==3 %}<b style="color:#c7254e">钻石会员</b>
-                                        {% elseif client_data.vip==4 %}<b style="color:darkblue">渠道代理</b>{% endif %}
+                                    <td>{% if client_data.vip=='普通会员' %}普通会员
+                                        {% elseif client_data.vip=='金卡会员' %}<b style="color:#f39c12">金卡会员</b>
+                                        {% elseif client_data.vip=='钻石会员' %}<b style="color:#c7254e">钻石会员</b>
+                                        {% elseif client_data.vip=='渠道代理' %}<b style="color:darkblue">渠道代理</b>{% endif %}
                                     </td>
 
                                 </tr>
@@ -76,13 +76,20 @@
                                     <th>日期</th>
                                     <th>产品</th>
                                     <th>点击查看</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
+                                {% for statement in statements %}
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ statement.getUpdatedAt()|date('Y-m-d') }}</td>
+                                    <td>期货</td>
+                                    <td><a href="{{ path('stm_detail',{'id':statement.id}) }}"><button class="btn btn-instagram">查看详情</button></a></td>
+                                    <td>
+                                        <button class="btn btn-dropbox" style="margin-right:10px"  data-toggle="modal" data-target="#statement_form" data-whatever="@mdo" id="reupload" value="{{ statement.id }}">重新上传</button>
+                                        <button class="btn btn-danger" onclick="delete_statement({{ statement.id }})">删除</button>
+                                    </td>
                                 </tr>
+                                {% endfor %}
                             </table>
                             <form name="statement" method="post" action="{{ path('upload_statement',{'id':user_id}) }}" enctype="multipart/form-data">
                                 <div class="vich-file">
@@ -211,6 +218,32 @@
             </div><!-- nav-tabs-custom -->
         </div>
     </div>
+
+        <div class="modal modal-primary fade" id="statement_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" style="margin-top: 100px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">修改日结单</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit_statement" name="statement" method="post" action enctype="multipart/form-data">
+                            <div class="vich-file">
+                                <div class="form-group">
+                                    <label class="control-label required" for="statement_statement_file_file">上传日结单</label>
+                                    <input type="file" id="statement_statement_file_file" name="statement[statement_file][file]" required="required">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline" id="edit_stm_submit">提交</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
 {% endblock %}
 
 {% block private_js %}
@@ -248,5 +281,21 @@
             }
         }
 
+    </script>
+    <script>
+        $(document).on('click','#reupload',function(){
+           var $stm_id = $('#reupload').val();
+            $('#edit_statement').attr('action','/admin/edit_statement/'+$stm_id);
+        });
+
+        $(document).on('click','#edit_stm_submit',function(){
+            $('#edit_statement').submit();
+        });
+
+        function delete_statement(id){
+            if(confirm('确定删除该日结单?')){
+                window.location.href='/admin/delete_statement/'+id;
+            }
+        }
     </script>
 {% endblock %}

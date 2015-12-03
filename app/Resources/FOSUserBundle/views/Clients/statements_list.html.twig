@@ -18,7 +18,7 @@
                         <tr>
                             <td>{{ statement.getUpdatedAt()|date('Y-m-d') }}</td>
                             <td>股票</td>
-                            <td><button class="btn btn-facebook">查看详情</button></td>
+                            <td><a href="{{ path('statement_detail',{'id':statement.id}) }}"><button class="btn btn-facebook">查看详情</button></a></td>
                         </tr>
                     {% endfor %}
                 </table>

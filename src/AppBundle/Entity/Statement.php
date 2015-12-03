@@ -39,7 +39,7 @@ class Statement
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="upload_product", fileNameProperty="statementName")
+     * @Vich\UploadableField(mapping="statement", fileNameProperty="statementName")
      *
      * @var File
      */
