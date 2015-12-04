@@ -1,0 +1,64 @@
+{% extends '@FOSUser/layout_admin.html.twig' %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}持有股票详情{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-xd-12">
+        <div class="box">
+            <div class="box-body">
+                <table id="stock" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>持仓股票代码</th>
+                        <th>持仓股票名称</th>
+                        <th>购买日期</th>
+                        <th>持仓手数</th>
+                        <th>购买价格(元/股)</th>
+                        <th>当前价格(元/股)</th>
+                        <th>浮动盈亏(元)</th>
+                        <th>当前状态</th>
+                    </tr>
+                    </thead>
+                    {% for data in stocks_data %}
+                        <tr>
+                            <td>{{ data.stockId }}</td>
+                            <td>{{ data.stockName }}</td>
+                            <td>{{ data.buyDate|date('Y-m-d') }}</td>
+                            <td>{{ data.position }}</td>
+                            <td>{{ data.buyingPrice }}</td>
+                            <td>{{ data.currentPrice }}</td>
+                            <td>{{ data.calculateProfitAndLoss() }}</td>
+                            <td><span class="label label-success">买入</span></td>
+                        </tr>
+                    {% endfor %}
+                    <thead><tr><th>合计盈亏:{{ sum }}元</th></tr></thead>
+
+                </table
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#stock").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+        });
+    </script>
+{% endblock %}

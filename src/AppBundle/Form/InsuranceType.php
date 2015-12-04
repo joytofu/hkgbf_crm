@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class InsuranceType extends AbstractType
 {
     private $user_obj;
-    public function __construct(User $user){   //传入agent对象
+    public function __construct(User $user=null){   //传入agent对象
         $this->user_obj = $user;
     }
 

@@ -14,6 +14,7 @@ use AppBundle\Entity\Statement;
 use AppBundle\Form\InsuranceType;
 use AppBundle\Form\StatementType;
 use AppBundle\Form\StockType;
+use AppBundle\Form\ToDoType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Fund;
@@ -296,7 +297,6 @@ class ClientsProductController extends Controller
      */
     public function addInsurance(Client $client,Request $request,$id){
         $insurance = new Insurance();
-
         $form = $this->createForm(new InsuranceType(),$insurance);
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -497,7 +497,8 @@ class ClientsProductController extends Controller
             $em->flush();
 
         }
-        $redirect_url = "/admin/product_detail/".$id;
+        $baseurl = $this->getRequest()->getBaseUrl();
+        $redirect_url = $baseurl."/admin/product_detail/".$id;
         return new Response("<script>alert('添加日结单成功!');window.location.href='$redirect_url';</script>");
     }
 
@@ -530,7 +531,8 @@ class ClientsProductController extends Controller
             $statement->setContent($content);
             $em->flush();
         }
-        $redirect_url = "/admin/product_detail/".$client_id;
+        $baseurl = $this->getRequest()->getBaseUrl();
+        $redirect_url = $baseurl."/admin/product_detail/".$client_id;
         return new Response("<script>alert('修改日结单成功!');window.location.href='$redirect_url';</script>");
     }
 
@@ -553,13 +555,17 @@ class ClientsProductController extends Controller
         $client_of_statement = $statement->getClient();
         $user = $this->getUser();
         $client = $user->getSingleClient();
+        $client_id = $client->getId();
         if($client_of_statement!==$client){
             $redirect_url = "/admin/client_index";
             return new Response("<script>alert('你没有权限浏览该用户数据!');window.location.href='$redirect_url'</script>");
         }
         $content = $statement->getContent();
         $updatedAt = $statement->getUpdatedAt();
-        return $this->render("@FOSUser/Clients/statement_detail.html.twig",array('content'=>$content,'updatedAt'=>$updatedAt));
+        return $this->render("@FOSUser/Clients/statement_detail.html.twig",array(
+            'content'=>$content,
+            'updatedAt'=>$updatedAt,
+            'client_id'=>$client_id));
 
     }
 
@@ -586,6 +592,29 @@ class ClientsProductController extends Controller
         $em->flush();
         return $this->redirectToRoute('productdetail',array('id'=>$client_id));
 
+    }
+
+    /**
+     * @Route("/stocks_detail",name="stocks_detail")
+     */
+    public function stocks_detail(){
+        $client = $this->getUser()->getSingleClient();
+        $stocks_data = $client->getStocks();
+        $sum = 0;
+        foreach($stocks_data as $value){
+            $sum+=$value->calculateProfitAndLoss();
+        }
+        return $this->render("@FOSUser/Clients/stocks_detail.html.twig",array('stocks_data'=>$stocks_data,'sum'=>$sum));
+    }
+
+
+    /**
+     * @Route("/insurances_detail",name="insurances_detail")
+     */
+    public function insurances_detail(){
+        $client = $this->getUser()->getSingleClient();
+        $insurances_data = $client->getInsurances();
+        return $this->render("@FOSUser/Clients/insurances_detail.html.twig",array('insurances_data'=>$insurances_data));
     }
 
 

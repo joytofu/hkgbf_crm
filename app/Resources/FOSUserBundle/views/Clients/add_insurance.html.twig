@@ -1,59 +1,149 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
-{% block private_css %}
-    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% block style %}
+<style type="text/css">
+    .form-control{
+        width:60%;display: inline-block;
+    }
+    .form-inline{display: inline;}
+
+    .table tbody tr td{
+        vertical-align: middle;
+    }
+    .table tbody tr td div{
+        display: inline;
+    }
+    .checkbox{
+        display: inline;
+    }
+    .radio{
+        display: inline;
+    }
+    .radio label{
+        display: inline;
+    }
+
+</style>
 {% endblock %}
-{% block page_header %}添加股票信息{% endblock %}
+{% block hidden_username %}{{ username }}{% endblock %}
+{% block page_header %}保险订单提交{% endblock %}
 {% block content %}
-
-    <div class="col-md-7" style="margin-left: 19%">
-      <div class="box box-primary">
+    <div class="box box-primary" style="width: 100%">
         <div class="box-header with-border">
-            <h3 class="box-title">输入客户保险产品信息</h3>
+            <h3 class="box-title">
+    创建保险
+        </h3>
         </div>
-        <form role="form" method="post" action="{{ path('addinsurance',{'id':id}) }}">
-            <div class="box-body">
-                <div class="form-group">{{ form_row(form.insurance_name) }}</div>
-                <div class="form-group">{{ form_row(form.type) }}</div>
-                <div class="form-group">{{ form_row(form.insurance_premium) }}</div>
-                <div class="form-group">{{ form_row(form.sum_insured) }}</div>
-                <div class="form-group">{{ form_row(form.policy_holder) }}</div>
-                <div class="form-group">{{ form_row(form.recognizee) }}</div>
-                <div class="form-group">{{ form_row(form.age_at_issue) }}</div>
-                <div class="form-group">{{ form_row(form.years) }}</div>
-                <div class="form-group">{{ form_row(form.born_date) }}</div>
-                <div class="form-group" style="width:13%">{{ form_row(form.gender) }}</div>
-                <div class="form-group" style="width:13%">{{ form_row(form.is_smoking) }}</div>
-                <div class="form-group">{{ form_row(form.buy_date) }}</div>
-                <div class="form-group">{{ form_row(form.next_pay_date) }}</div>
-            </div>
-            <div class="box-footer"><button class="btn btn-primary" style="padding-top: 3px;font-size:14px" type="submit">提交</button></div>
-            {{ form_rest(form) }}
-        </form>
-      </div>
+        <div class="box-body">
+            {{ form_start(form) }}
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th colspan="3" style="text-align: center;font-size:18px">投保人资料</th>
+                </tr>
+                </thead>
+                <tbody style="vertical-align: middle">
+                <tr>
+                    <td>中文姓名：{{ form_widget(form.ph_name) }}</td>
+                    <td>身份证号码：{{ form_widget(form.ph_id_card) }}</td>
+                    <td>身份证有效期：{{ form_widget(form.ph_id_card_expired_date) }}</td>
+                </tr>
+                <tr>
+                    <td>姓名拼音：{{ form_widget(form.ph_name_pinyin) }}</td>
+                    <td>通行证号码：{{ form_widget(form.ph_traffic_permit) }}</td>
+                    <td>通行证有效期：{{ form_widget(form.ph_traffic_permit_expired_date) }}</td>
+                </tr>
+                <tr>
+                    <td>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：{{ form_widget(form.ph_gender) }}</td>
+                    <td>婚姻状况：{{ form_widget(form.ph_marriage) }}</td>
+                    <td>是否吸烟：{{ form_widget(form.ph_is_smoking) }}</td>
+                </tr>
+                <tr>
+                    <td>出生日期：{{ form_widget(form.ph_born_date) }}</td>
+                    <td>联络电话：{{ form_widget(form.ph_tel) }}</td>
+                    <td>电子邮箱：{{ form_widget(form.ph_email) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">通讯地址及邮编：{{ form_widget(form.ph_address,{'attr':{'style':'width:90%'}}) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">身份证地址及邮编：{{ form_widget(form.ph_id_address,{'attr':{'style':'width:88%'}}) }}</td>
+                </tr>
+                <tr>
+                    <td>身&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：{{ form_widget(form.ph_height) }}cm</td>
+                    <td>体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重：{{ form_widget(form.ph_weight) }}kg</td>
+                </tr>
+                <tr>
+                    <td>职业（行业）：{{ form_widget(form.ph_profession) }}</td>
+                    <td>职位及职责：{{ form_widget(form.ph_position) }}</td>
+                </tr>
+                <tr>
+                    <td>雇主名称：{{ form_widget(form.ph_employer) }}</td>
+                    <td>公司地址：{{ form_widget(form.ph_company_address) }}</td>
+                    <td>公司电话：{{ form_widget(form.ph_company_tel) }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered table-striped" style="margin-top: 20px">
+                <thead>
+                <tr>
+                    <th colspan="3" style="text-align: center;font-size:18px">被保人资料（若投保人与被保人为同一人则不用填写）</th>
+                </tr>
+                </thead>
+                <tbody style="vertical-align: middle">
+                <tr>
+                    <td>中文姓名：{{ form_widget(form.r_name) }}</td>
+                    <td>身份证号码：{{ form_widget(form.r_id_card) }}</td>
+                    <td>身份证有效期：{{ form_widget(form.r_id_card_expired_date) }}</td>
+                </tr>
+                <tr>
+                    <td>姓名拼音：{{ form_widget(form.r_name_pinyin) }}</td>
+                    <td>通行证号码：{{ form_widget(form.r_traffic_permit) }}</td>
+                    <td>通行证有效期：{{ form_widget(form.r_traffic_permit_expired_date) }}</td>
+                </tr>
+                <tr>
+                    <td>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：{{ form_widget(form.r_gender) }}</td>
+                    <td>婚姻状况：{{ form_widget(form.r_marriage) }}</td>
+                    <td>是否吸烟：{{ form_widget(form.r_is_smoking) }}</td>
+                </tr>
+                <tr>
+                    <td>出生日期：{{ form_widget(form.r_born_date) }}</td>
+                    <td>联络电话：{{ form_widget(form.r_tel) }}</td>
+                    <td>电子邮箱：{{ form_widget(form.r_email) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">通讯地址及邮编：{{ form_widget(form.r_address,{'attr':{'style':'width:90%'}}) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">身份证地址及邮编：{{ form_widget(form.r_id_address,{'attr':{'style':'width:88%'}}) }}</td>
+                </tr>
+                <tr>
+                    <td>身&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：{{ form_widget(form.r_height) }}cm</td>
+                    <td>体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重：{{ form_widget(form.r_weight) }}kg</td>
+                </tr>
+                <tr>
+                    <td>职业（行业）：{{ form_widget(form.r_profession) }}</td>
+                    <td>职位及职责：{{ form_widget(form.r_position) }}</td>
+                </tr>
+                <tr>
+                    <td>雇主名称：{{ form_widget(form.r_employer) }}</td>
+                    <td>公司地址：{{ form_widget(form.r_company_address) }}</td>
+                    <td>公司电话：{{ form_widget(form.r_company_tel) }}</td>
+                </tr>
+                </tbody>
+            </table>
+            {{ form_widget(form.productFile) }}
+            <button class="btn btn-primary" type="submit">提交</button>
+            </form>
+        </div>
+
     </div>
+
 {% endblock %}
-
-
-
 
 {% block private_js %}
-    <!--DataTables-->
-    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
-    <script src="{{ asset('js/demo.js') }}"></script>
-    <script>
-        $(function () {
-            $("#products_list1").DataTable();
-            $('#products_list2').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
-            });
-        });
-    </script>
+{% if client_id is defined %}
+<script>
+   $('#todo_Insurance_client').find("option[value={{ client_id }}]").attr("selected",true);
+</script>
+    {% endif %}
 {% endblock %}

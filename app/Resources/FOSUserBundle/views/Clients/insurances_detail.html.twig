@@ -1,0 +1,83 @@
+{% extends '@FOSUser/layout_admin.html.twig' %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}购买保险详情{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-xd-12">
+        <div class="box">
+            <div class="box-body">
+                <table id="insurance" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>保险名称</th>
+                        <th>保单编号</th>
+                        <th>保险类型</th>
+                        <th>购买日期</th>
+                        <th>投保人</th>
+                        <th>被保人</th>
+                        <th>保费(元)</th>
+                        <th>保额(元)</th>
+                        <th>出生日期</th>
+                        <th>已缴费年期</th>
+                        <th>下次续费日期</th>
+                        <th>状态</th>
+
+                    </tr>
+                    </thead>
+                    {% for data in insurance_data %}
+                        <tr>
+                            <td>{{ data.insuranceName }}</td>
+                            <td>{{ data.insuranceNumber }}</td>
+                            <td>{{ data.type }}</td>
+                            <td>{{ data.buyDate|date('Y-m-d') }}</td>
+                            <td>{{ data.getPhName() }}</td>
+                            {% if data.getRName is not null %}
+                                <td>{{ data.getRName() }}</td>
+                            {% else %}
+                                <td>{{ data.getPhName() }}</td>
+                            {% endif %}
+                            <td>{{ data.insurancePremium }}</td>
+                            <td>{{ data.sumInsured }}</td>
+                            {% if data.RBornDate is null %}
+                                <td>{{ data.PhBornDate|date('Y-m-d') }}</td>
+                            {% else %}
+                                <td>{{ data.RBornDate|date('Y-m-d') }}</td>
+                            {% endif %}
+                            <td>{{ data.getPaidYears() }}</td>
+                            <td>{{ data.NextPayDate|date('Y-m-d') }}</td>
+                            <td>
+                                {% if data.Verified==true %}<span class="label label-success">已审核</span>
+                                {% else %}<span class="label label-warning">审核中</span>{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#insurance").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+        });
+    </script>
+{% endblock %}
