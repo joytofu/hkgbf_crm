@@ -53,6 +53,7 @@ class ClientsProductController extends Controller
         //get insurance data of user
         $insurance_data = $client->getInsurances();
 
+
         //get name of current user
         $client_name = $client->getName();
 
@@ -346,7 +347,7 @@ class ClientsProductController extends Controller
      * @Route("/edit_insurance/{id}", name="editinsurance")
      * @Method({"GET","POST"})
      * @ParamConverter("insurance", class="AppBundle:Insurance")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editInsurance(Insurance $insurance, Request $request,$id){
         $em = $this->getDoctrine()->getManager();
@@ -363,7 +364,7 @@ class ClientsProductController extends Controller
             return new Response("<script>alert('修改成功!');window.location.href='/admin/clientslist';</script>");
         }
 
-        return $this->render('@FOSUser/Clients/edit_insurance.html.twig',array(
+        return $this->render('@FOSUser/Clients/add_insurance.html.twig',array(
             'form'=>$form->createView(),
             'id'=>$id,
             'client_id'=>$client_id,
@@ -577,7 +578,12 @@ class ClientsProductController extends Controller
     public function statement_detail_for_admin(Statement $statement){
         $content = $statement->getContent();
         $updatedAt = $statement->getUpdatedAt();
-        return $this->render('@FOSUser/Clients/statement_detail.html.twig',array('content'=>$content,'statement'=>$statement,'updatedAt'=>$updatedAt));
+        $client_id = $statement->getClient()->getId();
+        return $this->render('@FOSUser/Clients/statement_detail.html.twig',array(
+            'content'=>$content,
+            'statement'=>$statement,
+            'updatedAt'=>$updatedAt,
+            'client_id'=>$client_id));
     }
 
     /**

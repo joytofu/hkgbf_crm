@@ -36,7 +36,7 @@
     {% block style %}{% endblock %}
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini wysihtml5-supported {% if app.user.getSingleClient() is not null or statement is defined %}sidebar-collapse{% endif %}">
+<body class="hold-transition skin-blue sidebar-mini wysihtml5-supported {% if app.user.getSingleClient() is not null or statement is defined %}sidebar-collapse{% endif %}{% block if_collapsed %}{% endblock %}">
 <div class="wrapper">
 
     <!-- Main Header -->

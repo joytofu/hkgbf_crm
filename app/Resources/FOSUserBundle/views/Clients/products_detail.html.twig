@@ -1,4 +1,5 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block if_collapsed %}sidebar-collapse{% endblock %}
 {% block private_css %}
     <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
 {% endblock %}
@@ -160,8 +161,9 @@
                                     <th>出生日期</th>
                                     <th>已缴费年期</th>
                                     <th>下次续费日期</th>
-                                    <th>状态</th>
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <th>资料下载</th>
+                                    {#<th>状态</th>#}
+                                    {% if is_granted('ROLE_ADMIN') %}
                                         <th>修改</th>
                                     {% endif %}
 
@@ -172,7 +174,7 @@
                                         <td>{{ data.insuranceName }}</td>
                                         <td>{{ data.insuranceNumber }}</td>
                                         <td>{{ data.type }}</td>
-                                        <td>{{ data.buyDate|date('Y-m-d') }}</td>
+                                        <td>{% if data.buyDate is not null %}{{ data.buyDate|date('Y-m-d') }}{% endif %}</td>
                                         <td>{{ data.getPhName() }}</td>
                                         {% if data.getRName is not null %}
                                         <td>{{ data.getRName() }}</td>
@@ -187,13 +189,13 @@
                                         <td>{{ data.RBornDate|date('Y-m-d') }}</td>
                                         {% endif %}
                                         <td>{{ data.getPaidYears() }}</td>
-                                        <td>{{ data.NextPayDate|date('Y-m-d') }}</td>
-                                        <td>
+                                        <td>{% if data.NextPayDate is not null %}{{ data.NextPayDate|date('Y-m-d') }}{% endif %}</td>
+                                       {# <td>
                                             {% if data.Verified==true %}<span class="label label-success">已审核</span>
                                             {% else %}<span class="label label-warning">审核中</span>{% endif %}
-                                        </td>
-
-                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        </td>#}
+                                        <td><a href="{{ vich_uploader_asset(data,'productFile') }}">下载</a></td>
+                                        {% if is_granted('ROLE_ADMIN') %}
                                             <td>
                                                 <a href="{{ path('editinsurance',{'id':data.getId()}) }}"><button class="btn btn-facebook">编辑</button></a>
                                                 <a href="javascript:void(0)" onclick="deleteinsurance({{ data.getId() }})"><button class="btn btn-adn">删除</button></a>

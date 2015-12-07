@@ -41,7 +41,7 @@ class InsuranceType extends AbstractType
             ->add('ph_gender','choice',array('choices'=>array('男'=>'男','女'=>'女'),'expanded'=>true))
             ->add('ph_marriage','choice',array('expanded'=>true,'choices'=>array('未婚'=>'未婚','已婚'=>'已婚','离异'=>'离异','丧偶'=>'丧偶')))
             ->add('ph_is_smoking','choice',array('choices'=>array('1'=>'是','0'=>'否'),'expanded'=>true))
-            ->add('ph_born_date','date',array('widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(1932,1997,1)))
+            ->add('ph_born_date','date',array('empty_value'=>'','widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(1932,1997,1)))
             ->add('ph_height')
             ->add('ph_weight')
             ->add('ph_employer')
@@ -58,7 +58,7 @@ class InsuranceType extends AbstractType
             ->add('r_gender','choice',array('choices'=>array('男'=>'男','女'=>'女'),'required'=>false,'empty_data'=>null))
             ->add('r_marriage','choice',array('required'=>false,'empty_data'=>null,'choices'=>array('未婚'=>'未婚','已婚'=>'已婚','离异'=>'离异','丧偶'=>'丧偶')))
             ->add('r_is_smoking','choice',array('choices'=>array('1'=>'是','0'=>'否'),'required'=>false,'empty_data'=>null))
-            ->add('r_born_date','date',array('widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(1932,1997,1)))
+            ->add('r_born_date','date',array('empty_value'=>'','widget'=>'choice','format'=>'yyyy-MM-dd','required'=>false,'years'=>range(1932,1997,1)))
             ->add('r_tel')
             ->add('r_email')
             ->add('r_address')
@@ -74,7 +74,7 @@ class InsuranceType extends AbstractType
             ->add('paid_years')
             ->add('next_pay_date')
             ->add('verified')
-            ->add('productFile','vich_file')
+            ->add('productFile','vich_file',array('required'=>false))
             ->add('client','entity',array(
                 'class'=>'AppBundle\Entity\Client',
                 'placeholder'=>'请选择所属客户，如新客户请留空',
