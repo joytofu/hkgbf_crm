@@ -1,4 +1,7 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
 {% block page_header %}日结单列表{% endblock %}
 {% block content %}
     <div class="row">

@@ -118,8 +118,12 @@ class ToDoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new ToDoType($agent),$todo);
 
+        $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
             $em->flush();
+            $baseurl = $this->getRequest()->getBaseUrl();
+            $redirect_url = $baseurl.'/admin/todolist';
+            return new Response("<script>alert('待办事项修改成功!');window.location.href='$redirect_url'</script>");
         }
 
         return $this->render('@FOSUser/ToDo/createToDo.html.twig',array('form'=>$form->createView(),'client_id'=>$client_id));

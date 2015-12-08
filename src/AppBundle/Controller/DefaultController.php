@@ -293,7 +293,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/noticelist", name="noticelist")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function noticeList(){
         $em = $this->getDoctrine()->getManager();
@@ -305,7 +305,7 @@ class DefaultController extends Controller
     /**
      * @Route("/editnotice/{id}", name="editnotice")
      * @ParamConverter("notice", class="AppBundle:Notice")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editNotice(Notice $notice,Request $request,$id){
         $em = $this->getDoctrine()->getManager();
@@ -326,7 +326,7 @@ class DefaultController extends Controller
     /**
      * @Route("/deletenotice/{id}", name="deletenotice")
      * @ParamConverter("notice", class="AppBundle:Notice")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteNotice(Notice $notice){
         $em = $this->getDoctrine()->getManager();

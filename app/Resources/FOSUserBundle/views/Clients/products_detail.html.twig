@@ -11,7 +11,7 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_0" data-toggle="tab">客户详细信息</a></li>
-                    <li><a href="#tab_4" data-toggle="tab">交易日结单</a></li>
+                    {% if app.user.roles=='ROLE_ADMIN' %}<li><a href="#tab_4" data-toggle="tab">交易日结单</a></li>{% endif %}
                     <li><a href="#tab_1" data-toggle="tab">股票</a></li>
                     <li><a href="#tab_2" data-toggle="tab">保险</a></li>
                     <li><a href="#tab_3" data-toggle="tab">环球基金</a></li>
@@ -69,6 +69,7 @@
                             </table>
                         </div>
                     </div>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <div class="tab-pane" id="tab_4">
                         <div class="box-body">
                             <table id="products_list4" class="table table-bordered table-striped">
@@ -103,6 +104,7 @@
                             </form>
                         </div><!-- /.box-body -->
                     </div>
+                    {% endif %}
                     <div class="tab-pane" id="tab_1">
                         <div class="box-body">
                             <table id="products_list1" class="table table-bordered table-striped">

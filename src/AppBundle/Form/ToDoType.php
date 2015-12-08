@@ -23,7 +23,7 @@ class ToDoType extends AbstractType
         $builder
             ->add('title')
             ->add('Insurance',new InsuranceType($this->user_obj))
-            ->add('productFile','vich_file')
+            ->add('productFile','vich_file',array('required'=>false))
         ;
     }
 
