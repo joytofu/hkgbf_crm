@@ -19,6 +19,8 @@ require_once __DIR__.'/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';
 
 $kernel = new AppKernel('prod', true);
+$mmc = new Memcache;
+$mmc->connect();
 $kernel->loadClassCache();
 //$kernel = new AppCache($kernel);
 
