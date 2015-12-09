@@ -12,3 +12,7 @@ parameters:
     mailer_user: hkgbfmail@163.com
     mailer_password: oqyljewrdqmlmiia
     secret: dffee3a02b3dff8efa7b4203cc9a0ac9c3a54b4b
+    session_host: 127.0.0.1
+    session_port: 11211
+    session_prefix: sess_
+    session_lifetime: 86400
