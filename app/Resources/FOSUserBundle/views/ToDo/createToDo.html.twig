@@ -36,7 +36,7 @@
         </h3>
         </div>
         <div class="box-body">
-            {{ form_start(form) }}
+            <form method="post" action="{{ path('createtodo') }}">
             {{ form_widget(form.title) }}
             {{ form_widget(form.Insurance.client,{'attr':{'style':'width:25%'}}) }}
             <table class="table table-bordered table-striped">

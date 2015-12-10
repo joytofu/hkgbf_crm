@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\ManyToMany;
-use Doctrine\ORM\Mapping\JoinTable;
+
 
 /**
  * @ORM\Entity
@@ -56,7 +54,9 @@ class ToDo
     protected $user;
 
     /**
-     * @Vich\UploadableField(mapping="upload_product", fileNameProperty="productName")
+     * @Vich\UploadableField(mapping="todo", fileNameProperty="productName")
+     * 
+     * @var File
      */
     protected $productFile;
 
@@ -136,12 +136,6 @@ class ToDo
     }
 
     /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $product
      */
     public function setProductFile(File $product = null)

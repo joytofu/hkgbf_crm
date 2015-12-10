@@ -243,7 +243,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/createnotice", name="createnotice")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function createNotice(Request $request){
         $notice = new Notice();
