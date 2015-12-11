@@ -36,7 +36,7 @@
         </h3>
         </div>
         <div class="box-body">
-            <form method="post" action="{{ path('createtodo') }}">
+            <form method="post" action="{{ path('createtodo') }}" enctype="multipart/form-data">
             {{ form_widget(form.title) }}
             {{ form_widget(form.Insurance.client,{'attr':{'style':'width:25%'}}) }}
             <table class="table table-bordered table-striped">
@@ -135,7 +135,7 @@
                 </tr>
                 </tbody>
             </table>
-            {{ form_widget(form.productFile) }}
+            {{ form_widget(form.todoFile) }}
             <button class="btn btn-primary" type="submit">提交预约</button>
             </form>
         </div>

@@ -54,16 +54,16 @@ class ToDo
     protected $user;
 
     /**
-     * @Vich\UploadableField(mapping="todo", fileNameProperty="productName")
+     * @Vich\UploadableField(mapping="todo", fileNameProperty="todoName")
      * 
      * @var File
      */
-    protected $productFile;
+    protected $todoFile;
 
     /**
-     * @ORM\Column(type="string", length=255,name="product_name",nullable=true)
+     * @ORM\Column(type="string", length=255,name="todo_name",nullable=true)
      */
-    protected $productName;
+    protected $todoName;
 
     /**
      * @ORM\Column(type="datetime",nullable=true)
@@ -138,9 +138,9 @@ class ToDo
     /**
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $product
      */
-    public function setProductFile(File $product = null)
+    public function setTodoFile(File $product = null)
     {
-        $this->productFile = $product;
+        $this->todoFile = $product;
 
         if ($product) {
             // It is required that at least one field changes if you are using doctrine
@@ -152,25 +152,25 @@ class ToDo
     /**
      * @return File
      */
-    public function getProductFile()
+    public function getTodoFile()
     {
-        return $this->productFile;
+        return $this->todoFile;
     }
 
     /**
-     * @param string $productName
+     * @param string $todoName
      */
-    public function setProductName($productName)
+    public function setTodoName($todoName)
     {
-        $this->productName = $productName;
+        $this->todoName = $todoName;
     }
 
     /**
      * @return string
      */
-    public function getProductName()
+    public function getTodoName()
     {
-        return $this->productName;
+        return $this->todoName;
     }
 
 }
