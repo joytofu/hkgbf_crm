@@ -184,6 +184,8 @@ class ProfileController extends BaseProfileController
                 $user->setRoleName($role_name);
             }*/
             //$client->setSingleUser($user);
+            $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
+            $user->setRoleName($role_name);
             if($user->getPlainPassword()!==0){
                 $user->setPasswordRequestedAt(new \DateTime('now'));
             }
