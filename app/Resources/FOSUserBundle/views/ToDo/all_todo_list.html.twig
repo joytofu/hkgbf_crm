@@ -27,7 +27,9 @@
                                 {% for todo in todos %}
                                 <tr>
                                         <td>{{ todo.user.name }}</td>
-                                        <td>{{ todo.insurance.getClient().getName() }}</td>
+                                        <td>{{ todo.insurance.getClient().getName() }}
+                                        <a href="{{ path('showtodo',{'id':todo.id}) }}" data-toggle="tooltip" data-html="true" title="<span style='font-size:14px'>查看待办详情</span>"><i class="fa fa-eye"></i></a>
+                                        </td>
                                         <td>{{ todo.title }}</td>
                                         <td>{{ todo.createdAt|date('Y-m-d') }}</td>
                                         <td><button class="btn-instagram" onclick="setFinish({{ todo.id }})">完成待办</button></td>
@@ -55,7 +57,6 @@
                                         <td>{{ finished_todo.title }}</td>
                                         <td>{{ finished_todo.createdAt|date('Y-m-d') }}</td>
                                     <td><button class="btn-danger" onclick="undoFinish({{ finished_todo.id }})">取消完成</button></td>
-
                                 </tr>
                                 {% endfor %}
                             </table>

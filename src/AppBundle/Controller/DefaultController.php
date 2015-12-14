@@ -36,16 +36,13 @@ class DefaultController extends Controller
         $data = $em->getRepository('AppBundle:Client');
 
         //ROLE_REGULAR
-        $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
-        $regular = $data->findBy(array('role_name'=>$role_name));
+        $regular = $data->findBy(array('vip'=>'普通会员'));
 
         //ROLE_GOLDEN
-        $role_name = $em->getRepository('AppBundle:RoleName')->find(6);
-        $golden = $data->findBy(array('role_name'=>$role_name));
+        $golden = $data->findBy(array('vip'=>'金卡会员'));
 
         //ROLE_DIAMOND
-        $role_name = $em->getRepository('AppBundle:RoleName')->find(7);
-        $diamond = $data->findBy(array('role_name'=>$role_name));
+        $diamond = $data->findBy(array('vip'=>'钻石会员'));
 
 
 

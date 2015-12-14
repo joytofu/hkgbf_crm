@@ -172,6 +172,12 @@ class ProfileController extends BaseProfileController
         $form = $this->createForm(new EditClientProfileType(),$client);
         $em = $this->getDoctrine()->getManager();
         $user = $client->getSingleUser();
+        if(!$user){
+            $user = new User();
+            $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
+            $user->setRoleName($role_name);
+            $em->persist($user);
+        }
         $clientname = $client->getName();
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
         $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
@@ -214,7 +220,15 @@ class ProfileController extends BaseProfileController
  */
     public function deleteClient(Client $client){
         $em = $this->getDoctrine()->getManager();
+        $insurances = $client->getInsurances();
+        foreach($insurances as $insurance){
+            $todo = $insurance->getTodo();
+            $em->remove($todo);
+            $em->remove($insurance);
+        }
+        $user = $client->getSingleUser();
         $em->remove($client);
+        $em->remove($user);
         $em->flush();
         return $this->redirectToRoute('clientslist');
     }

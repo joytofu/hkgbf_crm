@@ -177,7 +177,7 @@ class Insurance {
     protected $r_name_pinyin;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_id_card;
 
@@ -187,7 +187,7 @@ class Insurance {
     protected $r_id_card_expired_date;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_traffic_permit;
 
@@ -217,7 +217,7 @@ class Insurance {
     protected $r_born_date;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_tel;
 
@@ -272,7 +272,7 @@ class Insurance {
     protected $r_company_address;
 
     /**
-     * @ORM\Column(type="bigint",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $r_company_tel;
 

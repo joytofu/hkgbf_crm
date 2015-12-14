@@ -55,11 +55,24 @@ class ToDoController extends Controller
             }
             $em->persist($todo);
             $em->flush();
-            return new Response("<script>alert('添加待办事项成功！');window.location.href='/admin/';</script>");
+            $baseurl = $this->getRequest()->getBaseUrl();
+            $redirect_url = $baseurl."/admin/";
+            return new Response("<script>alert('添加待办事项成功！');window.location.href='$redirect_url';</script>");
         }
 
         return $this->render('FOSUserBundle:ToDo:createToDo.html.twig',array('form'=>$form->createView()));
 
+    }
+
+    /**
+     * @Route("/showtodo/{id}",name="showtodo")
+     * @ParamConverter("todo", class="AppBundle:ToDo")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function showToDo(ToDo $todo){
+        $client = $todo->getUser();
+        $form = $this->createForm(new ToDoType($client),$todo);
+        return $this->render("@FOSUser/ToDo/showToDo.html.twig",array('todo'=>$todo,'form'=>$form->createView()));
     }
 
     /**
@@ -112,7 +125,7 @@ class ToDoController extends Controller
      * @Route("/edittodo/{id}", name="edittodo")
      * @ParamConverter("todo", class="AppBundle:ToDo")
      */
-    public function editToDo(ToDo $todo, Request $request){
+    public function editToDo(ToDo $todo, Request $request,$id){
         $agent = $this->getUser();
         $client_id = $todo->getInsurance()->getClient()->getId();
         $em = $this->getDoctrine()->getManager();
@@ -126,7 +139,10 @@ class ToDoController extends Controller
             return new Response("<script>alert('待办事项修改成功!');window.location.href='$redirect_url'</script>");
         }
 
-        return $this->render('@FOSUser/ToDo/createToDo.html.twig',array('form'=>$form->createView(),'client_id'=>$client_id));
+        return $this->render('@FOSUser/ToDo/editToDo.html.twig',array(
+            'form'=>$form->createView(),
+            'client_id'=>$client_id,
+            'id'=>$id));
     }
 
     /**

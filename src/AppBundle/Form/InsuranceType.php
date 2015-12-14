@@ -74,7 +74,7 @@ class InsuranceType extends AbstractType
             ->add('paid_years')
             ->add('next_pay_date')
             ->add('verified')
-            ->add('productFile','vich_file',array('required'=>false))
+            ->add('productFile','vich_file',array('label'=>'客户详细资料表','required'=>false))
             ->add('client','entity',array(
                 'class'=>'AppBundle\Entity\Client',
                 'placeholder'=>'请选择所属客户，如新客户请留空',

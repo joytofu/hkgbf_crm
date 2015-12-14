@@ -25,18 +25,14 @@
 </style>
 {% endblock %}
 {% block hidden_username %}{{ username }}{% endblock %}
-{% block page_header %}保险订单提交{% endblock %}
+{% block page_header %}保险订单修改{% endblock %}
 {% block content %}
     <div class="box box-primary" style="width: 100%">
         <div class="box-header with-border">
-            <h3 class="box-title">
-    {% if app.request.requestUri=="/admin/createtodo" %}创建待办事项
-        {% else %}修改待办事项
-            {% endif %}
-        </h3>
+            <h3 class="box-title">修改待办事项</h3>
         </div>
         <div class="box-body">
-            <form method="post" action="{{ path('createtodo') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ path('edittodo',{'id':id}) }}" enctype="multipart/form-data">
             {{ form_widget(form.title) }}
             {{ form_widget(form.Insurance.client,{'attr':{'style':'width:25%'}}) }}
             <table class="table table-bordered table-striped">
