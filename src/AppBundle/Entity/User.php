@@ -107,7 +107,7 @@ class User extends BaseUser
     protected $single_client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RoleName", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RoleName", inversedBy="users",cascade={"persist"})
      * @ORM\JoinColumn(name="role_name_id", referencedColumnName="id")
      */
     protected $role_name;
@@ -268,9 +268,8 @@ class User extends BaseUser
         return $this->role_name;
     }
 
-    public function setRoleName(RoleName $roleName){
+    public function setRoleName(RoleName $roleName=null){
         $this->role_name = $roleName;
-        return $this;
     }
 
     public function getSingleClient(){

@@ -39,6 +39,11 @@ class RoleName
      */
     protected $users;
 
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $for;
+
     public function __construct(){
         $this->users = new ArrayCollection();
         $this->clients = new ArrayCollection();
@@ -82,6 +87,14 @@ class RoleName
     public function removeUser(User $user){
         $this->users->removeElement($user);
         return $this;
+    }
+
+    public function getFor(){
+        return $this->for;
+    }
+
+    public function setFor($for){
+        $this->for = $for;
     }
 
 }

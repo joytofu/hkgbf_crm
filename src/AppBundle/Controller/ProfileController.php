@@ -105,7 +105,6 @@ class ProfileController extends BaseProfileController
         $normal = $em->getRepository('AppBundle:RoleName')->find(5);
         $client->setRoleName($normal);
 
-
         $role_name = $em->getRepository('AppBundle:RoleName')->find(4);
         $form = $this->createForm(new CreateClientType($role_name),$client);
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
@@ -115,7 +114,6 @@ class ProfileController extends BaseProfileController
         if($form->isSubmitted()&&$form->isValid()){
             $user = $client->getSingleUser();
             $user->setRoleName($normal);
-            $user->setEnabled(true);
 
             //设置手机、邮箱、公司到client表
             $cellphone = $_POST['createClient']['single_user']['cellphone'];
@@ -171,13 +169,6 @@ class ProfileController extends BaseProfileController
     public function editClientProfile(Request $request, Client $client,$id){
         $form = $this->createForm(new EditClientProfileType(),$client);
         $em = $this->getDoctrine()->getManager();
-        $user = $client->getSingleUser();
-        if(!$user){
-            $user = new User();
-            $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
-            $user->setRoleName($role_name);
-            $em->persist($user);
-        }
         $clientname = $client->getName();
         $direct_cities = array('北京市', '上海市', '天津市', '重庆市','香港特别行政区','澳门特别行政区','台湾');
         $hkmt = array('香港特别行政区','澳门特别行政区','台湾');
@@ -185,6 +176,14 @@ class ProfileController extends BaseProfileController
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+            $user = $client->getSingleUser();
+            /*if(!$user){
+                $user = new User();
+                $user->setSingleClient($client);
+                $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
+                $user->setRoleName($role_name);
+            }*/
+            //$client->setSingleUser($user);
             if($user->getPlainPassword()!==0){
                 $user->setPasswordRequestedAt(new \DateTime('now'));
             }
@@ -200,7 +199,6 @@ class ProfileController extends BaseProfileController
             if(isset($_POST['editProfile']['if_fund_purchased'])){
                 $client->setIfFundPurchased($_POST['editProfile']['if_fund_purchased']);
             }
-
             $em->flush();
             $group_url = $this->generateUrl('clientslist');
             return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");

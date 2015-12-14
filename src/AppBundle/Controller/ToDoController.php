@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Insurance;
 use AppBundle\Entity\ToDo;
+use AppBundle\Entity\User;
 use AppBundle\Form\ToDoType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -44,6 +45,8 @@ class ToDoController extends Controller
                 $insurance->setTodo($todo);
             }else{
                 $client = new \AppBundle\Entity\Client();
+                $normal = $em->getRepository('AppBundle:RoleName')->find(5);
+                $client->setRoleName($normal);
                 $insurance->setClient($client);
                 $insurance->setTodo($todo);
                 $client->addInsurance($insurance);
