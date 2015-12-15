@@ -20,7 +20,7 @@
                     <th>手机号码</th>
                     <th>客户级别</th>
                     <th>已购买产品</th>
-
+                    <th>注册时间</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,6 +44,7 @@
                         <input style="margin-left: 3%" type="checkbox" {% if client.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
                         <input style="margin-left: 3%" type="checkbox" {% if client.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
                     </td>
+                    <td>{{ client.createdAt|date('Y-m-d') }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -68,7 +69,9 @@
     <script src="{{ asset('js/demo.js') }}"></script>
     <script>
         $(function () {
-            $("#example1").DataTable();
+            $("#example1").DataTable({
+                "order":[[4,"desc"]]
+            });
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,

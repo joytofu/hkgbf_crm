@@ -73,6 +73,11 @@ class Client
     private $updatedAt;
 
     /**
+     * @ORM\Column(type="date",nullable=true)
+     */
+    protected $createdAt;
+
+    /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
      * @Vich\UploadableField(mapping="upload_product", fileNameProperty="productName")
@@ -188,6 +193,7 @@ class Client
     {
         $this->stocks = new ArrayCollection();
         $this->insurances = new ArrayCollection();
+        $this->createdAt = new \DateTime('now');
         $this->updatedAt = new \DateTime('now');
         $this->vip = "普通会员";
         $this->kill = "kill";
@@ -490,6 +496,14 @@ class Client
     public function removeStatement(Statement $statement){
         $this->statements->removeElement($statement);
         return $this;
+    }
+
+    public function getCreatedAt(){
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(){
+        return $this->updatedAt;
     }
 
 }

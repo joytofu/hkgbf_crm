@@ -174,6 +174,7 @@ class DefaultController extends Controller
         }
         $client->setVip($vip);
         $client->setRoleName($role_name);
+        $client->getSingleUser()->setRoleName($role_name);
         $em->flush();
         echo "<script>alert('设置成功！')</script>";
         return $this->redirectToRoute('group');

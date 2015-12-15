@@ -27,7 +27,7 @@ class CreateUserType extends AbstractType
             ->add('name',null,array('label'=>'form.name', 'translation_domain' => 'FOSUserBundle'))
             ->add('email',null,array('label'=>'form.email', 'translation_domain' => 'FOSUserBundle'))
             ->add('cellphone',null,array('label'=>'form.cellphone', 'translation_domain' => 'FOSUserBundle'))
-            ->add('role_name','entity',array(
+            /*->add('role_name','entity',array(
                 'class'=>'AppBundle\Entity\RoleName',
                 'placeholder'=>'请选择会员级别',
                 'required'=>true,
@@ -38,7 +38,7 @@ class CreateUserType extends AbstractType
                         ->setParameter("for","client")
                         ->orderBy('r.id','ASC');
                 },
-                'choice_label'=>'name'))
+                'choice_label'=>'name'))*/
             ->add('imageFile','vich_image',array('label'=>'form.imageFile', 'required'=>false,'translation_domain' => 'FOSUserBundle'));
     }
 

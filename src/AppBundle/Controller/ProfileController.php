@@ -114,21 +114,8 @@ class ProfileController extends BaseProfileController
         if($form->isSubmitted()&&$form->isValid()){
             $user = $client->getSingleUser();
             $user->setRoleName($normal);
-
-            //设置手机、邮箱、公司到client表
-            $cellphone = $_POST['createClient']['single_user']['cellphone'];
-            $email = $_POST['createClient']['single_user']['email'];
-            $company = $_POST['createClient']['single_user']['company'];
-            if(isset($cellphone)){
-                $client->setCellphone($cellphone);
-            }
-            if(isset($email)){
-                $client->setEmail($email);
-            }
-            if(isset($company)){
-                $client->setCompany($company);
-            }
-
+            $email = $_POST['createClient']['email'];
+            $user->setEmail($email);
 
             //设置对应的代理
             if(isset($_POST['createClient']['agent'])){
@@ -186,8 +173,12 @@ class ProfileController extends BaseProfileController
             //$client->setSingleUser($user);
             $role_name = $em->getRepository('AppBundle:RoleName')->find(5);
             $user->setRoleName($role_name);
+            $email = $_POST['editClientProfile']['email'];
+            $user->setEmail($email);
             if($user->getPlainPassword()!==0){
                 $user->setPasswordRequestedAt(new \DateTime('now'));
+            }else{
+
             }
 
             //将地址写入数组

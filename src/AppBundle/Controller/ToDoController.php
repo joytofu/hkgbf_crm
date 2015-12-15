@@ -53,6 +53,7 @@ class ToDoController extends Controller
                 $client->setAgent($user);
                 $client->setName($_POST['todo']['Insurance']['ph_name']);
                 $client->setCellphone($_POST['todo']['Insurance']['ph_tel']);
+                $client->setEmail($_POST['todo']['Insurance']['ph_email']);
                 $client->setIfInsurancePurchased(true);
                 $client->setCompany($_POST['todo']['Insurance']['ph_company_address']);
             }
