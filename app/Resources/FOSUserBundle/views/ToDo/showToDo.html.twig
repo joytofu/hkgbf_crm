@@ -128,7 +128,7 @@
                         <td>公司电话：{{ form_widget(form.Insurance.r_company_tel) }}</td>
                     </tr>
                     <tr>
-                        <td> <a href="{{ vich_uploader_asset(todo.insurance,'productFile') }}">下载客户详细资料</a></td>
+                        <td>{% if todo.insurance.productFile is not null %}<a href="/web{{ vich_uploader_asset(todo.insurance,'productFile') }}">下载客户详细资料</a>{% endif %}</td>
                     </tr>
                     </tbody>
                 </table>
