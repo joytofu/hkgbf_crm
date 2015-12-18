@@ -71,7 +71,6 @@ class ToDoController extends Controller
     /**
      * @Route("/showtodo/{id}",name="showtodo")
      * @ParamConverter("todo", class="AppBundle:ToDo")
-     * @Security("has_role('ROLE_ADMIN')")
      */
     public function showToDo(ToDo $todo){
         $client = $todo->getUser();
