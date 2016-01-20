@@ -38,6 +38,11 @@ class Insurance {
     /**
      * @ORM\Column(type="string",nullable=true)
      */
+    protected $insurance_company;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
     protected $type;
 
     /**
@@ -347,6 +352,14 @@ class Insurance {
 
     public function setInsuranceNumber($insurance_number){
         $this->insurance_number = $insurance_number;
+    }
+
+    public function getInsuranceCompany(){
+        return $this->insurance_company;
+    }
+
+    public function setInsuranceCompany($insurance_company){
+        $this->insurance_company = $insurance_company;
     }
 
     public function getType(){

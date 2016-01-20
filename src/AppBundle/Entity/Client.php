@@ -49,6 +49,11 @@ class Client
      */
     protected $company;
 
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected  $company_tel;
+
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -236,6 +241,14 @@ class Client
     public function getCompany()
     {
         return $this->company;
+    }
+
+    public function getCompanyTel(){
+        return $this->company_tel;
+    }
+
+    public function setCompanyTel($company_tel){
+        $this->company_tel = $company_tel;
     }
 
 

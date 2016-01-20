@@ -51,6 +51,8 @@
                             <table id="user_data" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
+                                    <th>手机号码</th>
+                                    <th>公司电话</th>
                                     <th>电子邮箱</th>
                                     <th>单位全称</th>
                                     <th>单位地址</th>
@@ -58,6 +60,8 @@
                                 </tr>
                                 </thead>
                                 <tr>
+                                    <td>{{ client_data.cellphone }}</td>
+                                    <td>{{ client_data.companyTel }}</td>
                                     <td>{{ client_data.email }}</td>
                                     <td>{{ client_data.company }}</td>
                                     <td>{{ client_data.province }}{{ client_data.city }}{{ client_data.district }}{% if client_data.address_detail is defined %}{{ client_data.address_detail }}{% endif %}</td>
@@ -154,7 +158,8 @@
                             <table id="products_list2" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>保险名称</th>
+                                    <th>保险公司名称</th>
+                                    <th>计划名称</th>
                                     <th>保单编号</th>
                                     <th>保险类型</th>
                                     <th>购买日期</th>
@@ -175,6 +180,7 @@
                                 </thead>
                                 {% for data in insurance_data %}
                                     <tr>
+                                        <td>{{ data.insuranceCompany }}</td>
                                         <td>{{ data.insuranceName }}</td>
                                         <td>{{ data.insuranceNumber }}</td>
                                         <td>{{ data.type }}</td>
