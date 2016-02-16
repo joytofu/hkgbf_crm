@@ -8,7 +8,7 @@
         <default key="_controller">FOSUserBundle:Security:login</default>
     </route>
 
-    <route id="fos_user_security_check" path="/login_check" methods="POST">
+    <route id="fos_user_security_check" path="/login_check" methods="GET POST">
         <default key="_controller">FOSUserBundle:Security:check</default>
     </route>
 
