@@ -372,7 +372,7 @@ class DefaultController extends Controller
             return new Response("<script>alert('创建成功');window.location.href='$redirect_url';</script>");
         }
 
-        return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView(),'agent_admins'=>$agent_admins));
+        return $this->render('@FOSUser/createUser/create_user.html.twig',array('form'=>$form->createView(),'agent_admins'=>$agent_admins,'role'=>$role));
     }
 
 

@@ -63,48 +63,55 @@ class RegistrationController extends Controller
             $invitation = $form['invitation']->getData();
 
             if ($invitation&&!$this->getinvitation($invitation)) {
-                return new Response("<script>alert('邀请码错误，请重新输入!');window.location.href='/register/';</script>");
+                $reg_path = $this->generateUrl("fos_user_registration_register");
+                return new Response("<script>alert('邀请码错误，请重新输入!');window.location.href='{$reg_path}';</script>");
             } else {
-
                 //获取具体地址，写入数组
                 $areaData = $em->getRepository('AppBundle:Area');
                 $address = array();
-                foreach($_POST['area'] as $value){
-                    $address[] = $areaData->find($value)->getName();
-                }
-                $address[] = $_POST['address_detail'];
 
+                if(isset($_POST['area'])&&$_POST['area'][0]!= -1){
+                    foreach($_POST['area'] as $value){
+                        $address[] = $areaData->find($value)->getName();
+                    }
+                    $address[] = $_POST['address_detail'];
 
-                //将地址分别写入省市区镇，作经纬度之用
-                $direct_cities = array('北京市','上海市','天津市','重庆市','香港特别行政区','澳门特别行政区','台湾');
-                if(in_array($address[0],$direct_cities)) {
-                    $user->setProvince($address[0]);
-                    $user->setCity($address[0]);
-                    $user->setDistrict($address[1]);
-                    $user->setTown($address[2]);
-                    $user->setAddressDetail($address[3]);
-                    $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array('province'=>$address[0],'district'=>$address[1]));
-                    $this->setLatLng($latlng_data,$user);
-                }else{
-                    $user->setProvince($address[0]);
-                    $user->setCity($address[1]);
-                    if($address[1]!="中山市") {
-                        $user->setDistrict($address[2]);
-                        $user->setTown($address[3]);
-                        $user->setAddressDetail($address[4]);
-                        $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array('province' => $address[0], 'city' => $address[1], 'district' => $address[2]));
-                    }else{
+                    //将地址分别写入省市区镇，作经纬度之用
+                    $direct_cities = array('北京市','上海市','天津市','重庆市','香港特别行政区','澳门特别行政区','台湾');
+                    if(in_array($address[0],$direct_cities)) {
+                        $user->setProvince($address[0]);
+                        $user->setCity($address[0]);
                         $user->setDistrict($address[1]);
                         $user->setTown($address[2]);
                         $user->setAddressDetail($address[3]);
-                        $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array('province' => $address[0], 'city' => $address[1], 'district' => $address[1]));
+                        $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array('province'=>$address[0],'district'=>$address[1]));
+                        $this->setLatLng($latlng_data,$user);
+                    }else{
+                        $user->setProvince($address[0]);
+                        $user->setCity($address[1]);
+                        if($address[1]!="中山市") {
+                            $user->setDistrict($address[2]);
+                            $user->setTown($address[3]);
+                            $user->setAddressDetail($address[4]);
+                            $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array('province' => $address[0], 'city' => $address[1], 'district' => $address[2]));
+                        }else{
+                            $user->setDistrict($address[1]);
+                            $user->setTown($address[2]);
+                            $user->setAddressDetail($address[3]);
+                            $latlng_data = $em->getRepository('AppBundle:LatLng')->findBy(array('province' => $address[0], 'city' => $address[1], 'district' => $address[1]));
+                        }
+                        $this->setLatLng($latlng_data,$user);
                     }
-                    $this->setLatLng($latlng_data,$user);
                 }
 
                 $event = new FormEvent($form, $request);
                 $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
-                $userManager->updateUser($user);
+                try{
+                    $userManager->updateUser($user);
+                }catch(\Exception $e){
+                    $exception = $e->getMessage();
+                    echo $exception;exit;
+                }
 
 
                 //发送邮件到渠道代理
@@ -116,8 +123,6 @@ class RegistrationController extends Controller
                     $body = '用户' . $username . '已成为你的用户！';
                     $this->sendEmailToAgent($fromEmail, $agentEmail, $body);
                 }
-
-
 
                 if (null === $response = $event->getResponse()) {
                     $url = $this->generateUrl('fos_user_display_after_registration');
@@ -225,7 +230,7 @@ class RegistrationController extends Controller
 
     protected function getinvitation($invitation){
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('AppBundle:User')->findBy(array('group_id'=>4));
+        $data = $em->getRepository('AppBundle:User')->findBy(array('pid'=>59));
         $invite = array();
         foreach($data as $res){
             $invite[] = $res->getInvite();

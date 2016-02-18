@@ -1,15 +1,15 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
 {% block hidden_username %}{{ username }}{% endblock %}
-{% block page_header %}创建代理{% endblock %}
+{% block page_header %}{% if role=='agent' %}创建代理{% elseif role=='admin' %}创建管理员{% endif %}{% endblock %}
 {% block content %}
     <div class="box box-primary" style="width: 50%;margin-left: 23%">
         <div class="box-header with-border">
-            <h3 class="box-title">创建代理</h3>
+            <h3 class="box-title">{% if role=='agent' %}创建代理{% elseif role=='admin' %}创建管理员{% endif %}</h3>
         </div>
 
         {{ form_start(form) }}
         <div class="box-body">
-            {% if app.request.requestUri=='/admin/create/agent' %}
+            {% if role=='agent' %}
             <div class="form-group" id="head">
                 <label class="control-label">角色权限</label>
                 <select id="roles" name="roles">

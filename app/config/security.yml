@@ -3,7 +3,7 @@
 security:
 
     encoders:
-            FOS\UserBundle\Model\UserInterface: bcrypt
+            FOS\UserBundle\Model\UserInterface: sha512
 
     role_hierarchy:
             ROLE_REGULAR:     ROLE_USER
@@ -21,6 +21,9 @@ security:
                      password: jntz020
                      roles: ROLE_SUPER_ADMIN
 
+        #hkgbf_crm_db_provider:
+            #entity: { class: AppBundle\Entity\User, property: username }
+
         fos_userbundle:
                     id: fos_user.user_provider.username
 
@@ -36,10 +39,30 @@ security:
                      provider: fos_userbundle
                      csrf_provider: security.csrf.token_manager # Use form.csrf_provider instead for Symfony <2.4
                      default_target_path: redirectAfterLogin
+                     always_use_default_target_path: false
+                     #default_target_path:            /
+                     target_path_parameter:          _target_path
+                     use_referer:                    false
+
+                     # field names for the username and password fields
+                     username_parameter: _username
+                     password_parameter: _password
+
+                     # csrf token options
+                     csrf_parameter:       _csrf_token
+                     intention:            authenticate
+                     csrf_provider:        my.csrf_token_generator.id
+
+                     require_previous_session: true
+
+                     login_path: /login
+                     check_path: /login_check
+                     use_forward: false
                logout:
                      path: /logout
                      target: /login
                anonymous:  true
+
 
 
 
