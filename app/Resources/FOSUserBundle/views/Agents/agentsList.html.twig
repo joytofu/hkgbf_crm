@@ -17,7 +17,7 @@
                  <ul class="nav nav-tabs">
                      {% set i=1 %}
                      {% for agent_admin in agent_admins %}
-                     <li {% if i==1 %}class="active"{% endif %}><a href="#agent_{{ i }}" data-toggle="tab">{{ agent_admin.name }}</a></li>
+                     <li {% if i==1 %}class="active"{% endif %} id="admin_tab" value="{{ agent_admin.id }}"><a href="#agent_{{ i }}" data-toggle="tab">{{ agent_admin.name }}</a></li>
                      {% set i=i+1 %}
                      {% endfor %}
                  </ul>
@@ -88,5 +88,24 @@
             });
         });
     </script>
+    <script>
+        function deleteAgent(id){
+            if(confirm('你确定删除该代理?')){
+                window.location.href="{{ app.request.baseUrl }}/admin/deleteagent/"+id;
+            }
+        };
+
+
+        function deleteAgentAdmin(id){
+            if(confirm('你确定删除该渠道管理吗?')){
+                window.location.href="{{ app.request.baseUrl }}/admin/deleteagentadmin/"+id;
+            }
+        }
+
+
+    </script>
+
+
+
 
 {% endblock %}

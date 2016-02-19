@@ -236,6 +236,17 @@ class ProfileController extends BaseProfileController
     }
 
     /**
+     * @Route("/admin/deleteagentadmin/{id}", name="deleteagentadmin")
+     * @ParamConverter("agentadmin", class="AppBundle:User")
+     */
+    public function deleteAgentAdmin(User $user){
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+        return $this->redirectToRoute('agentslist');
+    }
+
+    /**
      * edit private profile of your own
      * @Route("/admin/editprofile", name="editprofile")
      */

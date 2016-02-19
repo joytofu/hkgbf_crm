@@ -285,7 +285,7 @@ class DefaultController extends Controller
     public function getAgentsAction($agent_admin_id,$j){
         $em = $this->getDoctrine()->getManager();
         $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$agent_admin_id));
-        return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'j'=>$j));
+        return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'agent_admin_id'=>$agent_admin_id,'j'=>$j));
     }
 
 
