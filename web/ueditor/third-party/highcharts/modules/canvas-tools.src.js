@@ -3073,7 +3073,7 @@ if (CanvasRenderingContext2D) {
 			// Remove the canvas
 			discardElement(renderer.canvas);
 
-			// Kill the timer
+			// DBOpt the timer
 			if (renderer.ttTimer !== UNDEFINED) {
 				clearTimeout(renderer.ttTimer);
 			}

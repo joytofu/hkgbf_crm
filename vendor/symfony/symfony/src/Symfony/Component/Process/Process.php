@@ -103,7 +103,7 @@ class Process
         134 => 'Process aborted',
         135 => 'Bus error: "access to undefined portion of memory object"',
         136 => 'Floating point exception: "erroneous arithmetic operation"',
-        137 => 'Kill (terminate immediately)',
+        137 => 'DBOpt (terminate immediately)',
         138 => 'User-defined 1',
         139 => 'Segmentation violation',
         140 => 'User-defined 2',

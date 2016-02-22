@@ -2806,7 +2806,7 @@ vjs.Player.prototype.dispose = function(){
   // prevent dispose from being called twice
   this.off('dispose');
 
-  // Kill reference to this player
+  // DBOpt reference to this player
   vjs.players[this.id_] = null;
   if (this.tag && this.tag['player']) { this.tag['player'] = null; }
   if (this.el_ && this.el_['player']) { this.el_['player'] = null; }

