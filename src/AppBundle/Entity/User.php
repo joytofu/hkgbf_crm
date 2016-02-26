@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 
@@ -17,9 +18,19 @@ use Symfony\Component\HttpFoundation\File\File;
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
  * @Vich\Uploadable
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     message="用户名已存在,请重新输入!"
+ * )
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="邮箱已存在,请重新输入!"
+ * )
+ *
  */
 class User extends BaseUser
 {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

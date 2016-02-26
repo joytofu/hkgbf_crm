@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 
@@ -16,6 +17,9 @@ use Symfony\Component\HttpFoundation\File\File;
  * @ORM\Entity
  * @ORM\Table(name="client")
  * @Vich\Uploadable
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="邮箱已存在,请重新输入!")
  */
 class Client
 {
@@ -159,6 +163,11 @@ class Client
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $if_fund_purchased;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $if_future_purchased;
 
     /**
      * @ORM\Column(type="string",nullable=true)
@@ -437,6 +446,15 @@ class Client
 
     public function setIfFundPurchased($boolean){
         $this->if_fund_purchased = (boolean) $boolean;
+        return $this;
+    }
+
+    public function getIfFuturePurchased(){
+        return $this->if_future_purchased;
+    }
+
+    public function setIfFuturePurchased($boolean){
+        $this->if_future_purchased = (boolean) $boolean;
         return $this;
     }
 

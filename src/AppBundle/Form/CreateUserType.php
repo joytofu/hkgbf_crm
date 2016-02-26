@@ -25,7 +25,7 @@ class CreateUserType extends AbstractType
             ))
             ->add('company',null,array('label'=>'公司名称'))
             ->add('name',null,array('label'=>'form.name', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email',null,array('label'=>'form.email', 'translation_domain' => 'FOSUserBundle'))
+            ->add('email',null,array('label'=>'电子邮箱'))
             ->add('cellphone',null,array('label'=>'form.cellphone', 'translation_domain' => 'FOSUserBundle'))
             /*->add('role_name','entity',array(
                 'class'=>'AppBundle\Entity\RoleName',
@@ -46,6 +46,7 @@ class CreateUserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
+            'cascade_validation' => true,
             'csrf_protection' => false
         ));
     }

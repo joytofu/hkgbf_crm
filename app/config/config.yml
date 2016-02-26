@@ -153,6 +153,13 @@ vich_uploader:
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid
 
+        insurance_plan:
+            uri_prefix:         /product/upload/insurance/plan
+            upload_destination: %kernel.root_dir%/../web/product/upload/insurance/plan
+            inject_on_load:     true
+            delete_on_update:   true
+            namer:              vich_uploader.namer_uniqid
+
         statement:
             uri_prefix:         /statement
             upload_destination: %kernel.root_dir%/../web/statement

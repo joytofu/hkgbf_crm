@@ -18,6 +18,7 @@ use AppBundle\Form\EditAgentProfileType;
 use FOS\UserBundle\Form\Type\ProfileFormType;
 use AppBundle\Form\EditClientProfileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -115,7 +116,7 @@ class ProfileController extends BaseProfileController
             $user = $client->getSingleUser();
             $user->setRoleName($normal);
             $email = $_POST['createClient']['email'];
-            $user->setEmail($email);
+            $client->setEmail($email);
 
             //设置对应的代理
             if(isset($_POST['createClient']['agent'])){
@@ -135,7 +136,11 @@ class ProfileController extends BaseProfileController
             if(isset($_POST['createClient']['if_fund_purchased'])){
                 $client->setIfFundPurchased($_POST['createClient']['if_fund_purchased']);
             }
+            if(isset($_POST['createClient']['if_future_purchased'])){
+                $client->setIfFuturePurchased($_POST['createClient']['if_future_purchased']);
+            }
             $user->setSingleClient($client);
+
             $em->persist($client);
             $em->flush();
             $redirect_url = $this->generateUrl('clientslist');
@@ -192,6 +197,9 @@ class ProfileController extends BaseProfileController
             if(isset($_POST['editProfile']['if_fund_purchased'])){
                 $client->setIfFundPurchased($_POST['editProfile']['if_fund_purchased']);
             }
+            if(isset($_POST['editProfile']['if_future_purchased'])){
+                $client->setIfFuturePurchased($_POST['editProfile']['if_future_purchased']);
+            }
             $em->flush();
             $group_url = $this->generateUrl('clientslist');
             return new Response("<script>alert('修改成功');window.location.href='$group_url';</script>");
@@ -211,15 +219,20 @@ class ProfileController extends BaseProfileController
  */
     public function deleteClient(Client $client){
         $em = $this->getDoctrine()->getManager();
-        $insurances = $client->getInsurances();
-        foreach($insurances as $insurance){
-            $todo = $insurance->getTodo();
-            $em->remove($todo);
-            $em->remove($insurance);
+
+        if($insurances = $client->getInsurances()){
+            foreach($insurances as $insurance){
+                if($todo = $insurance->getTodo()){
+                    $em->remove($todo);
+                }
+                $em->remove($insurance);
+            }
         }
-        $user = $client->getSingleUser();
+
+        if($user = $client->getSingleUser()){
+            $em->remove($user);
+        }
         $em->remove($client);
-        $em->remove($user);
         $em->flush();
         return $this->redirectToRoute('clientslist');
     }
@@ -306,7 +319,9 @@ class ProfileController extends BaseProfileController
             $areaData = $em->getRepository('AppBundle:Area');
             $add = array(); //储存省市区地址名称
             foreach ($_POST['area'] as $value) {
-                $add[] = $areaData->find($value)->getName();
+                if($value!=-1){
+                    $add[] = $areaData->find($value)->getName();
+                }
             }
             $add[] = $_POST['address_detail'];
 

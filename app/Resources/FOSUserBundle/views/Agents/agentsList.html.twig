@@ -17,7 +17,7 @@
                  <ul class="nav nav-tabs">
                      {% set i=1 %}
                      {% for agent_admin in agent_admins %}
-                     <li {% if i==1 %}class="active"{% endif %} id="admin_tab" value="{{ agent_admin.id }}"><a href="#agent_{{ i }}" data-toggle="tab">{{ agent_admin.name }}</a></li>
+                     <li {% if i==1 %}class="active"{% endif %} id="admin_tab" value="{{ agent_admin.id }}"><a href="#agent_{{ i }}" data-toggle="tab">{% if agent_admin.name is not null %}{{ agent_admin.name }}{% else %}{{ agent_admin.username }}{% endif %}</a></li>
                      {% set i=i+1 %}
                      {% endfor %}
                  </ul>

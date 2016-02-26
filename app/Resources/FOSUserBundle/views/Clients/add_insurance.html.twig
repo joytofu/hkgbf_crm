@@ -139,11 +139,12 @@
                 </thead>
                 <tbody>
                 <tr>
+                    <td>保险公司：{{ form_widget(form.insurance_company) }}</td>
                     <td>保险名称：{{ form_widget(form.insurance_name) }}</td>
                     <td>保单编号：{{ form_widget(form.insurance_number) }}</td>
-                    <td>保险类型：{{ form_widget(form.type) }}</td>
                 </tr>
                 <tr>
+                    <td>保险类型：{{ form_widget(form.type) }}</td>
                     <td>保费(元)：{{ form_widget(form.insurance_premium) }}</td>
                     <td>保额(元)：{{ form_widget(form.sum_insured) }}</td>
                 </tr>
@@ -152,9 +153,17 @@
                     <td>已缴费年期：{{ form_widget(form.paid_years) }}</td>
                     <td>下次续费日期：{{ form_widget(form.next_pay_date) }}</td>
                 </tr>
+                <tr>
+                    <td>缴费方式：{{ form_widget(form.payment_method) }}</td>
+                    <td>银行自动付款：{{ form_widget(form.automatic_payment) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">保单情况：{{ form_widget(form.remark) }}</td>
+                </tr>
                 </tbody>
             </table>
             {{ form_widget(form.productFile) }}
+            {{ form_widget(form.insurancePlan) }}
             <button class="btn btn-primary" type="submit">提交</button>
             </form>
         </div>

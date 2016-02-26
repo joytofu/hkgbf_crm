@@ -327,7 +327,34 @@ class Insurance {
      *
      * @var \DateTime
      */
-    private $updatedAt;
+    protected $updatedAt;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $payment_method;
+
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    protected $automatic_payment = false;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    protected $remark;
+
+    /**
+     * @Vich\UploadableField(mapping="insurance_plan",fileNameProperty="planName")
+     */
+    protected $insurancePlan;
+
+    /**
+     * @ORM\Column(type="string",length=255,nullable=true)
+     */
+    protected $planName;
+
+
 
 
     public function getId(){
@@ -1424,5 +1451,49 @@ class Insurance {
     public function getProductName()
     {
         return $this->productName;
+    }
+
+    public function getPaymentMethod(){
+        return $this->payment_method;
+    }
+
+    public function setPaymentMethod($payment_method){
+        $this->payment_method = $payment_method;
+    }
+
+    public function getAutomaticPayment(){
+        return $this->automatic_payment;
+    }
+
+    public function setAutomaticPayment($boolean){
+        $this->automatic_payment = (boolean) $boolean;
+        return $this;
+    }
+
+    public function getRemark(){
+        return $this->remark;
+    }
+
+    public function setRemark($remark){
+        $this->remark = $remark;
+    }
+
+    public function getInsurancePlan(){
+        return $this->insurancePlan;
+    }
+
+    public function setInsurancePlan(File $insurancePlan){
+        $this->insurancePlan = $insurancePlan;
+        if($insurancePlan){
+            $this->updatedAt = new Assert\DateTime('now');
+        }
+    }
+
+    public function getPlanName(){
+        return $this->planName;
+    }
+
+    public function setPlanName($planName){
+        $this->planName = $planName;
     }
 }

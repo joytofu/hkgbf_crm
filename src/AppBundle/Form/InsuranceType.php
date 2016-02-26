@@ -22,6 +22,7 @@ class InsuranceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('insurance_company')
             ->add('insurance_name')
             ->add('insurance_number')
             ->add('type')
@@ -33,7 +34,7 @@ class InsuranceType extends AbstractType
             ->add('ph_id_card')
             ->add('ph_id_card_expired_date','date',array('empty_value'=>'','widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(2016,2036,1)))
             ->add('ph_traffic_permit')
-            ->add('ph_traffic_permit_expired_date','date',array('empty_value'=>'','widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(2016,2036,1)))
+            ->add('ph_traffic_permit_expired_date','date',array('empty_value'=>'','required'=>false,'widget'=>'choice','format'=>'yyyy-MM-dd','years'=>range(2016,2036,1)))
             ->add('ph_address')
             ->add('ph_id_address')
             ->add('ph_tel')
@@ -52,7 +53,7 @@ class InsuranceType extends AbstractType
             ->add('r_name')
             ->add('r_name_pinyin')
             ->add('r_id_card')
-            ->add('r_id_card_expired_date')
+            ->add('r_id_card_expired_date','date',array('required'=>false))
             ->add('r_traffic_permit')
             ->add('r_traffic_permit_expired_date')
             ->add('r_gender','choice',array('choices'=>array('男'=>'男','女'=>'女'),'required'=>false,'empty_data'=>null))
@@ -73,8 +74,12 @@ class InsuranceType extends AbstractType
             ->add('r_company_tel')
             ->add('paid_years')
             ->add('next_pay_date')
+            ->add('payment_method','choice',array('choices'=>array('年缴'=>'年缴','半年缴'=>'半年缴','月缴'=>'月缴')))
+            ->add('automatic_payment','choice',array('choices'=>array('1'=>'是','0'=>'否')))
+            ->add('remark','textarea',array('required'=>false,'attr'=>['rows'=>7,'style'=>'display:block;width:100%']))
             ->add('verified')
             ->add('productFile','vich_file',array('label'=>'客户详细资料表','required'=>false))
+            ->add('insurancePlan','vich_file',array('label'=>'保险计划书','required'=>false))
             ->add('client','entity',array(
                 'class'=>'AppBundle\Entity\Client',
                 'placeholder'=>'请选择所属客户，如新客户请留空',

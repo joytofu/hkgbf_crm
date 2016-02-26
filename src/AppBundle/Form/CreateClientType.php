@@ -47,6 +47,7 @@ class CreateClientType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Client',
+            'cascade_validation' => true
 
         ));
     }
