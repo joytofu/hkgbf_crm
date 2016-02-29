@@ -480,18 +480,18 @@ class ClientsProductController extends Controller
         $file = $form['statement_file']->getData();
         if($form->isSubmitted()) {
             $data = $this->handleExcelData($file);
-            $content = array_splice($data['excel_data'],1);
-            $tr_arr = array();
+            $content = $data['excel_data'][1];
+            array_splice($content,29,4);
+            array_splice($content,20,8);
+            array_splice($content,16,3);
+            array_splice($content,13,2);
+            array_splice($content,5,1);
+            $td_arr = array();
             foreach($content as $value){
-                $td_arr = array();
-                foreach($value as $td){
-                    $td_arr[] = '<td>'.$td.'</td>';
-                }
-                $tds = implode("",$td_arr);
-                $tdss = '<tr>'.$tds.'</tr>';
-                $tr_arr[] = $tdss;
+                $td = '<td>'.$value.'</td>';
+                $td_arr[] = $td;
             }
-            $content = implode("",$tr_arr);
+            $content = '<tr>'.implode("",$td_arr).'</tr>';
             $statement->setContent($content);
             $statement->setClient($client);
             $em->persist($statement);
@@ -517,18 +517,18 @@ class ClientsProductController extends Controller
         $file = $form['statement_file']->getData();
         if($form->isSubmitted()) {
             $data = $this->handleExcelData($file);
-            $content = array_splice($data['excel_data'],1);
-            $tr_arr = array();
+            $content = $data['excel_data'][1];
+            array_splice($content,29,4);
+            array_splice($content,20,8);
+            array_splice($content,16,3);
+            array_splice($content,13,2);
+            array_splice($content,5,1);
+            $td_arr = array();
             foreach($content as $value){
-                $td_arr = array();
-                foreach($value as $td){
-                    $td_arr[] = '<td>'.$td.'</td>';
-                }
-                $tds = implode("",$td_arr);
-                $tdss = '<tr>'.$tds.'</tr>';
-                $tr_arr[] = $tdss;
+                $td = '<td>'.$value.'</td>';
+                $td_arr[] = $td;
             }
-            $content = implode("",$tr_arr);
+            $content = implode("",$td_arr);
             $statement->setContent($content);
             $em->flush();
         }
