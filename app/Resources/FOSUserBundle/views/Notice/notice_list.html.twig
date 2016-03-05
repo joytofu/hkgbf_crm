@@ -62,7 +62,7 @@
     <script>
         function deletenotice(id){
             if(confirm('你确定删除该通知吗?')){
-                window.location.href={{ app.request.baseurl }}"/admin/deletenotice/"+id;
+                window.location.href="{{ app.request.baseurl }}"+"/admin/deletenotice/"+id;
             }
         }
     </script>
