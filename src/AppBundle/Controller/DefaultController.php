@@ -85,7 +85,7 @@ class DefaultController extends Controller
         //chart&clients count
         $role = $user->getRoles();
         if($role[0]=='ROLE_AGENT') {
-            $normal_clients = $client_data->findBy(array('agent' => $user, 'vip'=>'普通会员'));
+            $normal_clients = $client_data->findBy(array('agent' => $user, 'vip'=>'银卡会员'));
             $normal_clients_num = count($normal_clients);
 
             $golden_clients = $client_data->findBy(array('agent' => $user, 'vip'=>'金卡会员'));
@@ -100,7 +100,7 @@ class DefaultController extends Controller
             $golden_clients = array();
             $diamond_clients = array();
             foreach($agents as $agent){
-                $normal_clients = array_merge($normal_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'普通会员')));
+                $normal_clients = array_merge($normal_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'银卡会员')));
                 $golden_clients = array_merge($golden_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'金卡会员')));
                 $diamond_clients = array_merge($diamond_clients,$client_data->findBy(array('agent'=>$agent,'vip'=>'钻石会员')));
             }
@@ -108,7 +108,7 @@ class DefaultController extends Controller
             $golden_clients_num = count($golden_clients);
             $diamond_clients_num = count($diamond_clients);
         }elseif($this->isGranted('ROLE_ADMIN')){
-            $normal_clients = $client_data->findBy(array('vip'=>'普通会员'));
+            $normal_clients = $client_data->findBy(array('vip'=>'银卡会员'));
             $golden_clients = $client_data->findBy(array('vip'=>'金卡会员'));
             $diamond_clients = $client_data->findBy(array('vip'=>'钻石会员'));
             $normal_clients_num = count($normal_clients);
