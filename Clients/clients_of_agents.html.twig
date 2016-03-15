@@ -1,0 +1,104 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+{% block page_header %}下属代理及其客户{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12" >
+            {% if if_agent==false  %}你下属没有任何代理
+            {% else %}
+            <!-- Custom Tabs -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    {% set i=1 %}
+                    {% for agent in agents %}
+                    <li id="t{{ agent.id }}" {% if i==1 %}class="active"{% endif %}><a href="#tab_{{ agent.id }}" data-toggle="tab">{{ agent.name }}</a></li>
+                        {% set i=i+1 %}
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+
+                    {% set k=1 %}
+                    {% for agent in agents %}
+                    <div class="tab-pane {% if k==1 %}active{% endif %}" id="tab_{{ agent.id }}">
+                        <div class="box-body">
+                            <table id="products_list{{ k }}" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>手机号码</th>
+                                    <th>会员级别</th>
+                                    <th>已购买产品</th>
+                                </tr>
+                                </thead>
+                                {% for client in agent.getClients() %}
+                                    <tr>
+                                        <td><a href="{{ path('productdetail',{'id':client.getId()}) }}" target="_blank">{{ client.name }}</a></td>
+                                        <td>{{ client.cellphone }}</td>
+                                        <td>{{ client.vip }}</td>
+                                        <td>
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                            {% set k=k+1 %}
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                    {% endfor %}
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $("#products_list1").DataTable();
+            $('#products_list2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+            $('#products_list3').DataTable();
+            $('#products_list4').DataTable();
+            $('#t1').addClass('active');
+            $('#tab_1').attr('class','tab-pane active');
+        });
+    </script>
+    <script>
+        function deletestock(id){
+            if(confirm('你确定删除该股票信息吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_stock_2/"+id;
+            }
+        }
+
+        function deleteinsurance(id){
+            if(confirm('你确定删除该保险信息吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_insurance_2/"+id;
+            }
+        }
+
+        function deleteuser(id){
+            if(confirm('你确定删除该用户吗？')){
+                window.location.href={{ app.request.baseurl }}"/admin/delete_user/"+id;
+            }
+        }
+
+
+    </script>
+{% endblock %}

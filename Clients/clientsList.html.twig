@@ -21,22 +21,20 @@
                     <th>客户级别</th>
                     <th>已购买产品</th>
                     <th>注册时间</th>
-                    <th>所属代理</th>
-                    <th>所属渠道管理</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for client in clients %}
                 <tr>
                     <td><a href="{{ path('productdetail',{'id':client.id}) }}" target="_blank">{{ client.name }}</a>
-                        {% if is_granted('ROLE_ADMIN') and app.user.roles[0]!='ROLE_FUCKER' %}
+                        {% if is_granted('ROLE_ADMIN') %}
                             |<a href="{{ path('editclientprofile',{'id':client.id}) }}"><i class="fa fa-wrench"></i></a>
                             <a href="javascript:void(0)" onclick="deleteClient({{ client.id }})"><i class="fa fa-remove" style="color:darkred"></i></a>
                         {% endif %}
                     </td>
                     <td>{{ client.cellphone }}</td>
                     <td>
-                            {% if client.vip=='银卡会员' %}<span class="label bg-aqua">银卡会员</span>
+                            {% if client.vip=='普通会员' %}<span class="label bg-aqua">普通会员</span>
                             {% elseif client.vip=='金卡会员' %}<span class="label bg-blue">金卡会员</span>
                             {% elseif client.vip=='钻石会员' %}<span class="label bg-purple">钻石会员</span>
                             {% endif %}
@@ -49,13 +47,11 @@
 
                     </td>
                     <td>{{ client.createdAt|date('Y-m-d') }}</td>
-                    <td>{{ client.agent.getName() }}</td>
-                    <td>{{ render(controller('AppBundle:Default:getAgentAdmin',{'pid':client.agent.pid})) }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
-            {% if is_granted('ROLE_ADMIN') and app.user.roles[0]!='ROLE_FUCKER' %}
+            {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('createclient') }}"><button class="btn btn-primary">新客户</button></a>
             {% endif %}
         </div><!-- /.box-body -->

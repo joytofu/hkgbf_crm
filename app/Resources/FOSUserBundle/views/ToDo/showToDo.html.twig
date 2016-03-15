@@ -25,11 +25,11 @@
 </style>
 {% endblock %}
 {% block hidden_username %}{{ username }}{% endblock %}
-{% block page_header %}待办事项{% endblock %}
+{% block page_header %}保险订单事项{% endblock %}
 {% block content %}
     <div class="box box-primary" style="width: 100%">
         <div class="box-header with-border">
-            <h3 class="box-title">待办事项详情</h3>
+            <h3 class="box-title">保险订单详情</h3>
         </div>
         <div class="box-body">
                 {{ form_widget(form.title) }}
@@ -129,6 +129,7 @@
                     </tr>
                     <tr>
                         <td>{% if todo.insurance.productFile is not null %}<a href="/web{{ vich_uploader_asset(todo.insurance,'productFile') }}">下载客户详细资料</a>{% endif %}</td>
+                        <td>{% if todo.insurance.insurancePlan is not null %}<a href="/web{{ vich_uploader_asset(todo.insurance,'insurancePlan') }}">下载保险建议书</a>{% endif %}</td>
                     </tr>
                     </tbody>
                 </table>

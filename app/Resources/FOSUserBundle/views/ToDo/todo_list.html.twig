@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
     <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
 {% endblock %}
+{% block page_header %}保险订单管理{% endblock %}
 {% block hidden_username %}{{ username }}{% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-xs-7" style="margin-left: 20%">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">我的待办事项</h3>
+                    <h3 class="box-title">我的订单管理</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                     <table id="todo_data" class="table table-bordered table-striped">
@@ -48,13 +49,12 @@
                         </ul>
                         </tbody>
                     </table>
-                    <a href="{{ path('createtodo') }}"><button class="btn-microsoft">创建待办事项</button></a>
+                    <a href="{{ path('createtodo') }}"><button class="btn-microsoft">创建订单</button></a>
                 </div><!-- /.box-body -->
             </div>
         </div>
     </div>
 {% endblock %}
-{% block page_header %}待办事项{% endblock %}
 {% block private_js %}
     <!--DataTables-->
     <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>

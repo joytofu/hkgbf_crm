@@ -23,8 +23,10 @@
                     {% endfor %}
                 </select>
             </div>
-             {% else %}
+             {% elseif role=='admin' %}
                 <input type="hidden" name="roles" value="ROLE_ADMIN">
+             {% elseif role=='fucker' %}
+                <input type="hidden" name="roles" value="ROLE_FUCKER">
              {% endif %}
             <div class="form-group">
                 {{ form_widget(form.imageFile) }}

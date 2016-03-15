@@ -25,7 +25,7 @@ class InsuranceType extends AbstractType
             ->add('insurance_company')
             ->add('insurance_name')
             ->add('insurance_number')
-            ->add('type')
+            ->add('currency','choice',array('choices'=>['$美元','$美元','¥人民币'=>'¥人民币','HK$港元'=>'HK$港元','€欧元'=>'€欧元'],'expanded'=>true))
             ->add('buy_date')
             ->add('insurance_premium')
             ->add('sum_insured')
@@ -79,7 +79,7 @@ class InsuranceType extends AbstractType
             ->add('remark','textarea',array('required'=>false,'attr'=>['rows'=>7,'style'=>'display:block;width:100%']))
             ->add('verified')
             ->add('productFile','vich_file',array('label'=>'客户详细资料表','required'=>false))
-            ->add('insurancePlan','vich_file',array('label'=>'保险计划书','required'=>false))
+            ->add('insurancePlan','vich_file',array('label'=>'保险建议书','required'=>false))
             ->add('client','entity',array(
                 'class'=>'AppBundle\Entity\Client',
                 'placeholder'=>'请选择所属客户，如新客户请留空',

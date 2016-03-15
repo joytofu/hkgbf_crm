@@ -1,13 +1,117 @@
 {% extends '@FOSUser/layout_admin.html.twig' %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('css/notice.css') }}">
+{% endblock %}
 {% block page_header %}客户{% endblock %}
 {% block content %}
+    <!--个人信息块-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header"><h3 class="box-title">个人信息</h3></div>
+                <div class="box-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>手机号码</th>
+                            <th>身份证</th>
+                            <th>通信地址</th>
+                            <th>邮箱</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ client.getName() }}</td>
+                            <td>{{ client.getCellphone() }}</td>
+                            <td>{{ client.getIdCard() }}</td>
+                            <td>{{ client.getAddressDetail() }}</td>
+                            <td>{{ client.getEmail() }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--通知和待办块-->
+    <div class="row">
+        <!--通知滑块-->
+        <div class="col-md-6">
+            <div class="box box-solid">
+                {#<div class="box-header with-border">
+                    <h3 class="box-title">Carousel</h3>
+                </div>#}<!-- /.box-header -->
+                <div class="box-body">
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="3" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="4" class=""></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <div class="notice_title"><h2>{% if notice_active is not null %}{{ notice_active.title|raw }}{% endif %}</h2></div>
+                                <div class="notice_content">{% if notice_active is not null %}{{ notice_active.content|raw }}{% endif %}</div>
+                                <img src="{{ asset('img/notice/1.png') }}">
+                            </div>
+                            {% set i=2 %}
+                            {% for data in notice %}
+                                <div class="item">
+                                    <div class="notice_title"><h2>{{ data.title|raw }}</h2></div>
+                                    <div class="notice_content">{{ data.content|raw }}</div>
+                                    <img src="{{ app.request.baseurl }}/img/notice/{{ i }}.png">
+                                </div>
+                                {% set i=i+1 %}
+                            {% endfor %}
+                        </div>
+                        <a class="left carousel-control" style="width:10%" href="#carousel-example-generic" data-slide="prev">
+                            <span class="fa fa-angle-left"></span>
+                        </a>
+                        <a class="right carousel-control"  style="width:10%" href="#carousel-example-generic" data-slide="next">
+                            <span class="fa fa-angle-right"></span>
+                        </a>
+                    </div>
+                </div><!-- /.box-body -->
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="content-header">
+                        <h4 class="box-title">保险缴费待办</h4>
+                        <span class="breadcrumb"><a href="{{ path('personal_client_todo_list') }}">查看全部</a></span>
+                        
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            {% for client_todo in client_todos %}
+                                <tr>
+                                {% if loop.index<=7 %}
+                                <td>{% if client_todo.updatedAt is defined %}{{ client_todo.updatedAt|date('Y-m-d') }}{% else %}{{ client_todo.createdAt|date('Y-m-d') }}{% endif %}</td>
+                                <td>{{ client_todo.title }}</td>
+                                <td>{% if client_todo.clientTodoFile is not null %}<a href="{{ vich_uploader_asset(client_todo,'clientTodoFile') }}">下载</a>{% endif %}</td>
+                                {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--产品块-->
     <div class="row">
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h4>日结单</h4>
-                    <p>点击查看每日交易日结单</p>
+                    <h4>期货</h4>
+                    <p>点击查看每日期货交易日结单</p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-shopping-cart"></i>
@@ -21,8 +125,8 @@
             <!-- small box -->
             <div class="small-box bg-green">
                 <div class="inner">
-                    <h4>股票</h4>
-                    <p>个人股票信息</p>
+                    <h4>私募基金</h4>
+                    <p>个人私募基金信息</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
@@ -36,8 +140,8 @@
             <!-- small box -->
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h4>期货</h4>
-                    <p>个人期货信息</p>
+                    <h4>环球基金</h4>
+                    <p>个人环球基金信息</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>

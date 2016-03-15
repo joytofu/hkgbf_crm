@@ -11,11 +11,11 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_0" data-toggle="tab">客户详细信息</a></li>
-                    {% if is_granted('ROLE_ADMIN') %}<li><a href="#tab_4" data-toggle="tab">期货交易日结单</a></li>{% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}<li><a href="#tab_4" data-toggle="tab">交易日结单</a></li>{% endif %}
                     <li><a href="#tab_1" data-toggle="tab">私募基金</a></li>
                     <li><a href="#tab_2" data-toggle="tab">保险</a></li>
                     <li><a href="#tab_3" data-toggle="tab">环球基金</a></li>
-                    {% if agent.roles[0]!='ROLE_AGENT_ADMIN' and app.user.roles[0]!='ROLE_FUCKER' %}
+                    {% if agent.roles[0]!='ROLE_AGENT_ADMIN' %}
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             产品资料上传 <span class="caret"></span>
@@ -34,9 +34,9 @@
                             添加产品信息 <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li role="presentation"><a href="{{ path('addstocks',{'id':user_id}) }}" role="menuitem" tabindex="-1">添加私募基金信息</a></li>
+                            <li role="presentation"><a href="{{ path('addstocks',{'id':user_id}) }}" role="menuitem" tabindex="-1">添加股票信息</a></li>
                             <li role="presentation"><a href="{{ path('addinsurance',{'id':user_id}) }}" role="menuitem" tabindex="-1">添加保险信息</a></li>
-                            <li role="presentation"><a href="#" role="menuitem" tabindex="-1">添加环球基金信息</a></li>
+                            <li role="presentation"><a href="#" role="menuitem" tabindex="-1">添加基金信息</a></li>
                         </ul>
                     </li>
                     <li class="pull-right"><a href="{{ path('clientslist') }}" class="text-muted"><i class="fa fa-arrow-left">返回客户列表</i></a></li>
@@ -84,26 +84,21 @@
                                     <th>日期</th>
                                     <th>产品</th>
                                     <th>点击查看</th>
-                                    {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                     <th>操作</th>
-                                    {% endif %}
                                 </tr>
                                 </thead>
                                 {% for statement in statements %}
                                 <tr>
-                                    <td>{{ statement.getBalanceDate|date('Y-m-d') }}</td>
+                                    <td>{{ statement.getUpdatedAt()|date('Y-m-d') }}</td>
                                     <td>期货</td>
                                     <td><a href="{{ path('stm_detail',{'id':statement.id}) }}"><button class="btn btn-instagram">查看详情</button></a></td>
-                                    {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                     <td>
                                         <button class="btn btn-dropbox" style="margin-right:10px"  data-toggle="modal" data-target="#statement_form" data-whatever="@mdo" id="reupload" value="{{ statement.id }}">重新上传</button>
                                         <button class="btn btn-danger" onclick="delete_statement({{ statement.id }})">删除</button>
                                     </td>
-                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </table>
-                            {% if app.user.roles[0]!='ROLE_FUCKER' %}
                             <form name="statement" method="post" action="{{ path('upload_statement',{'id':user_id}) }}" enctype="multipart/form-data">
                                 <div class="vich-file">
                                     <div class="form-group">
@@ -113,7 +108,6 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </form>
-                            {% endif %}
                         </div><!-- /.box-body -->
                     </div>
                     {% endif %}
@@ -167,12 +161,12 @@
                                     <th>保险公司名称</th>
                                     <th>计划名称</th>
                                     <th>保单编号</th>
+                                    <th>保险类型</th>
                                     <th>购买日期</th>
                                     <th>投保人</th>
                                     <th>被保人</th>
-                                    <th>币种</th>
-                                    <th>保费</th>
-                                    <th>保额</th>
+                                    <th>保费(元)</th>
+                                    <th>保额(元)</th>
                                     <th>出生日期</th>
                                     <th>已缴费年期</th>
                                     <th>下次续费日期</th>
@@ -189,6 +183,7 @@
                                         <td>{{ data.insuranceCompany }}</td>
                                         <td>{{ data.insuranceName }}</td>
                                         <td>{{ data.insuranceNumber }}</td>
+                                        <td>{{ data.type }}</td>
                                         <td>{% if data.buyDate is not null %}{{ data.buyDate|date('Y-m-d') }}{% endif %}</td>
                                         <td>{{ data.getPhName() }}</td>
                                         {% if data.getRName is not null %}
@@ -196,7 +191,6 @@
                                         {% else %}
                                         <td>{{ data.getPhName() }}</td>
                                         {% endif %}
-                                        <td>{{ data.currency }}</td>
                                         <td>{{ data.insurancePremium }}</td>
                                         <td>{{ data.sumInsured }}</td>
                                         {% if data.RBornDate is null %}

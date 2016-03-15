@@ -7,6 +7,7 @@ security:
 
     role_hierarchy:
             ROLE_REGULAR:     ROLE_USER
+            ROLE_FUCKER:      [ROLE_FUCKER,ROLE_ADMIN]
             ROLE_AGENT:       ROLE_AGENT
             ROLE_AGENT_ADMIN: ROLE_AGENT_ADMIN
             ROLE_ADMIN:       [ROLE_ADMIN,ROLE_AGENT]

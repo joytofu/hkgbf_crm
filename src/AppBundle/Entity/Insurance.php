@@ -43,7 +43,7 @@ class Insurance {
     /**
      * @ORM\Column(type="string",nullable=true)
      */
-    protected $type;
+    protected $currency;
 
     /**
      * @ORM\Column(type="date",nullable=true)
@@ -389,12 +389,12 @@ class Insurance {
         $this->insurance_company = $insurance_company;
     }
 
-    public function getType(){
-        return $this->type;
+    public function getCurrency(){
+        return $this->currency;
     }
 
-    public function setType($type){
-        $this->type = $type;
+    public function setCurrency($currency){
+        $this->type = $currencyw;
     }
 
     public function getBuyDate(){
@@ -1485,7 +1485,7 @@ class Insurance {
     public function setInsurancePlan(File $insurancePlan){
         $this->insurancePlan = $insurancePlan;
         if($insurancePlan){
-            $this->updatedAt = new Assert\DateTime('now');
+            $this->updatedAt = new \DateTime('now');
         }
     }
 

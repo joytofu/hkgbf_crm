@@ -36,15 +36,13 @@ class DefaultController extends Controller
         $data = $em->getRepository('AppBundle:Client');
 
         //ROLE_REGULAR
-        $regular = $data->findBy(array('vip'=>'普通会员'));
+        $regular = $data->findBy(array('vip'=>'银卡会员'));
 
         //ROLE_GOLDEN
         $golden = $data->findBy(array('vip'=>'金卡会员'));
 
         //ROLE_DIAMOND
         $diamond = $data->findBy(array('vip'=>'钻石会员'));
-
-
 
         return $this->render('FOSUserBundle:Clients:group.html.twig',array('regular'=>$regular,'golden'=>$golden,'diamond'=>$diamond));
     }
@@ -138,7 +136,34 @@ class DefaultController extends Controller
      * @Route("/clientindex",name="client_index")
      */
     public function clientIndex(){
-        return $this->render('@FOSUser/Clients/client_index.html.twig',array());
+        $em = $this->getDoctrine()->getManager();
+
+        //personal information
+        $client = $this->getUser()->getSingleClient();
+
+        //notice
+        $data = $em->getRepository('AppBundle:Notice')->findBy(array(),array('createdAt'=>'DESC'));
+        if($data) {
+            $notice_active = $data[0];
+            $notice = array();
+            $j = count($data) < 5 ? count($data) : 5 ;
+            for ($i = 1; $i < $j; $i++) {
+                $notice[] = $data[$i];
+            }
+        }else{
+            $notice = null;
+            $notice_active = null;
+        }
+
+        //bill
+        $clienttodos = $em->getRepository('AppBundle:ClientToDo')->findBy(['client'=>$client,'if_paid'=>0],['createdAt'=>'DESC']);
+
+        return $this->render('@FOSUser/Clients/client_index.html.twig',array(
+            'notice'=>$notice,
+            'notice_active'=>$notice_active,
+            'client'=>$client,
+            'client_todos'=>$clienttodos
+            ));
     }
 
     public function getAgentsCountAction(){
@@ -282,10 +307,20 @@ class DefaultController extends Controller
 
     }
 
-    public function getAgentsAction($agent_admin_id,$j){
+    /**
+     * @Route("/getagents/{agent_admin_id}", name="get_agents")
+     */
+    public function getAgentsAction($agent_admin_id){
         $em = $this->getDoctrine()->getManager();
         $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$agent_admin_id));
-        return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'agent_admin_id'=>$agent_admin_id,'j'=>$j));
+        return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'agent_admin_id'=>$agent_admin_id));
+    }
+
+    public function getAgentAdminAction($pid){
+        $em = $this->getDoctrine()->getManager();
+        $agent_admin = $em->getRepository('AppBundle:User')->find($pid);
+        $name = $agent_admin->getName();
+        return $this->render('@FOSUser/Agents/getAgentAdmin.html.twig',['name'=>$name]);
     }
 
 
@@ -365,6 +400,13 @@ class DefaultController extends Controller
                         break;
                 }
                 $user->setRoles(array($_POST['roles']));
+            }elseif($role=='fucker'){
+                $user->setRoles(['ROLE_FUCKER']);
+                $role_name = $em->getRepository('AppBundle:RoleName')->find(8);
+                $user->setRoleName($role_name);
+                $em->persist($user);
+                $em->flush();
+                return new Response("<script>alert('创建fucker成功!');</script>");
             }
             $em->persist($user);
             $em->flush();

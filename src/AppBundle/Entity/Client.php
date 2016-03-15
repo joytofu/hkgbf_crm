@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\OneToMany;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -42,6 +43,11 @@ class Client
      * @Assert\Regex(pattern="/^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/", message="手机号码不正确，请重新输入!")
      */
     protected $cellphone;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $idCard;
 
     /**
      * @ORM\Column(type="string",nullable=true)
@@ -202,6 +208,11 @@ class Client
      */
     protected $statements;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientToDo",mappedBy="client")
+     */
+    protected $clientTodos;
+
 
     public function __construct()
     {
@@ -232,6 +243,14 @@ class Client
     public function getCellphone()
     {
         return $this->cellphone;
+    }
+
+    public function getIdCard(){
+        return $this->idCard;
+    }
+
+    public function setIdCard($idCard){
+        $this->idCard = $idCard;
     }
 
     public function getEmail(){
@@ -526,6 +545,19 @@ class Client
 
     public function removeStatement(Statement $statement){
         $this->statements->removeElement($statement);
+        return $this;
+    }
+
+    public function getClientTodos(){
+        return $this->clientTodos;
+    }
+
+    public function addClientTodo(ClientToDo $clientToDo){
+        $this->clientTodos[] = $clientToDo;
+    }
+
+    public function removeClientTodo(ClientToDo $clientToDo){
+        $this->clientTodos->removeElement($clientToDo);
         return $this;
     }
 

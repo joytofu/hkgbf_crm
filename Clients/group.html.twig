@@ -9,7 +9,7 @@
             <!-- Custom Tabs -->
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab_1" data-toggle="tab">银卡会员</a></li>
+                    <li class="active"><a href="#tab_1" data-toggle="tab">普通会员</a></li>
                     <li><a href="#tab_2" data-toggle="tab" style="color:#f39c12">金卡会员</a></li>
                     <li><a href="#tab_3" data-toggle="tab" style="color:#c7254e">钻石会员</a></li>
                 </ul>
@@ -21,17 +21,14 @@
                                 <tr>
                                     <th>姓名</th>
                                     <th>所属代理</th>
-                                    {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                     <th>修改会员级别</th>
                                     <th>修改会员信息</th>
-                                    {% endif %}
                                 </tr>
                                 </thead>
                                 {% for content in regular %}
                                     <tr>
                                         <td>{{ content.name }}</td>
                                         <td>{{ content.agent.name }}</td>
-                                        {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                         <td>
                                             <div class="btn-group">
                                             <button type="button" class="dropdown-toggle btn btn-vk" data-toggle="dropdown">
@@ -48,7 +45,6 @@
                                             <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
 
                                         </td>
-                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </table>
@@ -61,24 +57,21 @@
                                 <tr>
                                     <th>姓名</th>
                                     <th>所属代理</th>
-                                    {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                     <th>修改会员级别</th>
                                     <th>修改会员信息</th>
-                                    {% endif %}
                                 </tr>
                                 </thead>
                                 {% for content in golden %}
                                     <tr>
                                         <td>{{ content.name }}</td>
                                         <td>{{ content.agent.name }}</td>
-                                        {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="dropdown-toggle btn btn-vk" data-toggle="dropdown">
                                                     设置会员级别<b class="caret"></b>
                                                 </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为银卡会员</a></li>
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为普通会员</a></li>
                                                 <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_DIAMOND'}) }}">设为钻石会员</a></li>
                                             </ul>
                                             </div>
@@ -87,7 +80,6 @@
                                             <a href="{{ path('editclientprofile',{'id':content.id}) }}"><button class="btn btn-primary">修改用户信息</button></a>
                                             <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
                                         </td>
-                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </table>
@@ -100,24 +92,21 @@
                                 <tr>
                                     <th>姓名</th>
                                     <th>所属代理</th>
-                                    {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                     <th>修改会员级别</th>
                                     <th>修改会员信息</th>
-                                    {% endif %}
                                 </tr>
                                 </thead>
                                 {% for content in diamond %}
                                     <tr>
                                         <td>{{ content.name }}</td>
                                         <td>{{ content.agent.name }}</td>
-                                        {% if app.user.roles[0]!='ROLE_FUCKER' %}
                                         <td>
                                             <div class="btn-group">
                                             <button type="button" class="dropdown-toggle btn btn-vk" data-toggle="dropdown">
                                                 设置会员级别<b class="caret"></b>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为银卡会员</a></li>
+                                                <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_REGULAR'}) }}">设为普通会员</a></li>
                                                 <li><a href="{{ path('modify_role',{'id':content.id,'role':'ROLE_GOLDEN'}) }}">设为金卡会员</a></li>
                                             </ul>
                                                 </div>
@@ -126,7 +115,6 @@
                                             <a href="{{ path('editclientprofile',{'id':content.id}) }}"><button class="btn btn-primary">修改用户信息</button></a>
                                             <a href="javascript:void(0)" onclick="deleteuser({{ content.id }})"><button class="btn btn-pinterest">删除用户</button></a>
                                         </td>
-                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </table>

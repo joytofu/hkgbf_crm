@@ -487,6 +487,10 @@ class ClientsProductController extends Controller
             array_splice($content,13,2);
             array_splice($content,5,1);
             $td_arr = array();
+
+            //balance date
+            $statement->setBalanceDate($content[1]);
+
             foreach($content as $value){
                 $td = '<td>'.$value.'</td>';
                 $td_arr[] = $td;

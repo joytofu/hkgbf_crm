@@ -173,3 +173,18 @@ vich_uploader:
             inject_on_load:     true
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid
+
+        proposal:
+            uri_prefix:         /proposal
+            upload_destination: %kernel.root_dir%/../web/proposal
+            inject_on_load:     true
+            delete_on_update:   true
+            namer:              vich_uploader.namer_uniqid
+
+
+        client_todo:
+            uri_prefix:         /clienttodo
+            upload_destination: %kernel.root_dir%/../web/clienttodo
+            inject_on_load:     true
+            delete_on_update:   true
+            namer:              vich_uploader.namer_uniqid

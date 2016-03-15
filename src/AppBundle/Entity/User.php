@@ -1,11 +1,14 @@
 <?php
 namespace AppBundle\Entity;
 
+use AppBundle\Controller\DefaultController;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
+use FOS\UserBundle\Model\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -122,6 +125,16 @@ class User extends BaseUser
      * @ORM\JoinColumn(name="role_name_id", referencedColumnName="id")
      */
     protected $role_name;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $property;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $region;
 
 
 
@@ -290,6 +303,30 @@ class User extends BaseUser
     public function setSingleClient(Client $client){
         $this->single_client = $client;
         return $this;
+    }
+
+    public function getProperty(){
+        return $this->property;
+    }
+
+    public function setProperty($property){
+        $this->property = $property;
+    }
+
+    public function getRegion(){
+        return $this->region;
+    }
+
+    public function setRegion($region){
+        $this->region = $region;
+    }
+
+    public function getAgentAdmin(){
+        if($this->pid){
+            $controller = new DefaultController();
+            $agent_admin = $controller->getDoctrine()->getManager()->getRepository('AppBundle:User')->find($this->pid);
+            return $agent_admin;
+        }
     }
 
 

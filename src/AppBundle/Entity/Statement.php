@@ -64,6 +64,12 @@ class Statement
      */
     protected $updated_at;
 
+    /**
+     * @ORM\Column(type="date",nullable=true)
+     * @var \DateTime
+     */
+    protected $balance_date;
+
     public function __construct(){
         $this->updated_at = new \DateTime('now');
     }
@@ -106,6 +112,14 @@ class Statement
 
     public function getUpdatedAt(){
         return $this->updated_at;
+    }
+
+    public function getBalanceDate(){
+        return $this->balance_date;
+    }
+
+    public function setBalanceDate($date){
+        $this->balance_date = new \DateTime($date);
     }
 
 

@@ -1,0 +1,80 @@
+{% extends "FOSUserBundle::layout_admin.html.twig" %}
+{% block private_css %}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+    <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block page_header %}{% if is_granted('ROLE_ADMIN') %}所有客户缴费待办信息列表{% else %}缴费信息列表{% endif %}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">{% if is_granted('ROLE_ADMIN') %}客户缴费待办信息{% else %}缴费通知{% endif %}</h3>
+        </div>
+    <div class="box-body">
+        <table id="bill" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>日期</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                <th>客户姓名</th>
+                {% endif %}
+                <th>标题</th>
+                <th>附件</th>
+                {% if app.user.roles[0]!='ROLE_FUCKER' %}
+                <th>缴费状态</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+                {% for clienttodo in clienttodos %}
+                    <tr>
+                    <td>{% if clienttodo.updatedAt is defined %}{{ clienttodo.updatedAt|date('Y-m-d') }}{% else %}{{ clienttodo.createdAt|date('Y-m-d') }}{% endif %}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <td>{{ clienttodo.getClient().getName() }}</td>
+                    {% endif %}
+                    <td>{{ clienttodo.title }}</td>
+                    <td>{% if clienttodo.clientTodoFile is not null %}<a href="{{ vich_uploader_asset(clienttodo,'clientTodoFile') }}">下载</a>{% endif %}</td>
+                        {% if app.user.roles[0]!='ROLE_FUCKER' %}
+                    <td>
+                        <input type="checkbox" {% if clienttodo.getIfPaid()==true %} checked{% endif %} onclick="return false">
+                        {% if is_granted('ROLE_ADMIN') %}<button style="margin-left:5%" {% if clienttodo.getIfPaid()==true %}class='btn btn-danger' onclick="setIfPaid({{ clienttodo.id }},0)">取消缴费状态{% elseif clienttodo.getIfPaid()==false %}class='btn btn-success' onclick="setIfPaid({{ clienttodo.id }},true)">设置已缴状态{% endif %}</button>{% endif %}
+                    </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if app.user.roles[0]!='ROLE_FUCKER' %}
+        <a href="{{ path('createclienttodo') }}">
+        <button class="btn btn-facebook">添加缴费信息</button></a>
+        {% endif %}
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block private_js %}
+    <!--DataTables-->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
+<script>
+    $(function(){
+        $('#bill').DataTable({
+            "order":[[0,"desc"]]
+        })
+    })
+</script>
+<script>
+    function setIfPaid(client_todo_id,boolean){
+        if(boolean==true || boolean==1){
+            if(confirm('确定设定为已缴状态吗?')){
+                window.location.href={{ app.request.baseUrl }}'/admin'+'/setifpaid'+'/'+client_todo_id+'/'+boolean;
+            };
+        }else if(boolean==false || boolean==0){
+            if(confirm('确定取消已缴款吗?')){
+                window.location.href={{ app.request.baseUrl }}'/admin'+'/setifpaid'+'/'+client_todo_id+'/'+boolean;
+            }
+        }
+    }
+</script>
+{% endblock %}

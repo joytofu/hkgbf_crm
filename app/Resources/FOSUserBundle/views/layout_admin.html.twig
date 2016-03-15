@@ -93,7 +93,7 @@
                     </li>#}<!-- /.messages-menu -->
 
                     <!-- Notifications Menu -->
-                    {% if app.user.getRoleName().getId()==5 %}{% else %}
+                    {% if app.user.getRoleName().getId()==5 or app.user.getRoleName().getId()==6 or app.user.getRoleName().getId()==7  %}{% else %}
                    {{ render(controller('AppBundle:ToDo:getUnfinishedTodos')) }}
                     {% endif %}
                     <!-- Tasks Menu -->
@@ -199,19 +199,19 @@
             </div>
 
             <!-- search form (Optional) -->
-            <form action="#" method="get" class="sidebar-form">
+            {#<form action="#" method="get" class="sidebar-form">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" placeholder="Search...">
               <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
                 </div>
-            </form>
+            </form>#}
             <!-- /.search form -->
 
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
-                <li class="header">HEADER</li>
+                {#<li class="header">HEADER</li>#}
                 <!-- Optionally, you can add icons to the links -->
                 <li {% if app.request.requestUri=="/admin/" %}class="active"{% endif %}><a href="{{ path('index') }}"><i class="fa fa-home"></i> <span>首页</span></a></li>
                 {% if is_granted('ROLE_ADMIN') %}
@@ -232,10 +232,15 @@
                 <li {% if app.request.requestUri=="/admin/noticelist" %}class="active"{% endif %}><a href="{{ path('noticelist') }}"><i class="fa fa-file"></i> <span>通知公告</span></a></li>
                 {% endif %}
                 {% if app.user.roles[0]=='ROLE_AGENT' %}
-                <li {% if app.request.requestUri=="/admin/todolist" %}class="active"{% endif %}><a href="{{ path('todolist') }}"><i class="fa fa-list"></i> <span>待办事项</span></a></li>
+                <li {% if app.request.requestUri=="/admin/todolist" %}class="active"{% endif %}><a href="{{ path('todolist') }}"><i class="fa fa-list"></i> <span>订单管理</span></a></li>
                 {% elseif is_granted('ROLE_ADMIN') %}
-                <li {% if app.request.requestUri=="/admin/alltodolist" %}class="active"{% endif %}><a href="{{ path('alltodolist') }}"><i class="fa fa-list"></i> <span>待办事项</span></a></li>
+                <li {% if app.request.requestUri=="/admin/alltodolist" %}class="active"{% endif %}><a href="{{ path('alltodolist') }}"><i class="fa fa-list"></i> <span>订单管理</span></a></li>
                 {% else %}
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN')  %}
+                <li {% if app.request.requestUri=="/admin/allclienttodolist" %}class="active"{% endif %}><a href="{{ path('all_client_todo_list') }}"><i class="fa fa-list"></i><span>客户待办事项</span></a></li>
+                {% elseif app.user.roles[0]=='' %}
+                <li {% if app.request.requestUri=="/admin/clienttodolist" %}class="active">{% endif %}><a href="{{ path('personal_client_todo_list') }}"><i class="fa fa-list"></i><span>待办事项</span> </a> </li>
                 {% endif %}
                 {#<li class="treeview">
                     <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -279,7 +284,7 @@
             Kinson Chow CRM
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2016 <a href="http://www.hkgbf.com/">HKGBF</a>.</strong> All rights reserved.&nbsp;&nbsp;&nbsp;全国热线:4006-822-812
     </footer>
 
    {# <!-- Control Sidebar -->

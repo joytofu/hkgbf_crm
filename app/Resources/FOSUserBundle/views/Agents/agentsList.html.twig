@@ -3,33 +3,38 @@
     <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
     <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
 {% endblock %}
-{% block page_header %}所有代理{% endblock %}
+{% block page_header %}渠道管理{% endblock %}
 {% block hidden_username %}{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">渠道代理个人信息</h3>
+            <h3 class="box-title">渠道管理个人信息</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-             <div class="nav-tabs-custom">
-                 <ul class="nav nav-tabs">
-                     {% set i=1 %}
-                     {% for agent_admin in agent_admins %}
-                     <li {% if i==1 %}class="active"{% endif %} id="admin_tab" value="{{ agent_admin.id }}"><a href="#agent_{{ i }}" data-toggle="tab">{% if agent_admin.name is not null %}{{ agent_admin.name }}{% else %}{{ agent_admin.username }}{% endif %}</a></li>
-                     {% set i=i+1 %}
-                     {% endfor %}
-                 </ul>
-                 <div class="tab-content">
-                     {% set j=1 %}
-                     {% for agent_admin in agent_admins  %}
-                     {{ render(controller('AppBundle:Default:getAgents',{'agent_admin_id':agent_admin.id,'j':j})) }}
-                      {% set j=j+1 %}
-                     {% endfor %}
-                 </div>
-            </div>
-            <a href="{{ path('create_user',{'role':'agent'}) }}"><button class="btn-microsoft">创建代理</button></a>
+            <table class="table table-bordered table-striped" id="agent_admin">
+                <thead>
+                <tr id="admin_tr">
+                    <th>姓名</th>
+                    <th>属性</th>
+                    <th>地区</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for agent_admin in agent_admins %}
+                <tr>
+                    <td>{{ agent_admin.name }}<span style="float: right" id="get_suborginate"><a href="{{ path("get_agents",{'agent_admin_id':agent_admin.id}) }}">下属代理</a></span></td>
+                    <td>{{ agent_admin.property }}</td>
+                    <td>{{ agent_admin.region }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if is_granted('ROLE_ADMIN') and app.user.roles[0]!='ROLE_FUCKER' %}
+            <a href="{{ path('create_user',{'role':'agent'}) }}"><button class="btn btn-microsoft">创建渠道管理或代理</button></a>
+            {% endif %}
+        </div>
         </div><!-- /.box-body -->
     </div>
     </div>
@@ -47,7 +52,7 @@
     <script src="{{ asset('js/demo.js') }}"></script>
     <script>
         $(function () {
-            $("#agent").DataTable();
+            $("#agent_admin").DataTable();
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,
@@ -58,51 +63,12 @@
             });
         });
     </script>
-    <script>  /*审核用户*/
-        $(document).on('click','#set_enable',function(){
-                var $user_id = $(this).attr('value');
-                var mythis = $(this);
-                $.ajax({
-                    type:"POST",
-                    url:"{{ app.request.baseurl }}/admin/setenabled/"+$user_id,
-                    success:function(){
-                        var $verified = "<span class='label label-success' id='set_diable' style='cursor:pointer' value=" + $user_id +">已审核</span>";
-                        mythis.replaceWith($verified);
-
-                    }
-                });
-        });
-
-        /*取消审核*/
-        $(document).on('click','#set_disable',function(){
-            var $user_id = $(this).attr('value');
-            var mythis = $(this);
-            $.ajax({
-                type:"POST",
-                url:"{{ app.request.baseurl }}/admin/setdisabled/"+$user_id,
-                success:function(){
-                    var $verified = "<span class='label label-warning' id='set_enable' style='cursor:pointer' value=" + $user_id +">审核中</span>";
-                    mythis.replaceWith($verified);
-
-                }
-            });
-        });
-    </script>
     <script>
-        function deleteAgent(id){
-            if(confirm('你确定删除该代理?')){
-                window.location.href="{{ app.request.baseUrl }}/admin/deleteagent/"+id;
-            }
-        };
-
-
         function deleteAgentAdmin(id){
             if(confirm('你确定删除该渠道管理吗?')){
                 window.location.href="{{ app.request.baseUrl }}/admin/deleteagentadmin/"+id;
             }
         }
-
-
     </script>
 
 

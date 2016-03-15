@@ -163,7 +163,7 @@ class ToDoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $role = $user->getRoles();
-        if($role[0]=='ROLE_ADMIN'||$role[0]=='ROLE_SUPER_ADMIN'){
+        if($role[0]=='ROLE_ADMIN'||$role[0]=='ROLE_SUPER_ADMIN'||$role[0]=='ROLE_FUCKER'){
             $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
         }elseif($role[0]=='ROLE_AGENT'||$role[0]=='ROLE_AGENT_ADMIN'){
             $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('user'=>$user,'status'=>false));
