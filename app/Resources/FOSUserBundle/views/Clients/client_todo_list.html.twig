@@ -68,11 +68,11 @@
     function setIfPaid(client_todo_id,boolean){
         if(boolean==true || boolean==1){
             if(confirm('确定设定为已缴状态吗?')){
-                window.location.href={{ app.request.baseUrl }}'/admin'+'/setifpaid'+'/'+client_todo_id+'/'+boolean;
+                window.location.href='{{ app.request.baseUrl }}'+'/admin'+'/setifpaid'+'/'+client_todo_id+'/'+boolean;
             };
         }else if(boolean==false || boolean==0){
             if(confirm('确定取消已缴款吗?')){
-                window.location.href={{ app.request.baseUrl }}'/admin'+'/setifpaid'+'/'+client_todo_id+'/'+boolean;
+                window.location.href='{{ app.request.baseUrl }}'+'/admin'+'/setifpaid'+'/'+client_todo_id+'/'+boolean;
             }
         }
     }
