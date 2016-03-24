@@ -9,6 +9,7 @@
 namespace AppBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -17,6 +18,12 @@ class NoticeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options){
         $builder
             ->add('title',null,array('label'=>'标题'))
+            ->add('users','entity',array(
+                'choice_label'=>'name',
+                'class'=>'AppBundle\Entity\User',
+                'expanded'=>true,
+                'multiple'=>true,
+                'mapped'=>false))
             ->add('content',null,array('label'=>'内容'));
     }
 

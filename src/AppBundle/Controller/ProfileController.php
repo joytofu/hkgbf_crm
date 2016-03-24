@@ -115,7 +115,7 @@ class ProfileController extends BaseProfileController
         if($form->isSubmitted()&&$form->isValid()){
             $user = $client->getSingleUser();
             $user->setRoleName($normal);
-            $email = $_POST['createClient']['email'];
+            $email = $_POST['createClient']['single_user']['email'];
             $client->setEmail($email);
 
             //设置对应的代理

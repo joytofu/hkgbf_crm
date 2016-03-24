@@ -1,6 +1,8 @@
 {% extends "FOSUserBundle::layout_admin.html.twig" %}
 {% block private_css %}
-   <link rel="stylesheet" href="{{ asset('css/boostrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/boostrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}"
+          xmlns="http://www.w3.org/1999/html">
+    <link rel="stylesheet" href="{{ asset('css/notice.css') }}">
 {% endblock %}
 {% block page_header %}通知公告{% endblock %}
 {% block content %}
@@ -16,6 +18,50 @@
                 <div class="box-body pad">
                     <form method="post" action="{{ path('createnotice') }}">
                         <input type="text" placeholder="请输入标题" style="width:300px;height:35px" class="form-group" id="Notice_title" name="Notice[title]">
+                        <button class="btn btn-facebook" type="button" data-toggle="modal" data-target="#users">选择通知下发的用户</button> </br>
+                        <div class="modal fade" id="users" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button class="close" type="button" data-dismiss="modal" aria-hidden="true">X</button>
+                                        <h4 class="modal-title">请选择用户:</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                            <div class="col-md-12">
+                                                <div class="nav-tabs-custom">
+                                                    <ul class="nav nav-tabs nav-justified">
+                                                        {% set i = 1 %}
+                                                        {% for agent_admin in agent_admins %}
+                                                            <li {% if i==1 %}class="active"{% endif %}>
+                                                                <a href="#tab_{{ i }}" data-toggle="tab">
+                                                                    {{ agent_admin.name }}
+                                                                </a>
+                                                            </li>
+                                                            {% set i = i+1 %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        {% set j = 1 %}
+                                                        {% for agent_admin in agent_admins %}
+                                                        <div class="tab-pane {% if j==1 %}active{% endif %}" id="tab_{{ j }}">
+                                                            <input type="checkbox" name="Notice[users][]" value="{{ agent_admin.id }}">{{ agent_admin.name }}(渠道管理)
+                                                                {{ render(controller('AppBundle:Default:getAgents',{'agent_admin_id':agent_admin.id,'mark':'yes'})) }}
+                                                        </div>
+                                                         {% set j=j+1 %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <input type="checkbox" id="select_all">全选所有用户
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <script id="container" name="Notice[content]" type="text/plain"></script>
                         <button class="btn btn-instagram" type="submit">提交</button>
                         {{ form_widget(form._token) }}
@@ -25,14 +71,17 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block private_js %}
+{#
+    <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
+#}
     <script src="{{ asset('js/fastclick/fastclick.min.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('js/demo.js') }}"></script>
     <script src="{{ asset('js/boostrap-wysihtml5/bootstrap3-wysihtml5.all.js') }}"></script>
+    <script src="{{ asset('js/jquery.webui-popover.min.js') }}"></script>
     <script>
         $(function () {
             //bootstrap WYSIHTML5 - text editor
@@ -57,7 +106,30 @@
             ]
         });
     </script>
+    <script>
+        $(document).on('click','#select_all',function () {
+            if ($(this).is(":checked")) {
+                $("input[name='Notice[users][]']").prop("checked", true);
+                $("input[name='select_all_clients[]'").prop("checked",true);
+            } else {
+                $("input[name='Notice[users][]']").prop("checked", false);
+                $("input[name='select_all_clients[]'").prop("checked",false);
+            }
+        });
+    </script>
 
+    <script>
+        $(document).on('click','#select_all_clients',function(){
+            var agent_id = $(this).val();
+            if($(this).is(":checked")){
+                $("input[sub="+"\'"+agent_id+"\'"+"]").prop("checked",true);
+            }else{
+                $("input[sub="+"\'"+agent_id+"\'"+"]").prop("checked",false);
+                $('#select_all').prop("checked",false);
+            }
+        });
+
+    </script>
 
 
 

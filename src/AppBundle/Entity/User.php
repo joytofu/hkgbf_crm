@@ -136,6 +136,12 @@ class User extends BaseUser
      */
     protected $region;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Notice", cascade={"persist"})
+     * @ORM\OrderBy({"createdAt"="DESC"})
+     */
+    protected $notices;
+
 
 
 
@@ -145,6 +151,8 @@ class User extends BaseUser
         $this->todos = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->updatedAt = new \DateTime('now');
+        $this->notices = new ArrayCollection();
+        $this->imageName = 'jntz.png';
 
     }
 
@@ -329,7 +337,25 @@ class User extends BaseUser
         }
     }
 
+    public function getNotices(){
+        return $this->notices;
+    }
 
+    public function addNotice(Notice $notice){
+        if(!$this->notices->contains($notice)){
+            $this->notices->add($notice);
+        }
+    }
+
+    public function removeNotice(Notice $notice){
+        $this->notices->removeElement($notice);
+    }
+
+    public function getAgents(){
+        if($this->role_name->name='渠道管理'){
+
+        }
+    }
 
 }
 

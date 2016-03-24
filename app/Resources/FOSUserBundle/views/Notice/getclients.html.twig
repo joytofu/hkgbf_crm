@@ -1,0 +1,5 @@
+{% for client in clients %}
+    <div class="notice_item">
+        <input type="checkbox" name="Notice[users][]" id="client" value="{{ client.id }}">{{ client.name }}
+    </div>
+{% endfor %}

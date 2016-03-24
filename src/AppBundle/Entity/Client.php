@@ -220,7 +220,7 @@ class Client
         $this->insurances = new ArrayCollection();
         $this->createdAt = new \DateTime('now');
         $this->updatedAt = new \DateTime('now');
-        $this->vip = "普通会员";
+        $this->vip = "银卡会员";
         $this->kill = "kill";
     }
 

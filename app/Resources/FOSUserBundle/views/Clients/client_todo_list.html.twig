@@ -44,7 +44,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% if app.user.roles[0]!='ROLE_FUCKER' %}
+        {% if app.user.roles[0]!='ROLE_FUCKER' and app.user.roles[1] is defined %}
         <a href="{{ path('createclienttodo') }}">
         <button class="btn btn-facebook">添加缴费信息</button></a>
         {% endif %}

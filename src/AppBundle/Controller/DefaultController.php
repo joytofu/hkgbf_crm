@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Group;
 use AppBundle\Entity\Notice;
 use AppBundle\Entity\User;
@@ -10,6 +11,7 @@ use AppBundle\Form\DataTransformer\NoticeType;
 use AppBundle\Form\ModifyRoleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -56,7 +58,7 @@ class DefaultController extends Controller
         if(!$user){
             return $this->redirectToRoute('fos_user_security_login');
         }
-        if($user->getRoleName()->getId()==5){
+        if($user->getRoleName()->getId()==5 || $user->getRoleName()->getId()==6 || $user->getRoleName()->getId()==7){
             return $this->redirectToRoute('client_index');
         }
         $username = $user->getUsername();
@@ -69,7 +71,8 @@ class DefaultController extends Controller
         $unfinished_todos = $em->getRepository('AppBundle:ToDo')->findBy(array('status'=>false));
 
         //notice
-        $data = $em->getRepository('AppBundle:Notice')->findBy(array(),array('createdAt'=>'DESC'));
+        //$data = $em->getRepository('AppBundle:Notice')->findBy(array('users'=>$user),array('createdAt'=>'DESC'));
+        $data = $user->getNotices();
         if($data) {
             $notice_active = $data[0];
             $notice = array();
@@ -275,13 +278,23 @@ class DefaultController extends Controller
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+            $users = $form->get('users')->getData();
+            foreach($users as $user){
+                $notice->addUser($user);
+            }
             $em->persist($notice);
             $em->flush();
             $noticelist_url = $this->generateUrl('noticelist');
 
             return new Response("<script>alert('添加成功!');window.location.href='$noticelist_url';</script>");
         }
-        return $this->render('FOSUserBundle:Notice:notice.html.twig',array('form'=>$form->createView()));
+
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
+        $agent_admins = $em->getRepository('AppBundle:User')->findBy(['role_name'=>$role_name]);
+        return $this->render('FOSUserBundle:Notice:notice.html.twig',array(
+            'form'=>$form->createView(),
+            'agent_admins'=>$agent_admins
+            ));
     }
 
     /**
@@ -310,10 +323,14 @@ class DefaultController extends Controller
     /**
      * @Route("/getagents/{agent_admin_id}", name="get_agents")
      */
-    public function getAgentsAction($agent_admin_id){
+    public function getAgentsAction($agent_admin_id,$mark = null){
         $em = $this->getDoctrine()->getManager();
         $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$agent_admin_id));
-        return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'agent_admin_id'=>$agent_admin_id));
+        if($mark = null){
+            return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'agent_admin_id'=>$agent_admin_id));
+        }else{
+            return $this->render('@FOSUser/Agents/getAgentsForNotice.html.twig',array('agents'=>$agents));
+        }
     }
 
     public function getAgentAdminAction($pid){
@@ -321,6 +338,15 @@ class DefaultController extends Controller
         $agent_admin = $em->getRepository('AppBundle:User')->find($pid);
         $name = $agent_admin->getName();
         return $this->render('@FOSUser/Agents/getAgentAdmin.html.twig',['name'=>$name]);
+    }
+
+    /**
+     * @Route("/getclients/{id}",name="getclients")
+     * @ParamConverter("user", class="AppBundle:User")
+     */
+    public function getClientsAction(User $user){
+        $clients = $user->getClients();
+        return $this->render('@FOSUser/Notice/getclients.html.twig',array('clients'=>$clients));
     }
 
 
@@ -363,6 +389,12 @@ class DefaultController extends Controller
      */
     public function deleteNotice(Notice $notice){
         $em = $this->getDoctrine()->getManager();
+        $users = $notice->getUsers();
+        foreach($users as $user){
+            $notice->removeUser($user);
+            $em->flush();
+
+        }
         $em->remove($notice);
         $em->flush();
 

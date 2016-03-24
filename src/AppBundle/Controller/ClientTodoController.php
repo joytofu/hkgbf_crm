@@ -71,7 +71,7 @@ class ClientTodoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $client = $user->getSingleClient();
-        $clientTodos = $em->getRepository('AppBundle:ClientToDo')->findBy([],['createdAt'=>'DESC']);
+        $clientTodos = $em->getRepository('AppBundle:ClientToDo')->findBy(['client'=>$client],['createdAt'=>'DESC']);
         return $this->render("@FOSUser/Clients/client_todo_list.html.twig",['client'=>$client,'clienttodos'=>$clientTodos]);
     }
 

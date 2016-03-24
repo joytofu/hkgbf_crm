@@ -8,8 +8,10 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
  * @ORM\Entity
@@ -35,12 +37,18 @@ class Notice {
     protected $content;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User",cascade={"persist"})
+     */
+    protected $users;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $createdAt;
 
     public function __construct(){
         $this->createdAt = new \DateTime('now');
+        $this->users = new ArrayCollection();
     }
 
     public function getId(){
@@ -70,6 +78,20 @@ class Notice {
 
     public function setContent($content){
         $this->content = $content;
+    }
+
+    public function getUsers(){
+        return $this->users;
+    }
+
+    public function addUser(User $user){
+        $user->addNotice($this);
+        $this->users->add($user);
+    }
+
+    public function removeUser(User $user){
+        $user->removeNotice($this);
+        $this->users->removeElement($user);
     }
 
 }
