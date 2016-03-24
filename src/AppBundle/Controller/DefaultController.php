@@ -267,35 +267,6 @@ class DefaultController extends Controller
         return $this->render('@FOSUser/Clients/clients_of_agents.html.twig',array('agents'=>$agents,'clients'=>$clients,'if_agent'=>$if_agent));
     }
 
-    /**
-     * @Route("/createnotice", name="createnotice")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function createNotice(Request $request){
-        $notice = new Notice();
-        $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(new NoticeType(),$notice);
-
-        $form->handleRequest($request);
-        if($form->isSubmitted()&&$form->isValid()){
-            $users = $form->get('users')->getData();
-            foreach($users as $user){
-                $notice->addUser($user);
-            }
-            $em->persist($notice);
-            $em->flush();
-            $noticelist_url = $this->generateUrl('noticelist');
-
-            return new Response("<script>alert('添加成功!');window.location.href='$noticelist_url';</script>");
-        }
-
-        $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
-        $agent_admins = $em->getRepository('AppBundle:User')->findBy(['role_name'=>$role_name]);
-        return $this->render('FOSUserBundle:Notice:notice.html.twig',array(
-            'form'=>$form->createView(),
-            'agent_admins'=>$agent_admins
-            ));
-    }
 
     /**
      * @Route("/agentslist",name="agentslist")
@@ -362,6 +333,36 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/createnotice", name="createnotice")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function createNotice(Request $request){
+        $notice = new Notice();
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new NoticeType(),$notice);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted()&&$form->isValid()){
+            $users = $form->get('users')->getData();
+            foreach($users as $user){
+                $notice->addUser($user);
+            }
+            $em->persist($notice);
+            $em->flush();
+            $noticelist_url = $this->generateUrl('noticelist');
+
+            return new Response("<script>alert('添加成功!');window.location.href='$noticelist_url';</script>");
+        }
+
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
+        $agent_admins = $em->getRepository('AppBundle:User')->findBy(['role_name'=>$role_name]);
+        return $this->render('FOSUserBundle:Notice:notice.html.twig',array(
+            'form'=>$form->createView(),
+            'agent_admins'=>$agent_admins
+        ));
+    }
+
+    /**
      * @Route("/editnotice/{id}", name="editnotice")
      * @ParamConverter("notice", class="AppBundle:Notice")
      * @Security("has_role('ROLE_ADMIN')")
@@ -369,16 +370,36 @@ class DefaultController extends Controller
     public function editNotice(Notice $notice,Request $request,$id){
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new NoticeType(),$notice);
+        $title = $notice->getTitle();
+        $content = $notice->getContent();
+        $users = $notice->getUsers();
 
         $form->handleRequest($request);
         if($form->isSubmitted()&&$form->isValid()){
+            $form_users = $form->get('users')->getData();
+            foreach($users as $user){
+                $notice->removeUser($user);
+                $em->flush();
+            }
+            foreach($form_users as $user){
+                $notice->addUser($user);
+            }
+            $em->persist($notice);
             $em->flush();
             $noticelist_url = $this->generateUrl('noticelist');
-            return new Response("<script>alert('修改成功！');window.location.href=$noticelist_url</script>");
+            return new Response("<script>alert('修改成功！');window.location.href='$noticelist_url'</script>");
         }
 
-        return $this->render('@FOSUser/Notice/editnotice.html.twig',array(
+        $role_name = $em->getRepository('AppBundle:RoleName')->find(3);
+        $agent_admins = $em->getRepository('AppBundle:User')->findBy(['role_name'=>$role_name]);
+
+
+        return $this->render('@FOSUser/Notice/notice.html.twig',array(
             'form'=>$form->createView(),
+            'title'=>$title,
+            'content'=>$content,
+            'agent_admins'=>$agent_admins,
+            'users'=>$users,
             'id'=>$id));
     }
 

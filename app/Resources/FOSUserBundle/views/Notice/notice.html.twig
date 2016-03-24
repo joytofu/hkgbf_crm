@@ -16,8 +16,10 @@
                     </div><!-- /. tools -->
                 </div><!-- /.box-header -->
                 <div class="box-body pad">
-                    <form method="post" action="{{ path('createnotice') }}">
-                        <input type="text" placeholder="请输入标题" style="width:300px;height:35px" class="form-group" id="Notice_title" name="Notice[title]">
+                    <form method="post" action="{% if title is defined and title is not null %}{{ path('editnotice',{'id':id}) }}{% else %}{{ path('createnotice') }}{% endif %}">
+
+                        <input type="text" {% if title is defined and title is not null %}value="{{ title }}"{% else %}placeholder="请输入标题"{% endif %} style="width:300px;height:35px" class="form-group" id="Notice_title" name="Notice[title]">
+
                         <button class="btn btn-facebook" type="button" data-toggle="modal" data-target="#users">选择通知下发的用户</button> </br>
                         <div class="modal fade" id="users" role="dialog" aria-hidden="true">
                             <div class="modal-dialog">
@@ -81,13 +83,6 @@
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('js/demo.js') }}"></script>
     <script src="{{ asset('js/boostrap-wysihtml5/bootstrap3-wysihtml5.all.js') }}"></script>
-    <script src="{{ asset('js/jquery.webui-popover.min.js') }}"></script>
-    <script>
-        $(function () {
-            //bootstrap WYSIHTML5 - text editor
-            $(".textarea").wysihtml5();
-        });
-    </script>
 
     {#富文本编辑器#}
     <script src="{{ asset('ueditor/ueditor.config.js') }}"></script>
@@ -103,9 +98,13 @@
                         'imagecenter','autotypeset','inserttable','charts',
 
                     ]
-            ]
+            ],
+            {% if content is defined and content is not null %}
+            initialContent:"{{ content|raw }}"
+            {% endif %}
         });
     </script>
+
     <script>
         $(document).on('click','#select_all',function () {
             if ($(this).is(":checked")) {
@@ -116,9 +115,7 @@
                 $("input[name='select_all_clients[]'").prop("checked",false);
             }
         });
-    </script>
 
-    <script>
         $(document).on('click','#select_all_clients',function(){
             var agent_id = $(this).val();
             if($(this).is(":checked")){
@@ -129,6 +126,19 @@
             }
         });
 
+        {% if title is defined and title is not null %}
+        var $users = [];
+        var i = 0;
+        {% for user in users %}
+            $users[i] = "{{ user.id }}";
+            i++;
+        {% endfor %}
+        console.log($users);
+
+        for(var j= 0;j<$users.length;j++){
+            $("input[value="+"\'"+$users[j]+"\'"+"]").prop('checked',true);
+        }
+        {% endif %}
     </script>
 
 
