@@ -34,6 +34,7 @@
                     {% endif %}
                     <td>{{ clienttodo.title }}</td>
                     <td>{% if clienttodo.clientTodoFile is not null %}<a href="{{ vich_uploader_asset(clienttodo,'clientTodoFile') }}">下载</a>{% endif %}</td>
+
                         {% if app.user.roles[0]!='ROLE_FUCKER' %}
                     <td>
                         <input type="checkbox" {% if clienttodo.getIfPaid()==true %} checked{% endif %} onclick="return false">

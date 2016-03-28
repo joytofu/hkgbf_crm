@@ -18,8 +18,9 @@
                 <div class="box-body pad">
                     <form method="post" action="{% if title is defined and title is not null %}{{ path('editnotice',{'id':id}) }}{% else %}{{ path('createnotice') }}{% endif %}">
 
-                        <input type="text" {% if title is defined and title is not null %}value="{{ title }}"{% else %}placeholder="请输入标题"{% endif %} style="width:300px;height:35px" class="form-group" id="Notice_title" name="Notice[title]">
+                        <input type="text" {% if title is defined and title is not null %}value="{{ title }}"{% else %}placeholder="请输入标题"{% endif %} style="width:300px;height:35px" class="form-group" id="Notice_title" name="Notice[title]" {% if app.user.roles[0]=='ROLE_FUCKER' %}disabled{% endif %}>
 
+                        {% if app.user.roles[0]!='ROLE_FUCKER' and app.user.roles[1] is not null %}
                         <button class="btn btn-facebook" type="button" data-toggle="modal" data-target="#users">选择通知下发的用户</button> </br>
                         <div class="modal fade" id="users" role="dialog" aria-hidden="true">
                             <div class="modal-dialog">
@@ -63,9 +64,15 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
+
 
                         <script id="container" name="Notice[content]" type="text/plain"></script>
+
+                        {% if app.user.roles[0]!='ROLE_FUCKER'  %}
                         <button class="btn btn-instagram" type="submit">提交</button>
+                        {% endif %}
+
                         {{ form_widget(form._token) }}
                     </form>
                 </div>
@@ -100,7 +107,10 @@
                     ]
             ],
             {% if content is defined and content is not null %}
-            initialContent:"{{ content|raw }}"
+            initialContent:"{{ content|raw }}",
+            {% endif %}
+            {% if app.user.roles[0]=='ROLE_FUCKER' %}
+            readonly:true,
             {% endif %}
         });
     </script>

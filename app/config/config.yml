@@ -155,28 +155,28 @@ vich_uploader:
 
         insurance_plan:
             uri_prefix:         /product/upload/insurance/plan
-            upload_destination: %kernel.root_dir%/../web/product/upload/insurance/plan
+            upload_destination: %kernel.root_dir%/../web/upload/insurance/plan
             inject_on_load:     true
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid
 
         statement:
             uri_prefix:         /statement
-            upload_destination: %kernel.root_dir%/../web/statement
+            upload_destination: %kernel.root_dir%/../web/upload/statement
             inject_on_load:     true
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid
 
         todo:
             uri_prefix:         /todo
-            upload_destination: %kernel.root_dir%/../web/todo
+            upload_destination: %kernel.root_dir%/../web/upload/todo
             inject_on_load:     true
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid
 
         proposal:
             uri_prefix:         /proposal
-            upload_destination: %kernel.root_dir%/../web/proposal
+            upload_destination: %kernel.root_dir%/../web/upload/proposal
             inject_on_load:     true
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid
@@ -184,7 +184,7 @@ vich_uploader:
 
         client_todo:
             uri_prefix:         /clienttodo
-            upload_destination: %kernel.root_dir%/../web/clienttodo
+            upload_destination: %kernel.root_dir%/../web/upload/clienttodo
             inject_on_load:     true
             delete_on_update:   true
             namer:              vich_uploader.namer_uniqid

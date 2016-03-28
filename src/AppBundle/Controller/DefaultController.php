@@ -297,7 +297,7 @@ class DefaultController extends Controller
     public function getAgentsAction($agent_admin_id,$mark = null){
         $em = $this->getDoctrine()->getManager();
         $agents = $em->getRepository('AppBundle:User')->findBy(array('pid'=>$agent_admin_id));
-        if($mark = null){
+        if($mark == null){
             return $this->render('@FOSUser/Agents/getAgents.html.twig',array('agents'=>$agents,'agent_admin_id'=>$agent_admin_id));
         }else{
             return $this->render('@FOSUser/Agents/getAgentsForNotice.html.twig',array('agents'=>$agents));
