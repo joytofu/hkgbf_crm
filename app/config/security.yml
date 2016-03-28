@@ -63,6 +63,11 @@ security:
                      path: /logout
                      target: /login
                anonymous:  true
+               remember_me:
+                     key:      '%secret%'
+                     lifetime: 604800
+                     httponly: true
+
 
 
 

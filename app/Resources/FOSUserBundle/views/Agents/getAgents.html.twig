@@ -27,8 +27,11 @@
                         <tbody>
                         {% for agent in agents %}
                             <tr>
-                                <td>{{ agent.username }}<a href="{{ path('editagentprofile',{'id':agent.id}) }}"><i class="fa fa-wrench"></i></a>
+                                <td>{{ agent.username }}
+                                    {% if app.user.roles[0]!='ROLE_FUCKER' %}
+                                    <a href="{{ path('editagentprofile',{'id':agent.id}) }}"><i class="fa fa-wrench"></i></a>
                                     <a href="javascript:void(0)" onclick="deleteAgent({{ agent.id }})"><i class="fa fa-remove" style="color:darkred"></i></a></td>
+                                    {% endif %}
                                 <td>{{ agent.name }}</td>
                                 <td>{{ agent.cellphone }}</td>
                                 <td>{{ agent.company }}</td>
