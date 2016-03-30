@@ -21,6 +21,7 @@ use AppBundle\Entity\Fund;
 use AppBundle\Entity\Insurance;
 use AppBundle\Entity\Stock;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -353,6 +354,9 @@ class ClientsProductController extends Controller
         $em = $this->getDoctrine()->getManager();
         $client_id = $insurance->getClient()->getId();
 
+        $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+        $clientDataDownloadPath = $helper->asset($insurance, 'clientDataFile');
+        $insurancePlanDownloadPath = $helper->asset($insurance,'insurancePlan');
 
         $form = $this->createForm(new InsuranceType(),$insurance);
         $delete_form = $this->createDeleteForm($insurance,'deleteinsurance');
@@ -361,14 +365,40 @@ class ClientsProductController extends Controller
 
         if($form->isSubmitted()&&$form->isValid()){
             $em->flush();
-            return new Response("<script>alert('修改成功!');window.location.href='/admin/clientslist';</script>");
+            $redirect_url = $this->generateUrl('clientslist');
+            return new Response("<script>alert('修改成功!');window.location.href='$redirect_url';</script>");
         }
 
         return $this->render('@FOSUser/Clients/add_insurance.html.twig',array(
             'form'=>$form->createView(),
             'id'=>$id,
             'client_id'=>$client_id,
+            'clientDataDownloadPath'=>$clientDataDownloadPath,
+            'insurancePlanDownloadPath'=>$insurancePlanDownloadPath,
             'delete_form'=>$delete_form->createView()));
+    }
+
+    /**
+     * @Route("/delete_attachment/{id}",name="delete_attachment")
+     * @Method({"POST"})
+     * @ParamConverter("insurance", class="AppBundle:Insurance")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function deleteAttachement(Insurance $insurance,Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $type = $request->get('type');
+
+        if($type=="client_data"){
+            $insurance->setClientDataName("");
+            $em->flush();
+            return new JsonResponse("success");
+        }elseif($type=="insurance_plan"){
+            $insurance->setPlanName("");
+            $em->flush();
+            return new JsonResponse("success");
+        }else{
+            return new JsonResponse('failed');
+        }
     }
 
     /**

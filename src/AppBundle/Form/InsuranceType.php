@@ -78,7 +78,7 @@ class InsuranceType extends AbstractType
             ->add('automatic_payment','choice',array('choices'=>array('1'=>'是','0'=>'否')))
             ->add('remark','textarea',array('required'=>false,'attr'=>['rows'=>7,'style'=>'display:block;width:100%']))
             ->add('verified')
-            ->add('productFile','vich_file',array('label'=>'客户详细资料表','required'=>false))
+            ->add('clientDataFile','vich_file',array('label'=>'客户详细资料表','required'=>false))
             ->add('insurancePlan','vich_file',array('label'=>'保险建议书','required'=>false))
             ->add('client','entity',array(
                 'class'=>'AppBundle\Entity\Client',

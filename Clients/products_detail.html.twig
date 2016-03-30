@@ -204,7 +204,7 @@
                                             {% if data.Verified==true %}<span class="label label-success">已审核</span>
                                             {% else %}<span class="label label-warning">审核中</span>{% endif %}
                                         </td>#}
-                                        <td>{% if data.productFile is not null %}<a href="/web{{ vich_uploader_asset(data,'productFile') }}">下载</a>{% endif %}</td>
+                                        <td>{% if data.clientDataName is not null %}<a href="/web{{ vich_uploader_asset(data,'clientDataFile') }}">下载</a>{% endif %}</td>
                                         {% if is_granted('ROLE_ADMIN') %}
                                             <td>
                                                 <a href="{{ path('editinsurance',{'id':data.getId()}) }}"><button class="btn btn-facebook">编辑</button></a>

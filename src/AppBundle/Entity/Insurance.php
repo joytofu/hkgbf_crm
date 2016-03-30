@@ -313,14 +313,14 @@ class Insurance {
     protected $todo;
 
     /**
-     * @Vich\UploadableField(mapping="upload_product", fileNameProperty="productName")
+     * @Vich\UploadableField(mapping="client_data", fileNameProperty="clientDataName")
      */
-    protected $productFile;
+    protected $clientDataFile;
 
     /**
-     * @ORM\Column(type="string", length=255,name="product_name",nullable=true)
+     * @ORM\Column(type="string", length=255,name="client_data_name",nullable=true)
      */
-    protected $productName;
+    protected $clientDataName;
 
     /**
      * @ORM\Column(type="datetime",nullable=true)
@@ -394,7 +394,7 @@ class Insurance {
     }
 
     public function setCurrency($currency){
-        $this->type = $currencyw;
+        $this->currency = $currency;
     }
 
     public function getBuyDate(){
@@ -1420,11 +1420,11 @@ class Insurance {
     }
 
 
-    public function setProductFile(File $product = null)
+    public function setClientDataFile(File $clientData = null)
     {
-        $this->productFile = $product;
+        $this->clientDataFile = $clientData;
 
-        if ($product) {
+        if ($clientData) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTime('now');
@@ -1432,25 +1432,25 @@ class Insurance {
     }
 
 
-    public function getProductFile()
+    public function getClientDataFile()
     {
-        return $this->productFile;
+        return $this->clientDataFile;
     }
 
     /**
-     * @param string $productName
+     * @param string $clientDataName
      */
-    public function setProductName($productName)
+    public function setClientDataName($clientDataName)
     {
-        $this->productName = $productName;
+        $this->clientDataName = $clientDataName;
     }
 
     /**
      * @return string
      */
-    public function getProductName()
+    public function getClientDataName()
     {
-        return $this->productName;
+        return $this->clientDataName;
     }
 
     public function getPaymentMethod(){
@@ -1482,7 +1482,7 @@ class Insurance {
         return $this->insurancePlan;
     }
 
-    public function setInsurancePlan(File $insurancePlan){
+    public function setInsurancePlan(File $insurancePlan = null){
         $this->insurancePlan = $insurancePlan;
         if($insurancePlan){
             $this->updatedAt = new \DateTime('now');

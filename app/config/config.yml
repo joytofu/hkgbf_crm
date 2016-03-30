@@ -147,44 +147,54 @@ vich_uploader:
             delete_on_remove:   false
 
         upload_product:
-            uri_prefix:         /product/upload
-            upload_destination: %kernel.root_dir%/../web/product/upload
-            inject_on_load:     true
-            delete_on_update:   true
+            uri_prefix:         /upload/product
+            upload_destination: %kernel.root_dir%/../web/upload/product
+            inject_on_load:     false
+            delete_on_update:   false
+            delete_on_remove:   false
+            namer:              vich_uploader.namer_uniqid
+
+        client_data:
+            uri_prefix:         /upload/insurance/client_data
+            upload_destination: %kernel.root_dir%/../web/upload/insurance/client_data
+            inject_on_load:     false
+            delete_on_update:   false
+            delete_on_remove:   false
             namer:              vich_uploader.namer_uniqid
 
         insurance_plan:
-            uri_prefix:         /product/upload/insurance/plan
+            uri_prefix:         /upload/insurance/plan
             upload_destination: %kernel.root_dir%/../web/upload/insurance/plan
-            inject_on_load:     true
-            delete_on_update:   true
+            inject_on_load:     false
+            delete_on_update:   false
+            delete_on_remove:   false
             namer:              vich_uploader.namer_uniqid
 
         statement:
-            uri_prefix:         /statement
+            uri_prefix:         /upload/statement
             upload_destination: %kernel.root_dir%/../web/upload/statement
-            inject_on_load:     true
-            delete_on_update:   true
+            inject_on_load:     false
+            delete_on_update:   false
             namer:              vich_uploader.namer_uniqid
 
         todo:
-            uri_prefix:         /todo
+            uri_prefix:         /upload/todo
             upload_destination: %kernel.root_dir%/../web/upload/todo
-            inject_on_load:     true
-            delete_on_update:   true
+            inject_on_load:     false
+            delete_on_update:   false
             namer:              vich_uploader.namer_uniqid
 
         proposal:
-            uri_prefix:         /proposal
+            uri_prefix:         /upload/proposal
             upload_destination: %kernel.root_dir%/../web/upload/proposal
-            inject_on_load:     true
-            delete_on_update:   true
+            inject_on_load:     false
+            delete_on_update:   false
             namer:              vich_uploader.namer_uniqid
 
 
         client_todo:
-            uri_prefix:         /clienttodo
+            uri_prefix:         ./../../upload/clienttodo
             upload_destination: %kernel.root_dir%/../web/upload/clienttodo
-            inject_on_load:     true
-            delete_on_update:   true
+            inject_on_load:     false
+            delete_on_update:   false
             namer:              vich_uploader.namer_uniqid

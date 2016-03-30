@@ -23,6 +23,8 @@ class CreateUserType extends AbstractType
                 'second_options' => array('label' => 'form.password_confirmation'),
                 'invalid_message' => 'fos_user.password.mismatch',
             ))
+            ->add('property',null,array('label'=>'属性'))
+            ->add('region',null,array('label'=>'地区'))
             ->add('company',null,array('label'=>'公司名称'))
             ->add('name',null,array('label'=>'form.name', 'translation_domain' => 'FOSUserBundle'))
             ->add('email',null,array('label'=>'电子邮箱'))

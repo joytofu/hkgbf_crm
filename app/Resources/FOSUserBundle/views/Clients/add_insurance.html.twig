@@ -21,6 +21,13 @@
     .radio label{
         display: inline;
     }
+    .delete_button{
+        font-size: 25px;
+        color:red;
+        font-weight: 700;
+        display: inline-block;
+        vertical-align: sub;
+    }
 
 </style>
 {% endblock %}
@@ -29,9 +36,7 @@
 {% block content %}
     <div class="box box-primary" style="width: 100%">
         <div class="box-header with-border">
-            <h3 class="box-title">
-    创建保险
-        </h3>
+            <h3 class="box-title">{% if client_id is not defined %}创建保险{% else %}编辑保险{% endif %}</h3>
         </div>
         <div class="box-body">
             {{ form_start(form) }}
@@ -162,8 +167,26 @@
                 </tr>
                 </tbody>
             </table>
-            {{ form_widget(form.productFile) }}
-            {{ form_widget(form.insurancePlan) }}
+
+            <div class="vich-file">
+                <div class="form-group">
+                    <label class="control-label" for="insurance_clientDataFile_file">客户详细资料表</label>
+                    <input type="file" id="insurance_clientDataFile_file" name="insurance[clientDataFile][file]">
+                    {% if clientDataDownloadPath is defined and clientDataDownloadPath is not null %}<a href="{{ clientDataDownloadPath }}" id="client_data_link">下载客户资料表</a>
+                    <a href="javascript:void(0)"><span class="delete_button" id="delete_client_data">×</span></a>{% endif %}
+                </div>
+            </div>
+
+            <div class="vich-file">
+                <div class="form-group">
+                <label class="control-label" for="insurance_insurancePlan_file">保险建议书</label>
+                <input type="file" id="insurance_insurancePlan_file" name="insurance[insurancePlan][file]">
+                {% if insurancePlanDownloadPath is defined and insurancePlanDownloadPath is not null %}<a href="{{ insurancePlanDownloadPath }}" id="insurance_plan_link">下载保险建议书</a>
+                <a href="javascript:void(0)"><span class="delete_button" id="delete_insurance_plan">×</span></a>{% endif %}
+                </div>
+            </div>
+
+
             <button class="btn btn-primary" type="submit">提交</button>
             </form>
         </div>
@@ -176,6 +199,46 @@
 {% if client_id is defined %}
 <script>
    $('#todo_Insurance_client').find("option[value={{ client_id }}]").attr("selected",true);
+
+   //delete client data file
+    $(document).on('click','#delete_client_data',function(){
+        if(confirm("你确定删除该附件吗?")){
+            var url = "{{ path("delete_attachment",{'id':id}) }}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {type:'client_data'},
+                success:function(res){
+                    if(res=="success"){
+                        $('#client_data_link').remove();
+                        $('#delete_client_data').remove();
+                    }else{
+                        alert('删除附件失败!');
+                    }
+                }
+            });
+        }
+    });
+
+    //delete insurance plan
+   $(document).on('click','#delete_insurance_plan',function(){
+       if(confirm("你确定删除该附件吗?")){
+           var url = "{{ path("delete_attachment",{'id':id}) }}";
+           $.ajax({
+               url: url,
+               type: 'POST',
+               data: {type:'insurance_plan'},
+               success:function(res){
+                   if(res=="success"){
+                       $('#insurance_plan_link').remove();
+                       $('#delete_insurance_plan').remove();
+                   }else{
+                       alert('删除附件失败!');
+                   }
+               }
+           });
+       }
+   });
 </script>
     {% endif %}
 {% endblock %}

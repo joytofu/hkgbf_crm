@@ -10,7 +10,15 @@
    <form name="editProfile" method="post" action="{{ path('editprofile') }}" role="form" enctype="multipart/form-data">
     <div class="box-body">
         <div class="form-group">
-            {{ form_widget(form.imageFile) }}
+            <div class="vich-image">
+                <div class="form-group">
+                    <label class="control-label" for="createUser_imageFile_file">头像</label>
+                    <input type="file" id="createUser_imageFile_file" name="createUser[imageFile][file]">
+                </div>
+                <a href="{{ app.request.baseUrl }}{{ vich_uploader_asset(user,'imageFile') }}">
+                    <img width="100px" src="{{ app.request.baseUrl }}{{ vich_uploader_asset(user,'imageFile') }}" alt="">
+                </a>
+            </div>
         </div>
     <div class="form-group">
         <label class="control-label required" for="createUser_username">用户名:{{ user.username }}</label>

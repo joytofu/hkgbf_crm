@@ -14,7 +14,15 @@
     <form method="post" action="{{ path('editclientprofile',{'id':id}) }}" {{ form_enctype(form) }} role="form">
     <div class="box-body">
         <div class="form-group">
-            {{ form_widget(form.imageFile) }}
+            <div class="vich-image">
+                <div class="form-group">
+                    <label class="control-label" for="editClientProfile_imageFile_file">头像</label>
+                    <input type="file" id="editClientProfile_imageFile_file" name="editClientProfile[imageFile][file]">
+                </div>
+                <a href="{{ app.request.baseUrl }}{{ vich_uploader_asset(client,'imageFile') }}">
+                    <img width="100px" src="{{ app.request.baseUrl }}{{ vich_uploader_asset(client,'imageFile') }}" alt="">
+                </a>
+            </div>
         </div>
         {#<div class="form-group">
             {{ form_widget(form.single_user.role_name) }}

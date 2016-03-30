@@ -222,6 +222,7 @@ class Client
         $this->updatedAt = new \DateTime('now');
         $this->vip = "银卡会员";
         $this->kill = "kill";
+        $this->imageName = "jntz.png";
     }
 
 
