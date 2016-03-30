@@ -2,3 +2,4 @@
 /app/cache/*
 /app/logs/dev.log
 *.DS_Store
+/web/upload/*
