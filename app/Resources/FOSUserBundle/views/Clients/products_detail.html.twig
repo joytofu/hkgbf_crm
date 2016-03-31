@@ -122,15 +122,13 @@
                             <table id="products_list1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>证券代码代码</th>
-                                    <th>证券名称</th>
-                                    <th>购买日期</th>
-                                    <th>持仓数量</th>
-                                    <th>购买价</th>
-                                    <th>当前价</th>
-                                    <th>浮动盈亏</th>
+                                    <th>基金名称</th>
+                                    <th>认购日期</th>
+                                    <th>认购份额</th>
+                                    <th>认购金额</th>
+                                    <th>本月净值</th>
                                     <th>当前状态</th>
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    {% if is_granted('ROLE_ADMIN') and app.user.roles[1]!='ROLE_FUCKER' %}
                                     <th>修改</th>
                                     {% endif %}
 
@@ -138,15 +136,13 @@
                                 </thead>
                                 {% for data in stock_data %}
                                 <tr>
-                                    <td>{{ data.stockId }}</td>
                                     <td>{{ data.stockName }}</td>
                                     <td>{{ data.buyDate|date('Y-m-d') }}</td>
                                     <td>{{ data.position }}</td>
                                     <td>{{ data.buyingPrice }}</td>
-                                    <td>{{ data.currentPrice }}</td>
-                                    <td>{{ data.calculateProfitAndLoss() }}</td>
+                                    <td>{{ data.value }}</td>
                                     <td><span class="label label-success">买入</span></td>
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    {% if is_granted('ROLE_ADMIN') %}
                                     <td>
                                         <a href="{{ path('editstock',{'id':data.getId()}) }}"><button class="btn btn-facebook">编辑</button></a>
                                         <a href="javascript:void(0)" onclick="deletestock({{ data.getId() }})"><button class="btn btn-adn">删除</button></a>
@@ -154,7 +150,7 @@
                                     {% endif %}
                                 </tr>
                                 {% endfor %}
-                                <thead><tr><th>合计盈亏:{{ sum }}元</th></tr></thead>
+                                <thead><tr><th>合计盈亏:  元</th></tr></thead>
 
                             </table>
                         </div><!-- /.box-body -->
@@ -283,7 +279,7 @@
     <script>
         function deletestock(id){
             if(confirm('你确定删除该股票信息吗？')){
-                window.location.href="{{ app.request.baseurl }}/admin/delete_stock_2/"+id;
+                window.location.href="{{ app.request.baseurl }}/admin/delete_stock/"+id;
             }
         }
 

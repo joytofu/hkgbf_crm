@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\DBAL\Types\FloatType;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -26,7 +27,7 @@ class Stock
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $stock_id;
 
@@ -36,31 +37,45 @@ class Stock
     protected $stock_name;
 
     /**
-     * @ORM\Column(type="date")
+     * 认购日期
+     * @ORM\Column(type="date",nullable=true)
      */
     protected $buy_date;
 
     /**
-     * 手数
-     * @ORM\Column(type="integer")
+     * 认购份额
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $position;
 
     /**
-     * @ORM\Column(type="float")
+     * 认购金额
+     * @ORM\Column(type="float",nullable=true)
      */
     protected $buying_price;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",nullable=true)
      */
     protected $current_price;
+
+    /**
+     * 净值
+     * @ORM\Column(type="float",nullable=true)
+     */
+    protected $value;
 
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $note;
+
+    /**
+     * 备注
+     * @ORM\Column(type="text",nullable=true)
+     */
+    protected $remark;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="stocks")
@@ -137,6 +152,22 @@ class Stock
 
     public function setClient(Client $client = null){
         $this->client = $client;
+    }
+
+    public function getValue(){
+        return $this->value;
+    }
+
+    public function setValue($value){
+        $this->value = (float)$value;
+    }
+
+    public function getRemark(){
+        return $this->remark;
+    }
+
+    public function setRemark($remark){
+        $this->remark = $remark;
     }
 
 

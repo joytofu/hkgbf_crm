@@ -17,18 +17,21 @@ class StockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stock_id',null,array('label'=>'股票代码'))
-            ->add('stock_name',null,array('label'=>'股票名称'))
-            ->add('buy_date',null,array('label'=>'买入日期','widget'=>'choice','format'=>'yyyy-MM-dd'))
-            ->add('position',null,array('label'=>'购买手数'))
-            ->add('buying_price',null,array('label'=>'购买价格'))
-            ->add('current_price',null,array('label'=>'当前价格'));
+            ->add('stock_id',null,array('label'=>'基金代码'))
+            ->add('stock_name',null,array('label'=>'基金名称'))
+            ->add('buy_date',null,array('label'=>'认购日期','widget'=>'choice','format'=>'yyyy-MM-dd'))
+            ->add('value',null,array('label'=>'本月净值'))
+            ->add('position',null,array('label'=>'认购份额'))
+            ->add('buying_price',null,array('label'=>'认购金额'))
+            ->add('current_price',null,array('label'=>'当前价格'))
+            ->add('remark',null,array('label'=>'备注'));
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Stock'
+            'data_class' => 'AppBundle\Entity\Stock',
+            'csrf_protection' => false
         ));
     }
 

@@ -46,6 +46,7 @@ class ClientsProductController extends Controller
 
         //get stock data of user
         $stock_data = $client->getStocks();
+
         $sum = 0;
         foreach($stock_data as $value){
             $sum+=$value->calculateProfitAndLoss();
@@ -137,7 +138,7 @@ class ClientsProductController extends Controller
 
 
     /**
-     * 股票资料写入器
+     * 私募基金资料写入器
      * @param User $user
      */
     public function upload_stock_data(User $user, $dataNum,$excel_data){
@@ -149,25 +150,23 @@ class ClientsProductController extends Controller
         }
         for($i=1;$i < $dataNum; $i++){
             if(in_array($excel_data[$i][1],$stockNames)){
-              $stock_obj =  $em->getRepository('AppBundle:Stock')->findBy(array('stock_name'=>$excel_data[$i][1]));
-                $stock_obj[0]->setStockId($excel_data[$i][0]);
-                $stock_obj[0]->setStockName($excel_data[$i][1]);
-                $stock_obj[0]->setBuyDate(new \DateTime($excel_data[$i][2]));
-                $stock_obj[0]->setPosition($excel_data[$i][3]);
-                $stock_obj[0]->setBuyingPrice($excel_data[$i][4]);
-                $stock_obj[0]->setCurrentPrice($excel_data[$i][5]);
-                $stock_obj[0]->setNote($excel_data[$i][6]);
+              $stock_obj =  $em->getRepository('AppBundle:Stock')->findBy(array('stock_name'=>$excel_data[$i][0]));
+                $stock_obj[0]->setStockName($excel_data[$i][0]);
+                $stock_obj[0]->setBuyDate(new \DateTime($excel_data[$i][1]));
+                $stock_obj[0]->setPosition($excel_data[$i][2]);
+                $stock_obj[0]->setBuyingPrice($excel_data[$i][3]);
+                $stock_obj[0]->setValue($excel_data[$i][4]);
+                $stock_obj[0]->setRemark($excel_data[$i][5]);
                 $stock_obj[0]->setUser($user);
                 $em->flush();
             }else{
                 $stock_obj = new Stock();
-                $stock_obj->setStockId($excel_data[$i][0]);
-                $stock_obj->setStockName($excel_data[$i][1]);
-                $stock_obj->setBuyDate(new \DateTime($excel_data[$i][2]));
-                $stock_obj->setPosition($excel_data[$i][3]);
-                $stock_obj->setBuyingPrice($excel_data[$i][4]);
-                $stock_obj->setCurrentPrice($excel_data[$i][5]);
-                $stock_obj->setNote($excel_data[$i][6]);
+                $stock_obj->setStockName($excel_data[$i][0]);
+                $stock_obj->setBuyDate(new \DateTime($excel_data[$i][1]));
+                $stock_obj->setPosition($excel_data[$i][2]);
+                $stock_obj->setBuyingPrice($excel_data[$i][3]);
+                $stock_obj->setValue($excel_data[$i][4]);
+                $stock_obj->setRemark($excel_data[$i][5]);
                 $stock_obj->setUser($user);
                 $em->persist($stock_obj);
                 $em->flush();
@@ -285,12 +284,16 @@ class ClientsProductController extends Controller
         if($form->isSubmitted()&&$form->isValid()){
             $stock->setClient($client);
             $em->persist($stock);
+            if($client->getIfStockPurchased()==false){
+                $client->setIfStockPurchased(true);
+            }
             $em->flush();
-
            return $this->redirectToRoute('productdetail',array('id'=>$id));
         }
 
-        return $this->render('@FOSUser/Clients/add_stocks.html.twig',array('form'=>$form->createView()));
+        return $this->render('@FOSUser/Clients/add_stocks.html.twig',array(
+            'form'=>$form->createView(),
+            'client_id'=>$id));
     }
 
     /**
@@ -306,6 +309,9 @@ class ClientsProductController extends Controller
         if($form->isSubmitted()&&$form->isValid()){
             $insurance->setClient($client);
             $em->persist($insurance);
+            if($client->getIfInsurancePurchased()==false){
+                $client->setIfInsurancePurchased(true);
+            }
             $em->flush();
 
             return $this->redirectToRoute('productdetail',array('id'=>$id));
@@ -319,28 +325,24 @@ class ClientsProductController extends Controller
      * @Route("/edit_stock/{id}",name="editstock")
      * @Method({"GET","POST"})
      * @ParamConverter("stock", class="AppBundle:Stock")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editStock(Stock $stock,Request $request,$id){
         $em = $this->getDoctrine()->getManager();
         $client_id = $stock->getClient()->getId();
-
-
         $form = $this->createForm(new StockType(),$stock);
-        $delete_form = $this->createDeleteForm($stock,'deletestock');
-
         $form->handleRequest($request);
 
         if($form->isSubmitted()&&$form->isValid()){
             $em->flush();
-            return new Response("<script>alert('修改成功!')</script>");
+            $redirect_url = $this->generateUrl('productdetail',array('id'=>$client_id));
+            return new Response("<script>alert('修改成功!');window.location.href='$redirect_url'</script>");
         }
 
-        return $this->render('@FOSUser/Clients/edit_stock.html.twig',array(
+        return $this->render('@FOSUser/Clients/add_stocks.html.twig',array(
             'form'=>$form->createView(),
-            'id'=>$id,
-            'client_id'=>$client_id,
-            'delete_form'=>$delete_form->createView()));
+            'stock_id'=>$id,
+            'client_id'=>$client_id));
     }
 
 
@@ -401,25 +403,6 @@ class ClientsProductController extends Controller
         }
     }
 
-    /**
-     * delete stock entity on the inside of edit form
-     * @Route("/delete_stock/{id}", name="deletestock")
-     * @ParamConverter("stock", class="AppBundle:Stock")
-     */
-    public function deleteStock(Stock $stock, Request $request){
-        $client_id = $stock->getClient()->getId();
-
-        $form = $this->createDeleteForm($stock,'deletestock');
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($stock);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('productdetail',array('id'=>$client_id));
-    }
 
     /**
      * delete insurance entity on the inside of edit form
@@ -427,7 +410,8 @@ class ClientsProductController extends Controller
      * @ParamConverter("insurance", class="AppBundle:Insurance")
      */
     public function deleteInsurance(Insurance $insurance, Request $request){
-        $client_id = $insurance->getClient()->getId();
+        $client = $insurance->getClient();
+        $client_id = $client->getId();
 
         $form = $this->createDeleteForm($insurance,'deleteinsurance');
         $form->handleRequest($request);
@@ -436,6 +420,10 @@ class ClientsProductController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($insurance);
             $em->flush();
+            if(count($client->getInsurances())==0){
+                $client->setIfInsurancePurchased(false);
+                $em->flush();
+            }
         }
         return $this->redirectToRoute('productdetail',array('id'=>$client_id));
     }
@@ -443,15 +431,19 @@ class ClientsProductController extends Controller
 
     /**
      * delete stock entity from the product detail table
-     * @Route("/delete_stock_2/{id}",name="deletestock2")
+     * @Route("/delete_stock/{id}",name="deletestock2")
      * @ParamConverter("stock", class="AppBundle:Stock")
      */
-    public function delete_stock_2(Stock $stock){
-        $client_id = $stock->getClient()->getId();
+    public function delete_stock(Stock $stock){
+        $client = $stock->getClient();
+        $client_id = $client->getId();
         $em = $this->getDoctrine()->getManager();
         $em->remove($stock);
         $em->flush();
-        echo "<script>alert('删除成功!')</script>";
+        if(count($client->getStocks())==0){
+            $client->setIfStockPurchased(false);
+            $em->flush();
+        }
 
         return $this->redirectToRoute('productdetail',array('id'=>$client_id));
     }

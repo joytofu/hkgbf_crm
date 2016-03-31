@@ -38,9 +38,10 @@
                                         <td>{{ client.cellphone }}</td>
                                         <td>{{ client.vip }}</td>
                                         <td>
-                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">股票
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfStockPurchased()==1 %}checked{% endif %} onclick="return false;">私募基金
                                             <input style="margin-left: 3%" type="checkbox" {% if client.getIfInsurancePurchased()==1 %}checked{% endif %} onclick="return false;">保险
                                             <input style="margin-left: 3%" type="checkbox" {% if client.getIfFundPurchased()==1 %}checked{% endif %} onclick="return false;">环球基金
+                                            <input style="margin-left: 3%" type="checkbox" {% if client.getIfFuturePurchased()==1 %}checked{% endif %} onclick="return false;">期货
                                         </td>
                                     </tr>
                                 {% endfor %}

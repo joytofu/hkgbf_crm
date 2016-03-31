@@ -25,7 +25,7 @@ class InsuranceType extends AbstractType
             ->add('insurance_company')
             ->add('insurance_name')
             ->add('insurance_number')
-            ->add('currency','choice',array('choices'=>['$美元','$美元','¥人民币'=>'¥人民币','HK$港元'=>'HK$港元','€欧元'=>'€欧元'],'expanded'=>true))
+            ->add('currency','choice',array('choices'=>['$美元'=>'$美元','¥人民币'=>'¥人民币','HK$港元'=>'HK$港元','€欧元'=>'€欧元'],'expanded'=>true))
             ->add('buy_date')
             ->add('insurance_premium')
             ->add('sum_insured')
