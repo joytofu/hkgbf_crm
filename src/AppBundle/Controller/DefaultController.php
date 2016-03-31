@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/admin")
+ * @Security("is_fully_authenticated()")
  */
 class DefaultController extends Controller
 {
@@ -55,9 +56,9 @@ class DefaultController extends Controller
      */
     public function showIndex(){
         $user = $this->getUser();
-        if(!$user){
+        /*if(!$user){
             return $this->redirectToRoute('fos_user_security_login');
-        }
+        }*/
         if($user->getRoleName()->getId()==5 || $user->getRoleName()->getId()==6 || $user->getRoleName()->getId()==7){
             return $this->redirectToRoute('client_index');
         }
@@ -141,8 +142,16 @@ class DefaultController extends Controller
     public function clientIndex(){
         $em = $this->getDoctrine()->getManager();
 
+        $user = $this->getUser();
+        $roleName = $user->getRoleName()->getName();
+
+        if(!strpos($roleName,'会员')){
+            $redirect_url = $this->generateUrl('fos_user_security_login');
+            return new Response("<script>alert('你登录了非客户账户,请重新登录!');window.location.href='$redirect_url';</script>");
+        }
+
         //personal information
-        $client = $this->getUser()->getSingleClient();
+        $client = $user->getSingleClient();
 
         //notice
         $data = $em->getRepository('AppBundle:Notice')->findBy(array(),array('createdAt'=>'DESC'));
@@ -181,6 +190,7 @@ class DefaultController extends Controller
     /**
      * modify role of users
      * @Route("/modifyrole/{id}/{role}", name="modify_role")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function modifyRole($id,$role)
     {
@@ -229,6 +239,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/unverifiedclientslist", name="unverifiedclientslist")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function showUnverifiedClients(){
         $user = $this->getUser();
@@ -424,6 +435,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/create/{role}", name="create_user")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function creatUser(Request $request,$role){
         $user = new User();

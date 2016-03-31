@@ -32,23 +32,11 @@ use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 
+/**
+ * @Security("is_fully_authenticated()")
+ */
 class ProfileController extends BaseProfileController
 {
-
-
-    /**
-     * Show the user information
-     * @Route("/userdetail/{id}", name="userdetail")
-     */
-    public function showUserDetail($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle:User')->find($id);
-
-        return $this->render('FOSUserBundle:Profile:show.html.twig', array(
-            'user' => $user
-        ));
-    }
 
 
     /**
@@ -73,6 +61,7 @@ class ProfileController extends BaseProfileController
 
     /**
      * @Route("/profile/")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function showAction(){
         $user = $this->getUser();
@@ -98,6 +87,7 @@ class ProfileController extends BaseProfileController
     /**
      * create client. only admin is granted.
      * @Route("/admin/createclient", name="createclient")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function createClient(Request $request){
         $em = $this->getDoctrine()->getManager();
@@ -157,6 +147,7 @@ class ProfileController extends BaseProfileController
      * edit user profile. only admin is granted.
      * @Route("/admin/editclientprofile/{id}", name="editclientprofile")
      * @ParamConverter("client", class="AppBundle:Client")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editClientProfile(Request $request, Client $client,$id){
         $form = $this->createForm(new EditClientProfileType(),$client);
@@ -215,9 +206,10 @@ class ProfileController extends BaseProfileController
     }
 
     /**
- * @Route("/admin/deleteclient/{id}",name="deleteclient")
- * @ParamConverter("client", class="AppBundle:Client")
- */
+     * @Route("/admin/deleteclient/{id}",name="deleteclient")
+     * @ParamConverter("client", class="AppBundle:Client")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
     public function deleteClient(Client $client){
         $em = $this->getDoctrine()->getManager();
 
@@ -241,6 +233,7 @@ class ProfileController extends BaseProfileController
     /**
      * @Route("/admin/deleteagent/{id}",name="deleteagent")
      * @ParamConverter("agent", class="AppBundle:User")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteAgent(User $user){
         $em = $this->getDoctrine()->getManager();
@@ -252,6 +245,7 @@ class ProfileController extends BaseProfileController
     /**
      * @Route("/admin/deleteagentadmin/{id}", name="deleteagentadmin")
      * @ParamConverter("agentadmin", class="AppBundle:User")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteAgentAdmin(User $user){
         $em = $this->getDoctrine()->getManager();
@@ -298,6 +292,7 @@ class ProfileController extends BaseProfileController
     /**
      * @Route("/admin/editagentprofile/{id}",name="editagentprofile")
      * @ParamConverter("user", class="AppBundle:User")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editAgentProfile(User $agent, Request $request,$id){
         $em = $this->getDoctrine()->getManager();
