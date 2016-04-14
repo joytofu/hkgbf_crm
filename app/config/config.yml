@@ -145,6 +145,7 @@ vich_uploader:
             inject_on_load:     false
             delete_on_update:   false
             delete_on_remove:   false
+            namer:              vich_uploader.namer_uniqid
 
         upload_product:
             uri_prefix:         /upload/product
@@ -157,6 +158,14 @@ vich_uploader:
         client_data:
             uri_prefix:         /upload/insurance/client_data
             upload_destination: %kernel.root_dir%/../web/upload/insurance/client_data
+            inject_on_load:     false
+            delete_on_update:   false
+            delete_on_remove:   false
+            namer:              vich_uploader.namer_uniqid
+
+        fund_client_data:
+            uri_prefix:         /upload/global_fund/client_data
+            upload_destination: %kernel.root_dir%/../web/upload/global_fund/client_data
             inject_on_load:     false
             delete_on_update:   false
             delete_on_remove:   false

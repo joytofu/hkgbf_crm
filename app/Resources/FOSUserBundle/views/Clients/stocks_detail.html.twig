@@ -11,25 +11,21 @@
                 <table id="stock" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>持仓股票代码</th>
-                        <th>持仓股票名称</th>
+                        <th>基金名称</th>
                         <th>购买日期</th>
-                        <th>持仓手数</th>
-                        <th>购买价格(元/股)</th>
-                        <th>当前价格(元/股)</th>
-                        <th>浮动盈亏(元)</th>
+                        <th>认购份额</th>
+                        <th>认购金额</th>
+                        <th>本月净值</th>
                         <th>当前状态</th>
                     </tr>
                     </thead>
                     {% for data in stocks_data %}
                         <tr>
-                            <td>{{ data.stockId }}</td>
                             <td>{{ data.stockName }}</td>
                             <td>{{ data.buyDate|date('Y-m-d') }}</td>
                             <td>{{ data.position }}</td>
                             <td>{{ data.buyingPrice }}</td>
-                            <td>{{ data.currentPrice }}</td>
-                            <td>{{ data.calculateProfitAndLoss() }}</td>
+                            <td>{{ data.value }}</td>
                             <td><span class="label label-success">买入</span></td>
                         </tr>
                     {% endfor %}

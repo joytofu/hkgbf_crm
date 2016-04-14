@@ -220,7 +220,68 @@
                         </div>
                     </div><!-- /.tab-pane -->
                     <div class="tab-pane" id="tab_3">
+                        <div class="box-body">
+                            <table id="products_list3" class="table table-bordered table-striped" style="font-size: 14px">
+                                <thead>
+                                <tr>
+                                    <th>保险公司名称</th>
+                                    <th>计划名称</th>
+                                    <th>保单编号</th>
+                                    <th>购买日期</th>
+                                    <th>投保人</th>
+                                    <th>被保人</th>
+                                    <th>币种</th>
+                                    <th>保费</th>
+                                    <th>保额</th>
+                                    <th>出生日期</th>
+                                    <th>已缴费年期</th>
+                                    <th>下次续费日期</th>
+                                    <th>资料下载</th>
+                                    {#<th>状态</th>#}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <th>修改</th>
+                                    {% endif %}
 
+                                </tr>
+                                </thead>
+                                {% for data in insurance_data %}
+                                    <tr>
+                                        <td>{{ data.insuranceCompany }}</td>
+                                        <td>{{ data.insuranceName }}</td>
+                                        <td>{{ data.insuranceNumber }}</td>
+                                        <td>{% if data.buyDate is not null %}{{ data.buyDate|date('Y-m-d') }}{% endif %}</td>
+                                        <td>{{ data.getPhName() }}</td>
+                                        {% if data.getRName is not null %}
+                                            <td>{{ data.getRName() }}</td>
+                                        {% else %}
+                                            <td>{{ data.getPhName() }}</td>
+                                        {% endif %}
+                                        <td>{{ data.currency }}</td>
+                                        <td>{{ data.insurancePremium }}</td>
+                                        <td>{{ data.sumInsured }}</td>
+                                        {% if data.RBornDate is null %}
+                                            <td>{{ data.PhBornDate|date('Y-m-d') }}</td>
+                                        {% else %}
+                                            <td>{{ data.RBornDate|date('Y-m-d') }}</td>
+                                        {% endif %}
+                                        <td>{{ data.getPaidYears() }}</td>
+                                        <td>{% if data.NextPayDate is not null %}{{ data.NextPayDate|date('Y-m-d') }}{% endif %}</td>
+                                        {# <td>
+                                             {% if data.Verified==true %}<span class="label label-success">已审核</span>
+                                             {% else %}<span class="label label-warning">审核中</span>{% endif %}
+                                         </td>#}
+                                        <td>{% if data.clientDataName !="" %}<a href="{{ app.request.baseUrl }}{{ vich_uploader_asset(data,'clientDataFile') }}">下载</a>{% endif %}</td>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <td>
+                                                <a href="{{ path('editinsurance',{'id':data.getId()}) }}"><button class="btn btn-facebook">编辑</button></a>
+                                                <a href="javascript:void(0)" onclick="deleteinsurance({{ data.getId() }})"><button class="btn btn-adn">删除</button></a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+                        </div>
                     </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
             </div><!-- nav-tabs-custom -->
@@ -264,6 +325,7 @@
     <script>
         $(function () {
             $("#products_list1").DataTable();
+            $("#products_list3").DataTable();
             $('#products_list2').DataTable({
                 "paging": true,
                 "lengthChange": true,

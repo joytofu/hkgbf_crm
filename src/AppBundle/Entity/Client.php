@@ -121,6 +121,11 @@ class Client
     protected $insurances;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Fund",mappedBy="client",cascade={"persist"})
+     */
+    protected $global_funds;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected $province;
@@ -497,6 +502,20 @@ class Client
 
     public function removeInsurance(Insurance $insurance){
         $this->insurances->removeElement($insurance);
+        return $this;
+    }
+
+    public function getGlobalFunds(){
+        return $this->global_funds;
+    }
+
+    public function addGlobalFunds(Fund $fund){
+        $this->global_funds[] = $fund;
+        return $this;
+    }
+
+    public function removeGlobalFund(Fund $fund){
+        $this->global_funds->removeElement($fund);
         return $this;
     }
 
