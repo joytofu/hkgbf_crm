@@ -67,7 +67,7 @@
                         {% endif %}
 
 
-                        <script id="container" name="Notice[content]" type="text/plain"></script>
+                        <script id="container" name="Notice[content]" type="text/plain">{% if edit is defined %}{{ content|raw }}{% endif %}</script>
 
                         {% if app.user.roles[0]!='ROLE_FUCKER'  %}
                         <button class="btn btn-instagram" type="submit">提交</button>
@@ -105,10 +105,7 @@
                         'imagecenter','autotypeset','inserttable','charts',
 
                     ]
-            ],
-            {% if content is defined and content is not null %}
-            initialContent:"{{ content|raw }}",
-            {% endif %}
+            ]
             {% if app.user.roles[0]=='ROLE_FUCKER' %}
             readonly:true,
             {% endif %}
@@ -143,7 +140,6 @@
             $users[i] = "{{ user.id }}";
             i++;
         {% endfor %}
-        console.log($users);
 
         for(var j= 0;j<$users.length;j++){
             $("input[value="+"\'"+$users[j]+"\'"+"]").prop('checked',true);

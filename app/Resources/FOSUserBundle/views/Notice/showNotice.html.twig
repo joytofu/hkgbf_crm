@@ -1,0 +1,23 @@
+{% extends '@FOSUser/layout_admin.html.twig' %}
+{% block page_header %}通知公告{% endblock %}
+{% block private_css %}
+    <style>
+        .box-body p img{
+            width:100%;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-header" style="text-align: center">
+                    <h3 class="box-title" >{{ notice.title }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ notice.content|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

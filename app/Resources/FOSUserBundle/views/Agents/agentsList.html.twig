@@ -17,6 +17,7 @@
                 <thead>
                 <tr id="admin_tr">
                     <th>姓名</th>
+                    <th>用户名</th>
                     <th>属性</th>
                     <th>地区</th>
                 </tr>
@@ -24,7 +25,9 @@
                 <tbody>
                 {% for agent_admin in agent_admins %}
                 <tr>
-                    <td>{{ agent_admin.name }}<span style="float: right" id="get_suborginate"><a href="{{ path("get_agents",{'agent_admin_id':agent_admin.id}) }}">下属代理</a></span></td>
+                    <td>{{ agent_admin.name }}<a href="{{ path('editagentprofile',{'id':agent_admin.id}) }}"><i class="fa fa-gear"></i></a>
+                        <span style="float: right" id="get_suborginate"><a href="{{ path("get_agents",{'agent_admin_id':agent_admin.id}) }}">下属代理</a></span></td>
+                    <td>{{ agent_admin.username }}</td>
                     <td>{{ agent_admin.property }}</td>
                     <td>{{ agent_admin.region }}</td>
                 </tr>

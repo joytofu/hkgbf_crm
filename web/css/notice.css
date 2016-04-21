@@ -9,16 +9,19 @@
 }
 
 .notice_content{
-    width:800px;
+    max-width:1000px;
     height:auto;
     margin-top:100px;
-    margin-left:-400px;
-    left:50%;
-    text-align: center;
     z-index: 999;
     position: absolute;
     font-size:18px;
     font-family: "微软雅黑", arial, sans-serif;
+}
+
+.notice_content p img{
+    width:100%;
+    display: block;
+    margin:0 auto;
 }
 
 .notice_item{

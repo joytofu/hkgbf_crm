@@ -502,30 +502,41 @@ class ClientsProductController extends Controller
         $file = $form['statement_file']->getData();
         if($form->isSubmitted()) {
             $data = $this->handleExcelData($file);
-            $content = $data['excel_data'][1];
-            array_splice($content,29,4);
-            array_splice($content,20,8);
-            array_splice($content,16,3);
-            array_splice($content,13,2);
-            array_splice($content,5,1);
-            $td_arr = array();
+            $content = $data['excel_data'];
+
+            unset($content[0]);
+            for($i=1;$i<=count($content);$i++){
+                array_splice($content[$i],29,4);
+                array_splice($content[$i],20,8);
+                array_splice($content[$i],16,3);
+                array_splice($content[$i],13,2);
+                array_splice($content[$i],5,1);
+            }
+
+            $tr_arr = array();
 
             //balance date
-            $statement->setBalanceDate($content[1]);
+            $statement->setBalanceDate($content[1][1]);
 
-            foreach($content as $value){
-                $td = '<td>'.$value.'</td>';
-                $td_arr[] = $td;
+            foreach($content as $data){
+                $td_arr = array();
+                foreach($data as $value){
+                    $td = '<td>'.$value.'</td>';
+                    $td_arr[] = $td;
+                }
+                $tr_arr[] = "<tr>".implode("",$td_arr)."</tr>";
             }
-            $content = '<tr>'.implode("",$td_arr).'</tr>';
+
+            $content = implode("",$tr_arr);
+
             $statement->setContent($content);
             $statement->setClient($client);
             $em->persist($statement);
             $em->flush();
 
         }
-        $baseurl = $this->getRequest()->getBaseUrl();
-        $redirect_url = $baseurl."/admin/product_detail/".$id;
+
+        $redirect_url = $this->generateUrl('productdetail',['id'=>$id]);
         return new Response("<script>alert('添加日结单成功!');window.location.href='$redirect_url';</script>");
     }
 
@@ -543,23 +554,35 @@ class ClientsProductController extends Controller
         $file = $form['statement_file']->getData();
         if($form->isSubmitted()) {
             $data = $this->handleExcelData($file);
-            $content = $data['excel_data'][1];
-            array_splice($content,29,4);
-            array_splice($content,20,8);
-            array_splice($content,16,3);
-            array_splice($content,13,2);
-            array_splice($content,5,1);
-            $td_arr = array();
-            foreach($content as $value){
-                $td = '<td>'.$value.'</td>';
-                $td_arr[] = $td;
+            $content = $data['excel_data'];
+            unset($content[0]);
+            for($i=1;$i<=count($content);$i++){
+                array_splice($content[$i],29,4);
+                array_splice($content[$i],20,8);
+                array_splice($content[$i],16,3);
+                array_splice($content[$i],13,2);
+                array_splice($content[$i],5,1);
             }
-            $content = implode("",$td_arr);
+
+            $tr_arr = array();
+
+            //balance date
+            $statement->setBalanceDate($content[1][1]);
+
+            foreach($content as $data){
+                $td_arr = array();
+                foreach($data as $value){
+                    $td = '<td>'.$value.'</td>';
+                    $td_arr[] = $td;
+                }
+                $tr_arr[] = "<tr>".implode("",$td_arr)."</tr>";
+            }
+
+            $content = implode("",$tr_arr);
             $statement->setContent($content);
             $em->flush();
         }
-        $baseurl = $this->getRequest()->getBaseUrl();
-        $redirect_url = $baseurl."/admin/product_detail/".$client_id;
+        $redirect_url = $this->generateUrl('productdetail',['id'=>$client_id]);
         return new Response("<script>alert('修改日结单成功!');window.location.href='$redirect_url';</script>");
     }
 

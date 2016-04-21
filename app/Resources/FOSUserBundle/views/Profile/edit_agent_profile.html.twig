@@ -17,8 +17,8 @@
             {{ form_widget(form.imageFile) }}
         </div>
         <div class="form-group">
-            <label class="control-label required" for="createUser_username">用户名:{{ agent.username }}</label>
-            <input type="hidden" id="createUser_username" name="createUser[username]"  value="{{ agent.username }}">
+            <label class="control-label required" for="createUser_username">用户名:</label>
+            <input type="text" id="createUser_username" name="createUser[username]"  value="{{ agent.username }}" class="form-control">
         </div>
         <div class="form-group">
             <div class="form-group">
@@ -42,6 +42,12 @@
         </div>
         <div class="form-group">
             {{ form_row(form.company) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.property) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.region) }}
         </div>
        {# <div class="form-group">
             <label class="control-label" for="editProfile_address">原地址</label>

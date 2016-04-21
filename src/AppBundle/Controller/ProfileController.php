@@ -281,7 +281,7 @@ class ProfileController extends BaseProfileController
             return new Response("<script>alert('修改成功');window.location.href='$editprofile_url';</script>");
         }
 
-        return $this->render('FOSUserBundle:Profile:edit_profile.html.twig',array(
+        return $this->render('$setn-FOSUserBundle:Profile:edit_profile.html.twig',array(
             'user'=>$user,
             'form'=>$form->createView(),
             'username'=>$username));

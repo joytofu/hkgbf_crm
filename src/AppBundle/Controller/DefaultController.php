@@ -290,6 +290,8 @@ class DefaultController extends Controller
         return $this->render('@FOSUser/Agents/agentsList.html.twig',array('agent_admins'=>$agent_admins));
     }
 
+
+
     /**
      * @Route("/adminslist",name="adminslist")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
@@ -344,6 +346,14 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/shownotice/{id}",name="shownotice")
+     * @ParamConverter("notice", class="AppBundle:Notice")
+     */
+    public function showNotice(Notice $notice){
+        return $this->render('@FOSUser/Notice/showNotice.html.twig',['notice'=>$notice]);
+    }
+
+    /**
      * @Route("/createnotice", name="createnotice")
      * @Security("has_role('ROLE_ADMIN')")
      */
@@ -380,6 +390,7 @@ class DefaultController extends Controller
      */
     public function editNotice(Notice $notice,Request $request,$id){
         $em = $this->getDoctrine()->getManager();
+        $edit = 'yes';
         $form = $this->createForm(new NoticeType(),$notice);
         $title = $notice->getTitle();
         $content = $notice->getContent();
@@ -407,6 +418,7 @@ class DefaultController extends Controller
 
         return $this->render('@FOSUser/Notice/notice.html.twig',array(
             'form'=>$form->createView(),
+            'edit'=>$edit,
             'title'=>$title,
             'content'=>$content,
             'agent_admins'=>$agent_admins,

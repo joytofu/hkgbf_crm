@@ -47,7 +47,9 @@
     <script src="{{ asset('js/demo.js') }}"></script>
     <script>
         $(function () {
-            $("#statement").DataTable();
+            $("#statement").DataTable({
+                "order":[[14,'desc']]
+            });
             $('#products_list2').DataTable({
                 "paging": true,
                 "lengthChange": true,

@@ -24,16 +24,22 @@
                         </ol>
                         <div class="carousel-inner">
                             <div class="item active">
+                                {% if notice_active is defined and notice_active is not null %}
+                                <a href="{{ path('shownotice', {'id': notice_active.id}) }}">
+                                    {% endif %}
                                 <div class="notice_title"><h2>{% if notice_active is not null %}{{ notice_active.title|raw }}{% endif %}</h2></div>
                                 <div class="notice_content">{% if notice_active is not null %}{{ notice_active.content|raw }}{% endif %}</div>
                                 <img src="{{ asset('img/notice/1.png') }}">
+                                    </a>
                             </div>
                             {% set i=2 %}
                             {% for data in notice %}
                             <div class="item">
+                                <a href="{{ path('shownotice', {'id': data.id}) }}">
                                 <div class="notice_title"><h2>{{ data.title|raw }}</h2></div>
                                 <div class="notice_content">{{ data.content|raw }}</div>
                                 <img src="{{ app.request.baseurl }}/img/notice/{{ i }}.png">
+                                </a>
                             </div>
                              {% set i=i+1 %}
                             {% endfor %}

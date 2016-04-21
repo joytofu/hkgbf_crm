@@ -355,7 +355,7 @@
     <script>
         $(document).on('click','#reupload',function(){
            var $stm_id = $('#reupload').val();
-            $('#edit_statement').attr('action','/admin/edit_statement/'+$stm_id);
+            $('#edit_statement').attr('action','{{ app.request.baseUrl }}/admin/edit_statement/'+$stm_id);
         });
 
         $(document).on('click','#edit_stm_submit',function(){
@@ -364,7 +364,7 @@
 
         function delete_statement(id){
             if(confirm('确定删除该日结单?')){
-                window.location.href='/admin/delete_statement/'+id;
+                window.location.href='{{ app.request.baseUrl }}/admin/delete_statement/'+id;
             }
         }
     </script>
